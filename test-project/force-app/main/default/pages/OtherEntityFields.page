@@ -1,0 +1,25 @@
+<apex:page standardcontroller="Account"  tabstyle="Account" >
+<apex:form >
+    <apex:pageBlock title="Other Fields for Entity" mode="Edit">   
+        <apex:pageBlockSection title="Loan Packet and Watch Credit related fields" collapsible="false">
+            <apex:inputfield value="{!Account.OFAC_Verified__c}" />
+            <apex:inputfield value="{!Account.Net_Worth__c}" />
+            <apex:inputfield value="{!Account.Liquid_Assets__c}" />
+            <apex:inputfield value="{!Account.Last_Financial_Statement__c}" />
+            <apex:inputfield value="{!Account.Company_Description__c}" />
+            <apex:inputfield value="{!Account.Last_FY_Performance__c}" />  
+            <apex:inputfield value="{!Account.YTD_Performance__c}" />        
+        </apex:pageBlockSection>
+         <apex:pageBlockButtons > 
+             <apex:commandButton id="Submitid" value="Submit" action="{!Save}" />
+             <apex:commandButton id="Cancelid" value="Cancel" action="{!Cancel}" immediate="true" /> 
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+    <!--<apex:pageBlock mode="Edit">
+        <apex:pageBlockSection title="Watch Credit related fields" collapsible="false">
+            <apex:inputfield value="{!Account.EB_UnitID__c}" />
+        </apex:pageBlockSection>
+    </apex:pageBlock>-->
+   
+</apex:form>
+</apex:page>

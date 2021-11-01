@@ -1,0 +1,126 @@
+<apex:page controller="ParentRelManagerController" tabStyle="Account" title="Parent Entity Edit: {!viewEntity.entity.Name}" sidebar="false" >
+
+    <apex:form >
+        <apex:pageMessages />
+        <apex:outputPanel id="parentingManager" >
+            <div class="{!If(!saveDisabled,'modEntityParentCentered','modEntityParentLeft')}" >
+
+            <apex:sectionHeader title="Modify Entity Parent" subtitle="{!viewEntity.entity.Name}" />
+            <apex:pageBlock mode="edit" >
+               
+                <apex:pageBlockSection columns="1" title="Please select a parent entity for: '{!viewEntity.entity.Name}'">
+
+                    <apex:pageBlockSectionItem >
+                       <apex:outputLabel value="Primary Relationship (Level 1 Entity)" styleClass="noWrapLabel"/>
+                       <apex:outputPanel >
+                            <apex:inputCheckbox value="{!viewEntity.noParent}" >
+                                <apex:actionSupport event="onchange" reRender="parentingManager,hierarchyView,proposedHierarchy" action="{!noParentToggled}"/>
+                            </apex:inputCheckbox>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="---------- OR ----------" rendered="{!hasParent}" styleClass="orBreak"/>
+
+                    <apex:pageBlockSectionItem rendered="{!hasParent}" >
+                       <apex:outputLabel value="Parent Entity" styleClass="noWrapLabel" />
+                       <apex:outputPanel >
+                           <apex:inputField id="parentIdInput" value="{!viewEntity.entity.ParentId}" >
+                               <apex:actionSupport event="onchange" reRender="parentingManager,proposedHierarchy,hierarchyView" action="{!changesMade}"/>
+                           </apex:inputField>
+                       </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    
+                    <apex:pageBlockSectionItem rendered="{!hasParent}" >
+                       <apex:outputLabel value="Relationship to Parent" styleClass="noWrapLabel"/>
+                       <apex:outputPanel >
+                            <apex:inputField id="relationshipToParentInput" value="{!viewEntity.entity.Relationship_To_Parent__c}" >
+                                <apex:actionSupport event="onchange" reRender="parentingManager,proposedHierarchy,hierarchyView" action="{!changesMade}"/>
+                            </apex:inputField>
+                       </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+
+               </apex:pageBlockSection>      
+                
+                <apex:pageBlockButtons location="bottom" styleClass="noWrapButtons" >
+                    <apex:commandButton value=" No Changes Necessary " action="{!noChangesNecessary}" rendered="{!displayNoChangesNecessary}"/>                     
+                    <apex:commandButton value=" Save Changes " action="{!save}" disabled="{!saveDisabled}"/>
+                    <apex:commandButton value=" Cancel " action="{!cancel}"/>
+                </apex:pageBlockButtons>
+                
+            </apex:pageBlock>
+          </div>
+
+        </apex:outputPanel>
+    </apex:form>
+
+
+    <apex:outputPanel id="hierarchyView" >
+      <div class="{!If(!saveDisabled,'hierarchytwocolumns','hierarchyonecolumn')}">
+        <div class="{!If(!saveDisabled,'hierarchy','hierarchyonecolumn')}">
+            <c:ParentRelationshipDisplay currentAccountId="{!viewEntity.entity.Id}" staticDisplay="true" rendered="true" title="Current Hierarchy" />
+        </div>
+        <div class="{!If(!saveDisabled,'hierarchy','hidden')}">
+            <c:ParentRelationshipDisplay currentAccountId="{!viewEntity.entity.Id}" staticDisplay="false" parentAccountId="{!viewEntity.entity.parentId}" selectedRelationship="{!viewEntity.entity.Relationship_To_Parent__c}" rendered="true" title="Proposed Hierarchy" />
+        </div>
+      </div>
+    </apex:outputPanel>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center; 
+        }
+        .noWrapButtons{
+            white-space: nowrap;
+        }
+        .noWrapLabel{
+            white-space: nowrap;
+            width:auto;
+        }
+        .hidden{
+            visibility: none;
+        }
+        .currentNodeEdit{
+            visibility: hidden;
+        }
+        .modEntityParentLeft {
+            width:600px;
+            text-align: left; 
+            margin-left:15px;
+        }
+        .modEntityParentCentered {
+            width:450px;
+            margin: 0 auto;
+            text-align: left; 
+        }
+        .hierarchyonecolumn {
+            width:600px;
+            text-align: left; 
+            margin-left:7px;
+        }
+        .hierarchytwocolumns {
+            margin: 0 auto;
+            text-align: left; 
+            width:95%;
+            min-width: 970px;
+        }
+        .hierarchy {
+            width:45%;
+            min-width: 460px;
+            text-align: left;
+            margin: 10px;
+            height:auto;
+            float: left;
+        }
+        .orBreak{
+            padding-top:10px;
+            padding-bottom:10px;
+            display:block;
+            width:340px;
+            text-align:center;
+        }
+
+    </style>
+</apex:page>

@@ -1,0 +1,251 @@
+<apex:component controller="EbtDocManagerController" allowDML="true">
+    <apex:attribute name="objectId" type="String" required="true" description="" />  
+
+    <apex:stylesheet value="{!URLFOR($Resource.bootstrap_3_3_5, 'bootstrap.min.css')}"/> 
+
+    <div id="progress-container" style="height:18px;width:99%;margin-bottom:1px;">
+        <div id="upload-progress-container" class="progress progress-striped active" style="height:18px;">
+            <div id="upload-progress" class="progress-bar" onclick="dismissProgressBar();" />
+        </div>
+    </div>
+
+    <NDOC:DocManager3 />
+    
+    <script type="text/javascript">
+        var uploadInProgress = false;    
+        var DocMan = (DocMan) ? DocMan : {};
+        
+        (function(){
+            var EbtFileStore = function(config) {
+                var self = this;
+                self.sessionId = null;
+                self.associatedObjectId = null;
+                _.extend(self, config);
+
+                self.uploadDocument = function(fileWrapper, successCallback, failureCallback){
+                    sendDocumentToExternalStore(
+                        fileWrapper, 
+                        function(){
+                            updateUploadProgressForSuccess(fileWrapper.file.name);
+                            successCallback.apply(this, [fileWrapper]);
+                        },
+                        function(){
+                            updateUploadProgressForFailure(fileWrapper.file.name);
+                            failureCallback.apply(this, [fileWrapper]);
+                        }
+                    );
+                };
+
+                self.setDocumentMetadata = function(fileWrapper, successCallback) {
+                    DocMan.updateMetadataExternalFile(
+                        self.associatedObjectId,
+                        JSON.stringify({
+                            documentId : fileWrapper.documentId,
+                            name : fileWrapper.file.name,
+                            type : fileWrapper.type,
+                            size : fileWrapper.file.size,
+                            docStoreId : fileWrapper.docStoreId,
+                            externalId : fileWrapper.externalId,
+                            storageType : "{!storeName}",
+                            isDeleted : false,
+                            filenetDocId : null
+                        }),
+                        function(data) {
+                            if(_.isFunction(successCallback)){
+                                successCallback.apply(this, [data]);
+                            }
+                        },
+                        DocMan.failure
+                    );
+                };
+
+                self.downloadDocument = function(documentId) {
+                    DocMan.getDocument(
+                        self.associatedObjectId,
+                        documentId,
+                        function(data) {
+                            if(data.attachmentId !== undefined && data.attachmentId !== null && $.trim(data.attachmentId) !== '' && !data.isExternal) {
+                                window.open("/servlet/servlet.FileDownload?file=" + data.attachmentId);
+                            }else if(data.isExternal && data.docStoreType == "{!storeName}"){
+                                var url = "{!documentUrlTemplate}".replace("{documentId}", data.externalId);
+                                window.open(url);
+                            }
+                        },
+                        DocMan.failure
+                    );
+                };
+
+                self.deleteDocument = function(documentId, successCallback){
+                    DocMan.deleteSFDCAttachment(
+                        documentId,
+                        function(data) {
+                            if(_.isFunction(successCallback)){
+                                successCallback.apply(this, [data]);
+                            }
+                        },
+                        DocMan.failure
+                    );
+                };
+
+                return self;
+            };
+            if(!DocMan.SFDCAttachmentFileStore){
+                DocMan.SFDCAttachmentFileStore = EbtFileStore;
+            }
+        })();
+    </script>
+
+    <script type="text/javascript">        
+        function sendDocumentToExternalStore(fileWrapper, successCallback, failureCallback){
+            var uploadRequest = JSON.stringify({
+                fileName : fileWrapper.filename,
+                documentType : "{!defaultDocType}",
+                drawerName : "{!defaultDrawerName}",
+                externalObjectKey : "{!objectId}",
+                externalDocumentKey : fileWrapper.docStoreId,
+                documentAsBase64 : fileWrapper.base64file,
+                fileExtension : fileWrapper.filename.substr(fileWrapper.filename.lastIndexOf(".") + 1),
+                userEmail : "{!$User.Email}"
+            });
+
+            var chunks = uploadRequest.match(/.{1,750000}/g);
+
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EbtDocManagerController.getTokenForChunkedUpload}',
+                chunks.length,
+                function(token){
+                    if(token != ''){
+                        initializeUploadProgress(fileWrapper.filename);
+                        uploadChunk(token, chunks, 0, fileWrapper, successCallback, failureCallback);
+                    }
+                    else{
+                        failureCallback();
+                    }
+                }
+            );    
+        }
+
+        function uploadChunk(token, chunks, index, fileWrapper, successCallback, failureCallback){
+            Visualforce.remoting.timeout = 60000;
+            updateUploadProgress(index+1, chunks.length)       
+            if(chunks.length >= index+1){
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.EbtDocManagerController.uploadDocumentChunk}',
+                    token,
+                    chunks[index],
+                    index+1,
+                    function(docid){
+                        if(docid != ''){
+                            fileWrapper.externalId = docid;
+                            successCallback();
+                        }else{
+                            uploadChunk(token, chunks, index+1, fileWrapper, successCallback, failureCallback);
+                        }
+                    }
+                );
+            }else{
+                failureCallback();
+            }
+        }
+
+        function initializeUploadProgress(filename){
+            $("#upload-progress").removeClass("progress-bar-success");
+            $("#upload-progress").removeClass("progress-bar-danger");
+            $("#upload-progress").width('0');
+            $("#upload-progress").text("Uploading \"" + filename + "\" ...");
+            $("#upload-progress-container").fadeIn();
+            uploadInProgress = true;
+        }
+
+        function updateUploadProgress(chunkNumber, totalChunks){
+            var roundToNearest = 1;
+            var percentComplete = (Math.round(Math.floor(chunkNumber / totalChunks * 100) / roundToNearest) * roundToNearest);
+            $("#upload-progress").width(percentComplete + '%');
+        }
+
+        function updateUploadProgressForSuccess(filename){
+            $("#upload-progress-container").fadeIn();
+            $("#upload-progress").width("100%");
+            $("#upload-progress").addClass("progress-bar-success");
+            $("#upload-progress").text("\"" + filename + "\" uploaded successfully. (click to dismiss)");
+            //$("#upload-progress-container").fadeOut(3500);
+            uploadInProgress = false;
+        }
+
+        function updateUploadProgressForFailure(filename){
+            $("#upload-progress-container").fadeIn();
+            $("#upload-progress").width("100%");
+            $("#upload-progress").addClass("progress-bar-danger");
+            $("#upload-progress").text("\"" + filename + "\" failed to upload! (click to dismiss)");
+            //$("#upload-progress-container").fadeOut(4500);
+            uploadInProgress = false;
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#upload-progress-container").fadeOut(100);
+            initialize();            
+        });
+
+        function initialize(){
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.EbtDocManagerController.init}',
+                '{!objectId}',
+                function (){
+                    initializeDocumentManager();
+                }
+            );
+        }
+
+        function initializeDocumentManager(){
+            var __sfdcSessionId = '{!GETSESSIONID()}';
+            MyDocuments.init({
+                page: 'Opportunity',
+                sessionId: __sfdcSessionId,
+                fileStore: new DocMan.SFDCAttachmentFileStore({
+                    sessionId: __sfdcSessionId,
+                    associatedObjectId: '{!objectId}'
+                })
+            });
+        }
+    
+        function dismissProgressBar(){
+            if(uploadInProgress == false){
+                $("#upload-progress").text("");
+                $("#upload-progress-container").fadeOut(2500);
+                $("#upload-progress").removeClass("progress-bar-success");
+                $("#upload-progress").removeClass("progress-bar-danger");
+                $("#upload-progress").width('0');
+            }
+        }
+    </script>
+    
+    <script type="text/javascript">
+        var test_filename = "Tax Returns 1980.pdf"        
+        function test_showLoading(){
+            initializeUploadProgress(test_filename);            
+            $("#upload-progress").width('56%');            
+        }
+        function test_showSuccess(){
+            updateUploadProgressForSuccess(test_filename);
+        }
+        function test_showFailure(){
+            updateUploadProgressForFailure(test_filename);
+        }
+    </script>
+    <!--
+    <div style="padding-top:100px">
+        <button onclick="test_showLoading();">
+            show loading
+        </button>
+        <button onclick="test_showSuccess();">
+            show success
+        </button>
+        <button onclick="test_showFailure();">
+            show failure
+        </button>
+    </div>    
+    -->
+    
+</apex:component>

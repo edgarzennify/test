@@ -1,0 +1,3 @@
+<apex:page controller="LoanApplicationSnapshotController" action="{!GenerateSnapShot}" >
+    {!serviceResponse}
+</apex:page>

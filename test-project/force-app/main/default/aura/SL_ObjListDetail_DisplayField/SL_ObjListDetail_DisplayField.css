@@ -1,0 +1,56 @@
+.THIS a:link {
+    /*Display the content of <a> in same line and not in next line */
+    display: inline;
+    color: rgb(37, 116, 169);
+}
+
+.THIS.object-display-field {
+    display: flex;
+    padding: .25rem 0;
+    border: none;
+}
+
+.THIS.object-display-field:last-child {
+    border: none;
+}
+
+.THIS .displayData {
+    /*Display the content inside the card and not overflow outside the main div*/
+    display: inline-block;
+    overflow: hidden;
+    max-width: 100%;
+    white-space: pre-line;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-word;
+    color: rgb(37, 116, 169);
+    padding: 0;
+    font-size: 14px;
+}
+
+.THIS .displayData .heading {
+    text-decoration: underline;
+    font-size: 16px;
+}
+
+.THIS .displayData .label,
+.THIS .displayData .value {
+    color: #000;
+    font-size: 14px;
+    text-decoration: none;
+    padding: 0;
+}
+
+.THIS .uiOutputRichText {
+    /*standard css class uiOutputRichText. To display in same line*/
+    display: inline;
+    white-space: pre-line;
+    font-size: 110%;
+}
+
+.THIS .value1 {
+    display: inline;
+    font-size: .875rem;
+    font-weight: 400;
+    flex: 3;
+}

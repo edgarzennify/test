@@ -1,0 +1,5 @@
+<apex:page title="Reporting Services" tabStyle="Reporting_Services__tab" >
+    <apex:sectionHeader title="Reporting Services" />
+    <hr/>
+    <apex:iframe src="apex/EbridgeFolder?folderId=2753" />
+</apex:page>

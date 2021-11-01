@@ -1,0 +1,78 @@
+.THIS {
+    border: none;
+}
+
+.THIS .slds-table--bordered {
+    border-top: none;
+}
+
+.THIS .customCircularImage {
+    border-radius: 50%;
+}
+
+.THIS .closeIcon .slds-icon {
+    fill: white !important;
+}
+
+.THIS .customProfilePicPrimaryFieldWrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: .5rem 0;
+    background-color: rgb(244, 246, 249);
+}
+
+.THIS .customEmployeeCardWrapper {
+    display: flex;
+    padding: .5rem .75rem;
+}
+
+.THIS .customInfoTextWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.THIS .customPrimaryFieldWrapper {
+    padding: .25rem .5rem .25rem .5rem;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.THIS .customPrimaryField {
+    font-weight: 300;
+    color: #2359A8;
+    font-size: 1.25rem;
+    word-wrap: break-word;
+    margin: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 1.25;
+}
+
+.THIS .customPrimaryField a {
+    color: inherit;
+    /* text-decoration: underline; */
+}
+
+.THIS .customSecondaryFieldsWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* flex-wrap: wrap;
+    border-top: 1px;
+    border-top-style: solid;
+    border-top-color: rgb(216, 221, 230); */
+}
+
+.THIS #imgClass img {
+    /* border-radius: 50%; */
+}
+
+@media only screen and (min-width: 724px) {
+    .THIS .modalProperty {
+        top: 5rem;
+        width: 70%
+    }
+}

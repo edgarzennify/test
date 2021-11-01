@@ -1,0 +1,16 @@
+<apex:page standardController="EB_Event_Session__c" extensions="EventAttendanceClearController" sidebar="false" action="{!init}">
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="1" rendered="{!vm.renderVerify}">
+                Are you sure you want to clear the attendance for {!EB_Event_Session__c.Event_Name__c}? 
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" rendered="{!vm.renderSuccess}">
+                Success!            
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons id="closeButton">
+                <apex:commandButton rendered="{!vm.renderOkButton}" action="{!clearAttendance}" value="OK"/>
+                <apex:commandButton rendered="{!vm.renderCloseButton}" action="{!close}" value="Close"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

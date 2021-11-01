@@ -1,0 +1,25 @@
+<apex:page standardcontroller="Account" lightningStylesheets="true">
+    <apex:form >
+        <!--<apex:pageBlock title="Fake Man">
+            <apex:pageBlockSection >
+                <apex:inputField label="Name (same as doc name) " value="{!LLC_BI__AccountDocument__c.Name}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:inputField label="EntityId" value="{!LLC_BI__AccountDocument__c.LLC_BI__Account__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                 <apex:inputField label="Portal Enabled?" value="{!LLC_BI__AccountDocument__c.LLC_BI__Portal_Enabled__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:inputField label="Doc Description" value="{!LLC_BI__AccountDocument__c.LLC_BI__Portal_Doc_Description__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:inputField label="Doc Name" value="{!LLC_BI__AccountDocument__c.LLC_BI__Portal_Doc_Name__c}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!save}" value="Save" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>-->        
+    </apex:form>
+    <apex:relatedList list="LLC_BI__AccountDocuments__r" />
+</apex:page>

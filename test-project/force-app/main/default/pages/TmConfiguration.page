@@ -1,0 +1,21 @@
+<apex:page title="TM Service Configuration"
+    controller="TmConfigurationController"
+    docType="html-5.0"
+    showHeader="false" 
+    sidebar="false"
+    standardStylesheets="false" 
+    applyHtmlTag="false">
+    
+     <html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>TM Configuration</title>
+    </head>
+    <body>
+        <div id="react-app"></div>
+        <script type="text/javascript">
+        </script>
+    </body>
+</html>
+</apex:page>

@@ -1,0 +1,68 @@
+<apex:page standardController="EB_Team_Member__c" extensions="DirectorExtension">
+<apex:form >
+<style type="text/css">
+.myLinkClass:link {text-decoration:none;color:#015BA7;}
+.myLinkClass:hover {text-decoration:underline;color:#015BA7;}
+</style>
+	
+	
+	<apex:pageblock rendered="{!IF(hasAccess='true',false,true)}">	
+	<b>Insufficient Privileges</b><br/><br/>
+	You do not have the level of access necessary to view this information. Please contact the owner of the record or your administrator if access is necessary. <br/>
+
+	
+	</apex:pageblock>
+	<div id="boardinfo">
+		<apex:pageblock title="Board Memberships" id="memberships" rendered="{!IF(hasAccess='true',true,false)}">
+			<apex:pageblocktable value="{!bdas}" var="c"  style="overflow:auto">
+				<!-- 
+				<apex:column headerValue="Action" style="text-decoration:none;color:blue;">
+                    <apex:commandLink action="{!editMembership}" style="text-decoration:none;color:#015BA7;">
+                    	Edit
+                    	<apex:param name="boardMemberChosen" value="{!c.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+                    <apex:outputLabel rendered="{!CanDelete=='true'}" style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+                    <apex:commandLink rendered="{!CanDelete=='true'}" action="{!deleteMembership}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+                    	Del
+                    <apex:param name="boardMemberChosen" value="{!c.Id}" assignTo="{!boardMemberChosen}" /> 
+                	</apex:commandLink>
+                </apex:column>
+                -->
+                <apex:column headervalue="Board Name" >
+                <apex:commandLink onclick="window.top.location='/{!c.Board__r.id}'">{!c.Board__r.Name}</apex:commandLink>
+                </apex:column>
+				<!-- <apex:column value="{!c.Board__r.Name}" />-->
+ 				<apex:column value="{!c.Role__c}" />
+				<apex:column value="{!c.Date_Elected__c}"/>
+				<apex:column value="{!c.Compensation_Type__c}" />
+			</apex:pageblocktable>
+			<div style="text-align:right;">
+				<apex:outputText value="{!bda_previous}" style="text-decoration:none;color:#999;" rendered="{!IF(bda_showPrev='true',false,true)}"></apex:outputText>
+				<apex:commandLink action="{!bda_getPrev}" reRender="memberships"  styleClass="myLinkClass" rendered="{!IF(bda_showPrev='true',true,false)}"><apex:outputText value="{!bda_Previous}"></apex:outputText></apex:commandLink>
+				<apex:outputLabel style="text-decoration:none;color:#999;">&nbsp;|&nbsp;</apex:outputLabel>
+				<apex:outputText value="{!bda_next}" style="text-decoration:none;color:#999;" rendered="{!IF(bda_showNext='true',false,true)}"></apex:outputText>
+				<apex:commandLink action="{!bda_getNext}" reRender="memberships"  styleClass="myLinkClass" rendered="{!IF(bda_showNext='true',true,false)}"><apex:outputText value="{!bda_Next}"></apex:outputText></apex:commandLink>
+			</div>
+		</apex:pageblock>
+		<apex:pageblock title="Board Meeting Attendance" id="attendance" rendered="{!IF(hasAccess='true',true,false)}">	
+			
+			<apex:pageblocktable value="{!bmas}" var="c" style="overflow:auto">
+					   
+		       <apex:column headervalue="Board Meeting" >
+		       <apex:commandLink onclick="window.top.location='/{!c.Board_Meeting__r.Id}'">{!c.Name__c}</apex:commandLink>
+		                	</apex:column>
+				<apex:column value="{!c.Attended_Meeting__c}" />
+				<apex:column value="{!c.How_Attended__c}" />
+				<apex:column value="{!c.Compensation_Type__c}" />
+			</apex:pageblocktable>
+			<div style="text-align:right;">
+			<apex:outputText value="{!bma_previous}" style="text-decoration:none;color:#999;" rendered="{!IF(bma_showPrev='true',false,true)}"></apex:outputText>
+			<apex:commandLink action="{!bma_getPrev}" reRender="attendance"  styleClass="myLinkClass" rendered="{!IF(bma_showPrev='true',true,false)}"><apex:outputText value="{!bma_Previous}"></apex:outputText></apex:commandLink>
+			<apex:outputLabel style="text-decoration:none;color:#999;">&nbsp;|&nbsp;</apex:outputLabel>
+			<apex:outputText value="{!bma_next}" style="text-decoration:none;color:#999;" rendered="{!IF(bma_showNext='true',false,true)}"></apex:outputText>
+			<apex:commandLink action="{!bma_getNext}" reRender="attendance"  styleClass="myLinkClass" rendered="{!IF(bma_showNext='true',true,false)}"><apex:outputText value="{!bma_Next}"></apex:outputText></apex:commandLink>
+			</div>
+		</apex:pageblock>
+	</div>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,67 @@
+<apex:page title="Pricing Worksheet" controller="PricingWkstController" action="{!initialize}" showHeader="true" sidebar="true" tabStyle="Account" >
+    <apex:stylesheet value="{!URLFOR($Resource.pricingwkst, 'pricingwkst.css')}"/>
+    <div id="hideAll">
+    <apex:form >
+    <apex:outputPanel id="entirePage" >
+
+        <c:LoadingOverlay />
+        <apex:inputText style="width:0px;visibility: collapse;" />
+        <apex:outputLink value="{!URLFOR($Action.Account.View,currentWorksheet.Entity__c)}">Return</apex:outputLink>
+        <apex:sectionHeader title="Pricing Worksheet" subtitle="{!currentWorksheet.Entity__r.Name}" printUrl="/apex/PricingWkstPDF?id={!currentWorksheet.Id}"/>
+        <c:PricingWkstROESummary pricingResult="{!pricingResults}" isEditable="true" />
+        <c:PricingWkstAcctRemovals pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="true" />
+        <c:PricingWkstLoans pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="true" />
+        <c:PricingWkstDeposits pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="true" />
+        <c:PricingWkstNonIntIncome pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="true" />
+        
+        <apex:outputLabel value="Comments" style="font-weight:bold;"/><br/>
+        <apex:inputTextarea value="{!currentWorksheet.Comments__c}" style="width:800px;" >
+            <apex:actionSupport event="onchange" action="{!savePricingWorksheet}" reRender="none"/>
+        </apex:inputTextarea>
+        <p/>
+
+        <apex:pageBlock id="hierarchy" title="Hierarchy">
+            <apex:pageBlockSection id="relationshipTree" title="Relationship Tree" onclick="toggleRelationshipTree();">
+                    <c:ParentRelationshipDisplay currentAccountId="{!currentWorksheet.Entity__r.id}" staticDisplay="false" rendered="{!displayRelationshipTree}" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+
+        <!-- Used with js to properly expand/collapse the relationshipTree via viewstate -->
+        <apex:actionFunction name="hideRelationshipTree" action="{!hideRelationshipTree}" ></apex:actionFunction>
+        <apex:actionFunction name="showRelationshipTree" action="{!showRelationshipTree}" ></apex:actionFunction>
+        
+        <script>
+            // default the relationshipTree to collapsed
+            {!displayRelationshipTree} ? expandRelationshipTree() : collapseRelationshipTree();
+            
+            function toggleRelationshipTree() {
+                let element = document.getElementById('{!$Component.hierarchy.relationshipTree}').getElementsByTagName('img')[0];
+                let altAttribute = element.getAttribute('alt');
+
+                altAttribute.toLowerCase().includes('hide') ? showRelationshipTree() : hideRelationshipTree();
+            }
+
+            function expandRelationshipTree() {
+                twistSection(document.getElementById('{!$Component.hierarchy.relationshipTree}').getElementsByTagName('img')[1]); // expanded
+            }
+
+            function collapseRelationshipTree() {
+                twistSection(document.getElementById('{!$Component.hierarchy.relationshipTree}').getElementsByTagName('img')[0]); // collapsed
+            }
+        </script>
+
+        <center>
+            <apex:commandButton value=" Save Snapshot of Pricing Worksheet " action="{!saveWorksheetAsAttachment}" status="loadStatus" reRender="entirePage" oncomplete="window.open('{!newpageUrl}')" style="margin-right:60px"/>
+            <apex:selectList value="{!selectedLoanPacket}" multiselect="false" size="1" rendered="{!relatedLoanPackets.size!=0}">
+                <apex:selectOptions value="{!relatedLoanPackets}"/>
+            </apex:selectList>
+            <apex:commandButton value=" Save Snapshot to Selected Loan Packet " action="{!saveWorksheetAsAttachmentOnLoanPacket}" status="loadStatus" reRender="entirePage" oncomplete="window.open('{!newpageUrl}')" rendered="{!relatedLoanPackets.size!=0}"/>
+        </center>
+
+         <c:Attachments idOfParent="{!currentWorksheet.Id}" refreshNeeded="{!refreshAttachments}"/>
+
+    </apex:outputPanel>
+
+    </apex:form>
+    </div>
+</apex:page>

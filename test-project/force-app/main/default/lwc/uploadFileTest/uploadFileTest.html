@@ -1,0 +1,12 @@
+<template>
+	<template for:each={requestDocs} for:item="doc">
+		<lightning-file-upload
+			key={doc.documentRequestId}
+			label={doc.documentName}
+			name={doc.documentRequestId}
+			accept={acceptedFormats}
+			record-id={doc.documentRequestId}
+			onuploadfinished={handleUploadFinished}>
+		</lightning-file-upload>
+	</template>
+</template>

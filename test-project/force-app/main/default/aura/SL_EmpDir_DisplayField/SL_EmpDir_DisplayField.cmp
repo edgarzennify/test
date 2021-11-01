@@ -1,0 +1,107 @@
+<aura:component >
+    <aura:attribute name="record" type="sObject" />
+    <aura:attribute name="fieldApiName" type="String" />
+    <aura:attribute name="fieldValue" type="String" />
+    <aura:attribute name="fieldType" type="object" />
+    <aura:attribute name="fieldLabel" type="object" />
+    <aura:attribute name="ShowFieldLabel" type="Boolean" default="true" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:if isTrue="{!v.fieldValue}">
+        <div class="customAnyContentWrapper">
+            <aura:if isTrue="{!v.fieldType == 'DATETIME' || v.fieldType == 'TIME'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputDateTime value="{!v.fieldValue}" format="MM/DD/YYYY h:mm a" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'STRING' || v.fieldType == 'COMBOBOX' || v.fieldType == 'ID' || v.fieldType == 'ENCRYPTEDSTRING' || v.fieldType == 'BASE64' || v.fieldType == 'PICKLIST' ||  v.fieldType == 'MULTIPICKLIST' || v.fieldType == 'REFERENCE' || v.fieldType == 'PHONE'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value custom-employee-text' : 'valueFullWidth custom-employee-text'}">
+                    <ui:outputText value="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'BOOLEAN'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputCheckbox value="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'CURRENCY'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputCurrency value="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'DOUBLE' || v.fieldType == 'INTEGER' || v.fieldType == 'PERCENT'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <aura:if isTrue="{!v.fieldType == 'PERCENT'}">
+                        <ui:outputNumber value="{!v.fieldValue}" />%
+                        <aura:set attribute="else">
+                            <ui:outputNumber value="{!v.fieldValue}" />
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'EMAIL'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputEmail value="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'DATE'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputDate value="{!v.fieldValue}" format="MM/DD/YYYY" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'TEXTAREA'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputTextArea value="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'RICHTEXT'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputRichText value="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'URL'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'value' : 'valueFullWidth'}">
+                    <ui:outputURL value="{!v.fieldValue}" label="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'IMAGE'}">
+                <aura:if isTrue="{!v.ShowFieldLabel}">
+                    <div class="label">{!v.fieldLabel}: </div>
+                </aura:if>
+                <div class="{!v.ShowFieldLabel ? 'employee-element employee-image' : 'employee-element employee-image'}">
+                    <img src="{!v.fieldValue}" />
+                </div>
+            </aura:if>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,26 @@
+<apex:component >
+    <apex:attribute name="elementSymbol" type="String" description="" />
+    <apex:attribute name="elementType" type="String" description="" />
+    <apex:attribute name="elementSummary" type="String" description="" />
+    <apex:attribute name="existingValue" type="String" description="" />
+    <apex:attribute name="existingPercent" type="String" description="" />
+    <apex:attribute name="existingSummary" type="String" description="" />
+    <apex:attribute name="opportunityValue" type="String" description="" />
+    <apex:attribute name="opportunityPercent" type="String" description="" />
+    <apex:attribute name="opportunityProbability" type="String" description="" />
+    <apex:attribute name="opportunitySummary" type="String" description="" />
+     <div class="element-container" title="{!elementSummary}">
+      <div class="header header-{!elementType}">{!elementSymbol}</div> 
+      <div class="detail" title="{!opportunitySummary}">
+         <div class="opportunity">
+           <div class="percent-{!opportunityPercent} content">{!opportunityValue}</div>
+         </div>  
+      </div>
+      <div class="detail opportunity-probability">
+        <div class="percent-{!opportunityProbability}"></div>
+      </div>
+      <div class="detail detail-{!elementType}" title="{!existingSummary}">
+        <div class="percent-{!existingPercent} content">{!existingValue}</div>
+      </div> 
+    </div>
+</apex:component>

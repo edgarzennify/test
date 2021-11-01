@@ -1,0 +1,52 @@
+<apex:component controller="Entity360RelationshipComponentController" >
+    <apex:stylesheet value="{!URLFOR($Resource.Entity360_css)}" />
+    <apex:attribute name="currentAccountId" type="String" description="" assignTo="{!entityId}" />
+    <apex:pageBlock title="Relationship 360" >
+        <table>
+           <tr>
+                <td>
+                   <div id="primary-rel-left-label">
+                        <p>"{!entityAggregateViewModel.EntityName}" Relationship</p>
+                    </div>
+                </td>          
+                <td class="aggregate-on-relationship-view"> 
+                    <apex:repeat value="{!entityAggregateViewModel.Elements}" var="e" >                                         
+                        <c:Entity360Element elementSymbol="{!e.elementSymbol}"
+                            elementType="{!e.elementType}"
+                            elementSummary="{!e.elementSummary}"
+                            existingValue="{!e.existingValue}"
+                            existingSummary="{!e.existingSummary}"
+                            existingPercent="{!e.existingPercent}"
+                            opportunityValue="{!e.opportunityValue}"
+                            opportunityPercent="{!e.opportunityPercent}"
+                            opportunityProbability="{!e.opportunityProbability}"
+                            opportunitySummary="{!e.opportunitySummary}" />
+                    </apex:repeat>
+                </td>           
+            </tr>
+            <tr height="30px">
+            </tr>
+            <apex:repeat value="{!entityViewModels}" var="entityVm" >
+            <tr>
+                    <td>
+                        <div class="relatedEntityName"><label>{!entityVm.EntityName}</label></div> 
+                    </td>
+                    <td>   
+                        <apex:repeat value="{!entityVm.Elements}" var="e" >                       
+                            <c:Entity360Element elementSymbol="{!e.elementSymbol}"
+                                elementType="{!e.elementType}"
+                                elementSummary="{!e.elementSummary}"
+                                existingValue="{!e.existingValue}"
+                                existingSummary="{!e.existingSummary}"
+                                existingPercent="{!e.existingPercent}"
+                                opportunityValue="{!e.opportunityValue}"
+                                opportunityPercent="{!e.opportunityPercent}"
+                                opportunityProbability="{!e.opportunityProbability}"
+                                opportunitySummary="{!e.opportunitySummary}" />
+                        </apex:repeat>
+                    </td>
+            </tr> 
+            </apex:repeat>
+        </table>
+    </apex:pageBlock>
+</apex:component>

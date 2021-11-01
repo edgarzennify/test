@@ -1,0 +1,119 @@
+<apex:component >
+<apex:attribute type="EB_Appraisal_Order__c" name="appraisalOrder" description="CH IH"/>
+<apex:pageBlockSection title="{!appraisalOrder.Related_Collateral__r.Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Total_Land_Area_Acres__c.inlineHelpText}">
+    <apex:outputLabel value="Total Land Area/Acres" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Total_Land_Area_Acres__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Gross Bldg Area" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Gross_Bldg_Area__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Rentable Sq Ft" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Rentable_Sq_Ft__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Stories" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Number_of_Stories__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Percent_Occupied__c.inlineHelpText}">
+    <apex:outputLabel value="Percent Occupied" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Percent_Occupied__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Tenants" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Number_of_Tenants__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Year Built" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Year_Built__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Buildings" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Number_of_Buildings__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="{!appraisalOrder.OREO_Account__r.OREO_Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Account__c.Fields.Total_Land_Area_Acres__c.inlineHelpText}">
+    <apex:outputLabel value="Total Land Area/Acres" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Total_Land_Area_Acres__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Gross Bldg Area" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Gross_Bldg_Area__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Rentable Sq Ft" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Rentable_Sq_Ft__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Stories" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Number_of_Stories__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Account__c.Fields.Percent_Occupied__c.inlineHelpText}">
+    <apex:outputLabel value="Percent Occupied" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Percent_Occupied__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Tenants" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Number_of_Tenants__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Year Built" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Year_Built__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Buildings" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Number_of_Buildings__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:component>

@@ -1,0 +1,379 @@
+<apex:page docType="html-5.0"
+    controller="GatewayApiController" 
+    showHeader="false"
+    standardStylesheets="false"
+    title="Ebridge Folder Navigator">
+    
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.4/react-dom.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+    <style>
+        body{background-color:transparent;}
+        .ebridge-container {
+            /*margin-right: 2px;*/
+        }
+        .fa-ul {
+            margin-left: 23px;
+        }
+        .breadcrumb-bar {
+            padding: 2px;
+            background-color: #f9f9f9;
+            color: #bbbbbb;
+            margin-bottom: 5px;
+        }
+
+            .breadcrumb-bar a:link {
+                color: #888888;
+            }
+
+        .breadcrumb-divider {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .search-block {
+            font-size: small;
+            margin-bottom: 5px;
+            max-width: 300px;
+        }
+
+        .search-results {
+            color: #666666;
+            background-color: #f9f9f9;
+            padding: 2px;
+        }
+
+        .input-xs {
+            height: 22px!important;
+            padding: 2px 5px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+        }
+
+        .input-group-xs > .form-control,
+        .input-group-xs > .input-group-addon,
+        .input-group-xs > .input-group-btn > .btn {
+            height: 22px;
+            padding: 1px 5px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        #btnSearch {
+            width:35px;
+        }
+    </style>
+    <div id="container" />
+    <script type="text/babel">
+        class Loader extends React.Component {
+            render() {
+                return (
+                    <ul className="fa-ul">
+                        <li><i className="fa fa-li fa-refresh fa-spin" />{this.props.message}</li>
+                    </ul>
+                );
+            }
+        }
+
+        class Search extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { value: this.props.query };
+
+                this.handleKeyPress = this.handleKeyPress.bind(this);
+                this.handleChange = this.handleChange.bind(this);
+                this.handleSubmit = this.handleSubmit.bind(this);
+                this.handleClear = this.handleClear.bind(this);
+            }
+
+            handleKeyPress(e) {
+                if (e.charCode === 13) {
+                    this.handleSubmit(e);
+                }
+            }
+
+            handleChange(e) {
+                this.setState({value:e.target.value}, function(){
+                    if(this.state.value.length > 2){
+                        this.handleSubmit(e);
+                    }else if(this.props.query != ""){
+                        this.props.clickBehavior("");
+                    }
+                }.bind(this));                
+            }
+
+            handleSubmit(e) {
+                this.props.clickBehavior(this.state.value);
+            }
+
+            handleClear(e) {
+                this.setState({value: ""}, function(){
+                    this.handleSubmit(e);
+                }.bind(this));
+            }
+
+            render() {
+                var btnClass = "btn btn-default";
+                if(this.props.query.length > 0){
+                    btnClass = "btn btn-primary";
+                }
+                return (
+                    <div className="search-block">
+                        <div className="input-group input-group-xs">
+                            <span className="input-group-addon">
+                                <i className="fa fa-search" />
+                            </span>
+                            <input className="form-control" id="searchTerm" type="text" 
+                                value = {this.state.value}
+                                onChange={this.handleChange}
+                                onKeyPress={this.handleKeyPress} placeholder="Search..." />
+                            <span className="input-group-btn">
+                                <button id="btnSearch" className={btnClass} onClick={this.handleClear} title="Clear search">
+                                    <i className="fa fa-close" />
+                                </button>
+                            </span>
+                        </div>                        
+                    </div>
+                );
+            }
+        }
+        
+        class Folder extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleClick = this.handleClick.bind(this);
+            }
+
+            handleClick(e) {
+                this.props.clickBehavior(this.props.link);
+            }
+
+            render() {
+                if (this.props.link === null) {
+                    return (<li></li>);
+                } else {
+                    return (
+                        <li>
+                            <a href="javascript:void(0)" onClick={this.handleClick} >
+                                <i className="fa fa-li fa-folder-open fa-pull-left" />{this.props.link.Description}
+                            </a>
+                        </li>
+                    );
+                }
+            }
+        }
+
+        class Link extends React.Component {
+            render(){
+                return (
+                    <li>
+                        <a href={this.props.url} target="_blank">
+                            <i className="fa fa-li fa-external-link fa-pull-left" />{this.props.description}
+                        </a>
+                    </li>
+                )
+            }
+        }
+
+        class BreadcrumbBar extends React.Component {
+            render() {
+                var data = this.props.data != null ? this.props.data : [];
+                var onclick = this.props.clickBehavior;
+                var results = [];
+                if (data.length > 0) {
+                    results.push(<Breadcrumb key={"home"+data[0].LinkId} link={data[0]} 
+                        clickBehavior={onclick} home="true" query={this.props.query}/>);
+                }
+                data.slice(1, data.length).map(function(c) {
+                    results.push(<Breadcrumb key={"bc"+c.LinkId} link={c} clickBehavior={onclick} />);
+                });
+                if (data.length > 0) {
+                    results.push(<Breadcrumb key={"last"+data[data.length - 1].LinkId} link={data[data.length - 1]} last="true" />);
+                }
+                return (
+                    <div className="breadcrumb-bar" >
+                        {results}
+                    </div>
+                );
+            }
+        }
+
+        class Breadcrumb extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleClick = this.handleClick.bind(this);
+            }
+
+            handleClick(e) {
+                this.props.clickBehavior(this.props.link);
+            }
+
+            render() {
+                var crumbTitle = "Back to " + this.props.link.ParentDescription;
+                var homeClass = "fa fa-home";
+                var homeTitle = "Back to Home";
+                if(this.props.query != ""){
+                    homeClass = "fa fa-search";
+                    homeTitle = "Back to search results";
+                }
+                if (this.props.home === "true") {
+                    return (
+                        <span>
+                            <a href="javascript:void(0)" onClick={this.handleClick} title={homeTitle}>
+                                <i className={homeClass} />
+                            </a>
+                        </span>
+                    );
+                }else if (this.props.last === "true") {
+                    return (
+                        <span>
+                            <i className="fa fa-angle-right breadcrumb-divider" />
+                            {this.props.link.Description}
+                        </span>
+                    );
+                } else {
+                    return (
+                        <span>
+                            <i className="fa fa-angle-right breadcrumb-divider" />
+                            <a href="javascript:void(0)" onClick={this.handleClick} title={crumbTitle}>
+                                {this.props.link.ParentDescription}
+                            </a>
+                        </span> 
+                    );
+                }
+            }
+        }
+        
+        class EbridgeFolder extends React.Component {
+            render() {
+                var data = this.props.data != null ? this.props.data : [];
+                var header = [];
+                if (this.props.breadcrumb.length > 0) {
+                    header.push(<BreadcrumbBar key="crumbs" data={this.props.breadcrumb} 
+                    clickBehavior={this.props.crumbClickBehavior}
+                    query={this.props.query} />);
+                } else {
+                    header.push(<Search key="search" searchText={this.props.query} clickBehavior={this.props.searchClickBehavior} query={this.props.query} />);
+                }
+                var results = [];
+                data.map(function(x) {
+                    if (x.IsFolder === true) {
+                        results.push(<Folder key={x.LinkId} link={x} clickBehavior={this.props.folderClickBehavior} />);
+                    } else {
+                        results.push(<Link key={x.LinkId} url={x.Url} description={x.Description} />);
+                    }
+                }.bind(this));
+                return (
+                    <div className="ebridge-container" >
+                        {header}
+                        <ul className="fa-ul">
+                        {results}
+                        </ul>
+                    </div>
+                );
+            }
+        }
+
+        class EbridgeFolderController extends React.Component {
+            constructor(props) {
+                super(props);
+
+                this.initialize = this.initialize.bind(this);
+                this.handleFolderClick = this.handleFolderClick.bind(this);
+                this.handleCrumbClick = this.handleCrumbClick.bind(this);
+                this.handleSearch = this.handleSearch.bind(this);
+                this.fetchData = this.fetchData.bind(this);
+
+                this.state = { data: [], loading: false, breadcrumb: [], rootId: [], query: [] };
+            }
+
+            initialize() {
+                this.fetchData({
+                    folderId: this.props.folderId,
+                    success: function() {
+                        this.setState({ rootId: this.props.folderId });
+                    }.bind(this)
+                });
+            }
+
+            handleFolderClick(link) {
+                this.fetchData({
+                    folderId: link.LinkId,
+                    success: function() {
+                        this.state.breadcrumb.push(link);
+                        this.setState({ breadcrumb: this.state.breadcrumb });
+                    }.bind(this)
+                });
+            }
+
+            handleCrumbClick(link) {
+                var index = this.state.breadcrumb.indexOf(link);
+                if (this.state.query !== "" && index === 0) {
+                    this.handleSearch(this.state.query);
+                } else {
+                    this.fetchData({
+                        folderId: link.ParentId,
+                        success: function() {
+                            this.setState({ breadcrumb: this.state.breadcrumb.slice(0, index) });
+                        }.bind(this)
+                    });
+                }
+            }
+
+            handleSearch(query) {
+                this.fetchData({
+                    folderId: this.state.rootId,
+                    query: query,
+                    success: function() {
+                        this.setState({ query: query, breadcrumb: [] });
+                    }.bind(this)
+                });
+            }
+
+            fetchData(request) {
+                this.setState({ loading: true });
+                var q = typeof request.query === "undefined" ? "" : request.query;
+                Visualforce.remoting.Manager.invokeAction("{!$RemoteAction.GatewayApiController.get}"
+                    ,"EbridgeUrl","/folders/"+request.folderId+"?search="+q,60
+                    ,function(result, event){
+                        if (event.status) {
+                            this.setState({data: JSON.parse(result)}); 
+                            if(request.success != null && typeof request.success !== "undefined") request.success();
+                        } else {                            
+                            console.log(event);
+                            if(request.error != null && typeof request.error !== "undefined") request.error();
+                        }
+                        this.setState({loading:false});                        
+                     }.bind(this)
+                     ,{escape: false}
+                );
+            }
+
+            componentDidMount() {
+                this.initialize();
+            }
+
+            render() {
+                return (
+                    <EbridgeFolder 
+                        data={this.state.data} 
+                        folderClickBehavior={this.handleFolderClick}
+                        crumbClickBehavior={this.handleCrumbClick}
+                        searchClickBehavior={this.handleSearch}
+                        breadcrumb={this.state.breadcrumb}
+                        query={this.state.query}
+                    />
+                );
+            }
+        }     
+
+        ReactDOM.render(
+          <EbridgeFolderController folderId="{!$CurrentPage.parameters.folderId}" />,
+          document.getElementById('container')
+        );
+    </script>
+</apex:page>

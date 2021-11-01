@@ -1,0 +1,25 @@
+<apex:component controller="BarcodeGeneratorDropzoneController" allowDML="true">
+<apex:attribute name="objectId" type="string" required="true" description="" assignTo="{!objectIdAttribute}"/>
+<apex:attribute name="uploadSplit" type="boolean" required="false" description="" assignTo="{!isUploadSplit}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.jquery_1_9_1, '/jquery.min.js')}" />
+<apex:includeScript value="{!URLFOR($Resource.bootstrap_3_3_5, '/bootstrap.min.js')}" />
+    
+<script type="text/javascript">
+
+    var jq$ = jQuery.noConflict(true);
+    var contextId = "{!objectIdAttribute}";
+    var email = "{!$User.Email}";
+    var chunkCharCount = 750000;
+    var tokenInfo= "{!tokenInfo}";
+    var isUploadSplit = false;
+    if ({!isUploadSplit})
+        isUploadSplit = true;
+
+</script>
+    <div id="react-dropzone-app"></div>
+
+<apex:includeScript value="{!URLFOR($Resource.DocumentUploadReactify, '/dropZoneClientApp.js')}" />
+
+
+</apex:component>

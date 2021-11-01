@@ -1,0 +1,3 @@
+<apex:page standardController="EB_Loan_Application__c" extensions="SynchronizeWithdrawnLoanController" action="{!ArchiveWithdrawnApp}" >
+ <apex:pageMessages />
+</apex:page>

@@ -1,0 +1,76 @@
+@media only screen and (min-width: 724px) {
+    .THIS .label {
+        /* width: 30%; */
+        height: 100%;
+        margin-right: .5rem;
+    }
+    .THIS .value {
+        width: 70%;
+        height: 100%;
+    }
+    .THIS .valueFullWidth {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media only screen and (max-width: 724px) {
+    .THIS .label1 {
+        width: 30%;
+        float: left;
+        height: 100%;
+    }
+}
+
+.THIS .employee-element {
+    margin-right: .5rem;
+}
+
+.THIS a:link {
+    /*Display the content of <a> in same line and not in next line */
+    display: inline;
+    color: rgb(0, 112, 210);
+}
+
+.THIS .displayData {
+    /*Display the content inside the card and not overflow outside the main div*/
+    overflow: hidden;
+    white-space: normal;
+    display: inline-block;
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-word;
+    padding: 0;
+}
+
+.THIS.customAnyContentWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.THIS .employee-image {
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    overflow: hidden;
+}
+
+.THIS .employee-image img {
+    max-width: 100%;
+}
+
+.THIS .uiOutputRichText {
+    /*standard css class uiOutputRichText. To display in same line*/
+    display: inline;
+}
+
+.THIS .custom-employee-text {
+    display: flex;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.THIS .custom-employee-text .uiOutputText {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

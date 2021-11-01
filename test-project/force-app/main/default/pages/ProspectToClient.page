@@ -1,0 +1,38 @@
+<apex:page standardController="Account" extensions="ProspectToClientController">
+    <script language="javascript">
+    function showConfirm(selected_text){
+        p = "{!ProspectSelected}";        
+        p = p.replace(/'/gi, '\'');        
+        return confirm("Are you sure you want to merge prospect \"" + p + "\" with client \"" + selected_text + "\"?");
+    }
+    </script>
+    <apex:form >
+        <apex:pageBlock title="Convert {!Quotes}{!ProspectSelected}{!Quotes} to Client" mode="edit" >
+            <div style="padding:4px;">
+            <div style="padding:4px;">Please use search to select an existing Client to be merged with {!Quotes}{!ProspectSelected}{!Quotes}</div>
+            <div style="padding:4px;">
+           <!-- <strong>
+                <apex:outputLabel value="Search: " for="lookup"></apex:outputLabel></strong>
+                <apex:actionRegion >
+                    <apex:inputText id="lookup"  value="{!searchParam}">
+                        <apex:actionSupport action="{!SetSearch}" event="onkeyup" timeout="5000" reRender="gridresults" status="searchStatus"/>
+                    </apex:inputText>
+                </apex:actionRegion>-->
+             <apex:inputText id="lookup" value="{!searchParam}" />
+             <apex:commandButton value="Search"  action="{!SetSearch}"/>
+             <apex:outputlabel value="(Over 100 results were returned. Consider revising your search to help find an entity faster.)" rendered="{!getRefineSearchStatus}" style="text-decoration:none;color:red;"  />
+           </div>
+                <apex:outputPanel id="gridresults">
+                    <apex:actionStatus startText="searching..." id="searchStatus"/>
+                    <apex:pageBlockTable id="dlclients" value="{!ClientNames}" frame="hsides" var="c"  first="1"  >
+                               <apex:column headerValue="Clients">
+                                <apex:commandLink onclick="return showConfirm('{!c.label}');" action="{!SaveClient}" id="txt" value="{!c.label}">
+                                    <apex:param assignTo="{!dropdownClientId}" name="selectedClient" value="{!c.value}" />
+                                </apex:commandLink>
+                               </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                </div>                 
+        </apex:pageBlock>
+    </apex:form>
+    </apex:page>

@@ -1,0 +1,35 @@
+<apex:page showHeader="false" controller="RenewalProcessingController" >
+  <html xmlns="http://www.w3.org/1999/xhtml">        
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <script language="javascript">
+                 function loadGraph() {
+             var frm = document.getElementById('post_form');
+             if (frm) {     
+                frm.action = 'https://chart.googleapis.com/chart?chid=' + (new Date()).getMilliseconds();
+                frm.submit();       
+             }     
+        }
+   </script>
+       </head>
+     
+         <body onload="loadGraph()">
+        <form id='post_form' method='POST' action='https://chart.googleapis.com/chart'>
+        <input type='hidden' name='chxr' value='0,0,60|1,0,365'/>         
+        <input type='hidden' name='chco' value='AACC00,000000'/>
+        <input type='hidden' name='chds' value='0,365,0,60,0,365,0,60'/>
+        <input type='hidden' name='cht' value='lxy'/>
+           <input type='hidden' name='chtt' value=''/>
+           <input type='hidden' name='chs' value='400x300'/>
+           <input type='hidden' name='chxt' value='y,x'/>
+           <input type='hidden' name='chd' value='{!DatasetTotal}' />
+           <input type='hidden' name='chdl' value='Loan Maturity|Loan Renewal'/>
+         <input type='hidden' name='chg' value='14.3,-1,1,6'/>
+         <input type='hidden' name='chls' value='0|1'/>
+         <input type='hidden' name='chm' value='B,AACC00BB,0,0,0'/>
+         <input type='hidden' name='chma' value='0,0,0,5|5'/>
+        </form>
+       </body>
+   
+     </html>
+  </apex:page>

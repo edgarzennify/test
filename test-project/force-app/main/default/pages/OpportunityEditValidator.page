@@ -1,0 +1,14 @@
+<!-- redirects to Entity Relationship Review Page if necessary, otherwise redirects to Opportunity Edit page -->
+<apex:page standardController="Opportunity" 
+           extensions="OpportunityEditRedirect" 
+           title="Opportunity Edit Redirection" 
+           tabStyle="Opportunity" 
+           showHeader="true" 
+           sidebar="true" 
+           showChat="true" 
+           cache="false" 
+           label="OpportunityEditRedirect" 
+           Name="OpportunityEditRedirect" 
+           action="{!determineDestination}"
+           LightningStylesheets="true" >
+</apex:page>

@@ -1,0 +1,16 @@
+<design:component label="SL Office">
+	<design:attribute name="sOfficeObject" label="Object name"  required="true" description="Office Object API name" />
+	<design:attribute name="sTZ" label="TimeZone field"  description="TimeZone Field API Name" />
+	<design:attribute name="sStripTags" label="Delete tags from Rich Textarea"  description="Set to false to leave tags in textarea fields" />
+    <design:attribute name="sPhoto" label="Photo field"  description="Photo field (URL or RichText) API Name" />
+	<design:attribute name="sAddress" label="Address field"  description="Address Field API Name" />	
+	<design:attribute name="sListFields" label="List View Fields"  description="Fields API Names for List View" />	
+	<design:attribute name="sDetailsFields" label="Details fields"  description="Fields API Names for Details Popup" />	
+	<design:attribute name="sFilter" label="Filter Criteria"  description="" />	
+	<design:attribute name="sSort" label="Sorting Field"  description="Sorting Field API Name" />	
+	<design:attribute name="bSortDesc" label="Sort Descending" />	
+	<design:attribute name="sGoogleKey" label="Google API Key"  description="Google Static Map API Key" />	
+	<design:attribute name="bDetailsButton" label="Show Details button"  description="Add Details Button to the Popup" />	
+	<design:attribute name="sDetailsUrl" label="Custom Details URL"  description="Custom Details URL like /page/[id]" />	
+	<design:attribute name="bHideLabels" label="Hide Fields Labels" />	
+</design:component>

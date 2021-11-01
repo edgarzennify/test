@@ -1,0 +1,4 @@
+<apex:page standardController="Agreement__c" extensions="ModifyAgreementController" action="{!ModifyCurrentAgreement}" >
+<apex:PageMessages />
+  Error modifying Agreement
+</apex:page>

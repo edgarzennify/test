@@ -1,0 +1,228 @@
+.THIS {
+    display: flex;
+    flex-direction: column;
+    padding: .5rem;
+}
+
+.THIS .slds-card__header--fix {
+    padding: 0;
+}
+
+.THIS .BorderWdth {
+    width: 100%;
+    margin-bottom: 9px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.THIS .itemTitle {
+    display: flex;
+    align-items: center;
+}
+
+.THIS .slds-type-focus {
+    border: none;
+}
+
+.THIS .BorderwdthppopUp {
+    width: 100%;
+    margin-bottom: 6px;
+    padding-top: 3px;
+}
+
+.THIS .leftAlign {
+    float: left;
+}
+
+.THIS .closeIcon .slds-icon {
+    fill: #fff !important;
+}
+
+.THIS .close-modal {
+    top: 1rem;
+    right: -2rem;
+}
+
+.THIS .modal-container__wrapper {
+    /*height: auto;*/
+    max-width: 50rem;
+}
+
+.THIS .customIcon .slds-icon {
+    fill: rgb(204, 204, 204);
+}
+
+.THIS .customIcon .slds-icon:hover {
+    fill: rgb(0, 112, 210) !important;
+}
+
+.THIS .hide {
+    display: none;
+}
+
+.THIS .divViewMode .forceContentFileCard {
+    width: auto !important;
+}
+
+.THIS .divViewMode .forceContentFileCard .uiImage {
+    display: none !important;
+}
+
+.THIS .divViewMode .forceContentFileCard .slds-file__crop {
+    padding-top: 51px !important;
+    z-index: 990;
+}
+
+.THIS .divViewMode .slds-image__title_card,
+.THIS .divViewMode .slds-image__title--card,
+.THIS .divViewMode .slds-file__title_card,
+.THIS .divViewMode .slds-file__title--card,
+.THIS .divViewMode .slds-image_card,
+.THIS .divViewMode .slds-image--card,
+.THIS .divViewMode .slds-file_card,
+.THIS .divViewMode .slds-file--card {
+    background: transparent !important;
+}
+
+.THIS .divViewMode .slds-image_card,
+.THIS .divViewMode .slds-image--card,
+.THIS .divViewMode .slds-file_card,
+.THIS .divViewMode .slds-file--card {
+    border: 0px !important;
+}
+
+.THIS .slds-file-selector_files .slds-file-selector__text,
+.THIS .slds-file-selector--files .slds-file-selector__text,
+.THIS .slds-file-selector_files .slds-file-selector__button,
+.THIS .slds-file-selector--files .slds-file-selector__button {
+    white-space: nowrap;
+}
+
+.THIS .divViewMode .slds-file__crop,
+.THIS .divViewMode .slds-file__crop img {
+    outline: none !important;
+    border: 0 !important;
+}
+
+.THIS .divViewMode .slds-file--card .slds-icon--x-small {
+    width: 32px !important;
+    height: 37px !important;
+}
+
+.THIS .divViewMode .slds-file--card .slds-media__body {
+    padding-left: 12px;
+    color: rgb(0, 112, 210);
+    font-size: .8125rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.THIS .forceContentFileCard {
+    width: 18.5rem !important;
+    padding-left: 5px;
+}
+
+.THIS .noRecAlert {
+    padding: 0.75rem;
+    background-color: lightgoldenrodyellow;
+    border-radius: 0.5rem
+}
+
+.THIS .infoIcon .slds-icon {
+    fill: rgb(84, 105, 141) !important;
+}
+
+.THIS .borderCls {
+    box-shadow: none !important;
+    border: 1px solid rgb(221, 219, 218) !important;
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+}
+
+@media only screen and (min-width: 724px) {
+    .THIS .modalProperty {
+        top: 5rem;
+        width: 90%
+    }
+}
+
+.THIS .object-main-content {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.THIS .object-main-content.object-main-content--start {
+    justify-content: flex-start;
+}
+
+.THIS .object-text-heading {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    cursor: pointer;
+    padding: .5rem 0;
+}
+
+.THIS .object-text-heading .object-display-field .displayData .heading {
+    font-size: 18px;
+}
+
+.THIS .object-text-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.THIS .object-text-heading.object-text-heading--no-links {
+    text-decoration: none;
+    cursor: default;
+}
+
+.THIS .object-text-heading.object-text-heading--no-links a {
+    pointer-events: none;
+    cursor: default;
+}
+
+.THIS .object-photo {
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    overflow: hidden;
+    margin-right: .5rem;
+}
+
+.THIS .object-photo img {
+    max-width: 100%;
+    height: auto;
+}
+
+.THIS .object-modal-wrapper {
+    display: flex;
+    padding: 1rem;
+    position: relative;
+    overflow: initial;
+}
+
+.THIS .object-modal-content__heading {
+    font-size: 120%;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.THIS .object-modal-content {
+    display: block;
+    width: 100%;
+    overflow: auto;
+}
+
+.THIS .object-modal__header {
+    background-color: rgb(244, 246, 249);
+}
+
+.THIS .object-record__show-attachments {
+    cursor: pointer;
+    padding-left: 0px;
+    padding-right: 0px;
+}

@@ -1,0 +1,22 @@
+<aura:component >
+    
+    <aura:attribute name="lstAttachments" type="Object[]" />
+    <aura:attribute name="lstFiles" type="Object[]" />
+    
+    <aura:if isTrue="{!v.lstAttachments.length > 0}">
+        <aura:iteration items="{!v.lstAttachments}" var="objAtt">
+            <div class="slds-col slds-size_1-of-1 flexTitle BorderWdth slds-border_top"  >
+                <ui:outputURL value="{!  '/servlet/servlet.FileDownload?file=' + objAtt.Id }" label="{!objAtt.Name}" target="_blank"/>
+            </div>
+        </aura:iteration>
+    </aura:if>
+    <aura:if isTrue="{!v.lstFiles.length > 0}">
+        <aura:iteration items="{!v.lstFiles}" var="File">
+            <div class="slds-col slds-size_1-of-1 flexTitle BorderWdth slds-border_top"  >
+                <!-- <ui:outputURL value="{!  '/sfc/servlet.shepherd/version/download/' + File.Id }" label="{!File.Title}"/> -->
+                <a Id="{! File.ContentDocumentId}" onclick="{!c.showFiles}" >{!File.Title}.{!File.FileType}</a>
+            </div>
+        </aura:iteration>
+    </aura:if>
+    
+</aura:component>

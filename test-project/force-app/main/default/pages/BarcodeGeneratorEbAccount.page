@@ -1,0 +1,6 @@
+<apex:page StandardController="EB_Account__c"  
+  title="Barcode Generator" 
+  tabStyle="Document"
+  >
+  <c:BarcodeGeneratorReactify objectId="{!EB_Account__c.Id}" />
+</apex:page>

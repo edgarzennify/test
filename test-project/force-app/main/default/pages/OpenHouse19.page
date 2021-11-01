@@ -1,0 +1,41 @@
+<apex:page title="OpenHouse19"
+           controller="GatewayApiController"
+           docType="html-5.0"
+    showHeader="false" 
+    sidebar="false"
+    lightningStylesheets="false"
+    standardStylesheets="false" 
+    applyHtmlTag="false"
+    
+    >
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/> 
+    </head>
+    <base href="" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous"/>
+    
+    <style type="text/css">
+        body {
+            overflow-y: hidden;
+        }
+        @font-face {
+            font-family: "Dotty";
+            src: url('{!URLFOR($Resource.OpenHouseApp19Reactify, '/dotty.ttf')}');
+        }
+
+        .dotFont {
+            font-family: Dotty !important;
+        }
+    </style>
+    <script type="text/javascript">
+        var __publicPath = "{!URLFOR($Resource.OpenHouseApp19Reactify, '/')}";
+    </script>
+    <div id="react-app">
+       Loading...
+    </div>
+    
+    <script src="{!URLFOR($Resource.OpenHouseApp19Reactify, '/vendor.js')}"></script>
+    <script src="{!URLFOR($Resource.OpenHouseApp19Reactify, '/main.js')}"></script>
+</apex:page>

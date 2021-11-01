@@ -1,0 +1,409 @@
+/*.THIS .cusMenuBtn div {
+    margin-top: -7.127rem !important;
+}
+
+.THIS .divViewMode .forceContentFileCard {
+    width: auto !important;
+}
+
+.THIS .slds-table th,
+.THIS .slds-table td {
+    padding: 0rem .5rem !important;
+}
+
+.THIS .slds-tree [aria-level="1"]>.slds-tree__item {
+    padding-left: 0.4rem !important;
+}
+
+.THIS .slds-tree [aria-level="2"]>.slds-tree__item {
+    padding-left: 1.7rem !important;
+}
+
+.THIS .slds-tree [aria-level="3"]>.slds-tree__item {
+    padding-left: 3.2rem !important;
+}
+
+.THIS .slds-tree [aria-level="4"]>.slds-tree__item {
+    padding-left: 4.7rem !important;
+}
+
+.THIS .divViewMode .forceContentFileCard .uiImage {
+    display: none !important;
+}
+
+.THIS .divViewMode .forceContentFileCard .slds-file__crop {
+    padding-top: 51px !important;
+    z-index: 990;
+}
+
+.THIS .divViewMode .slds-image__title_card,
+.THIS .divViewMode .slds-image__title--card,
+.THIS .divViewMode .slds-file__title_card,
+.THIS .divViewMode .slds-file__title--card,
+.THIS .divViewMode .slds-image_card,
+.THIS .divViewMode .slds-image--card,
+.THIS .divViewMode .slds-file_card,
+.THIS .divViewMode .slds-file--card {
+    background: transparent !important;
+}
+
+.THIS .divViewMode .slds-image_card,
+.THIS .divViewMode .slds-image--card,
+.THIS .divViewMode .slds-file_card,
+.THIS .divViewMode .slds-file--card {
+    border: 0px !important;
+}
+
+.THIS .cusItemDL,
+.THIS .cusItemDel {
+    padding: 5px;
+}
+
+.THIS .slds-table thead th {
+    background-color: transparent !important;
+}
+
+.THIS .slds-button_icon-more,
+.THIS .slds-button--icon-more {
+    padding: 0 5px !important;
+}
+
+.THIS .slds-file-selector_files .slds-file-selector__text,
+.THIS .slds-file-selector--files .slds-file-selector__text,
+.THIS .slds-file-selector_files .slds-file-selector__button,
+.THIS .slds-file-selector--files .slds-file-selector__button {
+    white-space: nowrap;
+}
+
+.THIS .slds-button_icon-more,
+.THIS .slds-button--icon-more {
+    line-height: auto !important;
+}
+
+.THIS .cusItemDL:hover {
+    background-color: #59b2ff;
+}
+
+.THIS .cusItemDel:hover {
+    background-color: #c23934;
+}
+
+.THIS .rSideInnerDoc {
+    padding: 0px !important;
+}
+
+.THIS .fUploadCus .slds-form-element__label,
+.THIS .hideIcon,
+.THIS .slds-file__icon {
+    display: none !important;
+}
+
+.THIS .divViewMode .slds-file__crop,
+.THIS .divViewMode .slds-file__crop img {
+    outline: none !important;
+    border: 0 !important;
+}
+
+.THIS .searchInp {
+    height: 24px;
+    max-width: 240px;
+}
+
+.THIS .divViewMode .slds-file--card .slds-icon--x-small {
+    width: 32px !important;
+    height: 37px !important;
+}
+
+.THIS .divViewMode .slds-file--card .slds-media__body {
+    padding-left: 12px;
+    color: rgb(0, 112, 210);
+    font-size: .8125rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.THIS .slds-tree__item a:link,
+.THIS .slds-tree__item a:visited,
+.THIS .slds-tree__item a:hover,
+.THIS .slds-tree__item a:focus,
+.THIS .slds-tree__item a:active {
+    text-decoration: none !important;
+}
+
+.THIS .forceContentFileCard {
+    width: 18.5rem !important;
+    padding-left: 5px;
+}
+
+.THIS .dateTime {
+    margin-top: 19.5px;
+}
+
+.THIS .marginBtn {
+    margin-top: 13px;
+    float: right;
+    padding-left: 12px;
+}
+
+.THIS .treeHandle {
+    position: relative;
+}
+
+.THIS .searchPadd {
+    margin-left: 7px;
+}
+
+@media only screen and (min-width: 680px) {
+    .THIS .hideTree1 {
+        display: none;
+    }
+    .THIS .pright {
+        border-left: 1px solid rgb(216, 221, 230);
+    }
+    .THIS .marginTop {
+        margin-top: 3px;
+    }
+    .THIS .alignCenter {
+        margin: 3% !important;
+    }
+}
+
+.THIS .slds-truncate {
+    white-space: initial;
+}
+
+@media only screen and (max-width: 680px) {
+    .THIS .hideContent {
+        display: none;
+    }
+    .THIS .alignDate {
+        text-align: left !important;
+        padding-left: 56px !important;
+        margin-top: -5px !important;
+    }
+    .THIS .TrancateWidth {
+        max-width: 87% !important;
+    }
+    .THIS .btnMobile {
+        margin-top: -42px !important;
+    }
+    .THIS .hideTree {
+        display: none;
+    }
+    .THIS .maxwidth {
+        width: 100% !important;
+    }
+    .THIS .searchInpMob {
+        max-width: 147px !important;
+    }
+    .THIS .headerAlign {
+        margin-left: 0px !important;
+    }
+    .THIS .btnMar {
+        margin-right: 5px;
+    }
+    .THIS .viewBtn {
+        float: right;
+        margin-top: -30px;
+        margin-right: 5px;
+    }
+    .THIS .treeAbs {
+        position: absolute;
+    }
+    .THIS .abstree {
+        margin-top: 36px;
+    }
+    .THIS .showHeading {
+        overflow: visible;
+    }
+    .THIS .divTopHeading {}
+    .THIS .tileRecordSize,
+    .THIS .forceContentFileCard {
+        width: 100% !important;
+    }
+}
+
+.THIS .sideBlockSmall {
+    width: 100% !important;
+    -webkit-flex: 0 0 100%;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.THIS .hideContentSmall {
+    display: none;
+}
+
+.THIS .absoluteTree {
+    position: absolute;
+    margin-bottom: 36px;
+}
+
+.THIS .abstree1 {
+    margin-top: 36px;
+}
+
+.THIS .smallBlock {
+    margin-bottom: 10px;
+}
+
+.THIS .smallBlockBtn {
+    margin-left: 123px;
+}
+
+@media only screen and (max-width: 300px) {
+    .THIS .HideBTn {
+        display: none;
+    }
+}
+
+.THIS .hideTree11 {
+    margin-top: 8px;
+}
+
+@media screen and (max-width: 800px) and (min-width: 681px) {
+    .THIS .testScreen {
+        text-align: left;
+        margin-left: 46px;
+    }
+}
+
+.THIS .dropdown__list {
+    width: 8rem;
+    z-index: 99999999999;
+    opacity: 1;
+}
+
+@media screen and (max-width: 600px) {
+    .THIS #ScrollDiv {
+        max-height: 100% !important;
+    }
+    .THIS #maxheight {
+        max-height: 100% !important;
+    }
+    .THIS .scrollerSize {
+        max-height: 500px !important;
+    }
+}
+
+.THIS .unhide {
+    overflow: unset !important;
+}*/
+
+/*
+* D.Bondarenko markup changes
+*/
+
+.THIS .searchPadd,
+.THIS .searchInpMob {
+    border-color: #2574a9;
+}
+
+.THIS .unhide {
+    overflow: unset !important;
+}
+
+.THIS .fUploadCus .slds-form-element__label,
+.THIS .hideIcon,
+.THIS .slds-file__icon {
+    display: none;
+}
+
+.THIS.document-list,
+.THIS .document-list__heading {
+    display: flex;
+    flex-direction: column;
+}
+
+.THIS .document-list__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: .5rem 0;
+}
+
+.THIS .document-list__files-count {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.THIS .showHeading {
+    color: rgb(0, 112, 210);
+}
+
+.THIS .document-list__tools {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.THIS .document-list__search {
+    display: flex;
+}
+
+.THIS lightning-input .slds-form-element__label {
+    display: none;
+}
+
+.THIS .document-list__search,
+.THIS .document-list__upload,
+.THIS .document-list__view {
+    margin: .5rem .25rem 0 0;
+}
+
+.THIS .searchInp {
+    margin-right: .25rem;
+}
+
+.THIS .document-list__content {
+    display: flex;
+}
+
+.THIS .document-list__content.document-list__content--vertical {
+    flex-direction: column;
+}
+
+.THIS .document-list__files {
+    width: 100%;
+}
+
+.THIS .table-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.THIS .table-header,
+.THIS .file-row {
+    display: flex;
+    align-items: center;
+}
+
+.THIS .file-row {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+}
+
+.THIS .table-header__name,
+.THIS .table-file__name {
+    width: 66.66666%;
+}
+
+.THIS .table-date-actions {
+    display: flex;
+    justify-content: space-around;
+    width: 33.3333%;
+}
+
+.THIS .table-body .forceContentFileCard .uiImage {
+    display: none;
+}
+
+.THIS .table-body .forceContentFileCard .slds-file__crop {
+    padding-top: 51px;
+    z-index: 990;
+}
+
+.THIS .table-body .forceContentFileCard .slds-file.slds-file--card {
+    border: none;
+}

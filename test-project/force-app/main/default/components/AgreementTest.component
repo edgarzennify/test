@@ -1,0 +1,76 @@
+<apex:component id="AgreementTestId" controller="AgreementTestComponentController" allowDML="true" >
+     <apex:attribute type="Agreement__c" name="AgreementObject" assignTo="{!agmt}" description="Financial Test" />
+    <apex:attribute type="String" Name="IsAgreementPendingStatus" assignTo="{!AgreementPendingStatus}" description="AgreementPendingStatus" />
+    
+    <apex:form >
+    <a id="AgmtTests" />
+   <apex:pageBlock id="relatedTests"  title="Agreement Tests" >
+      <apex:pageBlockButtons location="top" rendered="{!IF(AgreementPendingStatus=='false',true,false)}">
+      <apex:commandButton value="New Agreement Test" action="{!AddTest}" rerender="testDialog" rendered="{!AgreementActiveStatus}"/>
+      </apex:pageBlockButtons>
+      <apex:pageBlockTable value="{!tests}" var="o" rendered="{!NOT(ISNULL(tests))}">
+        <apex:column headerValue="Action" width="60" rendered="{!isEditable}" >
+          <apex:commandLink value="Edit" action="{!EditTest}" style="text-decoration:none;color: #015ba7;" rerender="testDialog"  >
+            <apex:param name="addId" assignTo="{!selectedAgreementTestId}" value="{!o.id}" />
+          </apex:commandLink>
+          |<apex:commandLink value=" Del" action="{!DeleteTest}" style="text-decoration:none;color: #015ba7;"  onclick="return showConfirm('delete \'{!o.Name}\' ');"  >
+             <apex:param name="delId" assignTo="{!selectedAgreementTestId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Action" width="60" rendered="{!!isEditable}" >
+          <apex:commandLink value="View" action="{!ViewTest}" style="text-decoration:none;color: #015ba7;" rerender="testDialog"  >
+            <apex:param name="addId" assignTo="{!selectedAgreementTestId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Type" value="{!o.Test_Type__c}" />
+        <apex:column headerValue="Tested On" value="{!o.Test_Date__c}" />
+        <apex:column headerValue="Compliant" value="{!o.Compliant__c}" />
+        <apex:column headerValue="Comments" value="{!o.Comments__c}" />
+        <apex:column headerValue="Action" value="{!o.Action__c}" />  
+        <apex:column headervalue="Waiver Fee" value="{!o.Waiver_Fee__c}"/>  
+        <apex:column headerValue="Approval Process" value="{!o.Approval_Process__c}" />
+        <apex:column headerValue="Status" value="{!o.Status__c}" />
+        <apex:column headerValue="Approver One" value="{!o.Approver_One__c}" />
+        <apex:column headerValue="Approver Two" value="{!o.Approver_Two__c}" />
+        <apex:column headerValue="Approver Three" value="{!o.Approver_Three__c}" />
+        
+          
+      <!-- <apex:column headerValue="Covenant Name" >
+            <apex:outputLink value="{!URLFOR($Action.Agreement_Financial_Covenant__c .View,o.Id)}" >{!o.Name}</apex:outputLink>       
+        </apex:column>       
+          -->
+      </apex:pageBlockTable>
+     </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+    <apex:outputPanel id="testDialog">
+    <apex:outputPanel id="TestInnerPanel" styleClass="popupBackground" layout="block" rendered="{!displayDialog}"/>
+        <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayDialog}">
+            <apex:PageMessages />
+            <apex:pageblock title="Edit - Agreement Test" mode="edit" tabStyle="Agreement_Test__c">
+                <apex:pageblockSection > 
+                   <!-- <apex:inputField value="{!test.Id}"/> -->
+                    <apex:inputField value="{!test.Test_Type__c}"/>
+                    <apex:inputField value="{!test.Test_Date__c}"/>
+                    <apex:inputField value="{!test.Comments__c}"/>
+                    <apex:inputField value="{!test.Compliant__c}"/>
+                    <!-- <apex:inputField value="{!test.Waiver_Fee__c}"/> -->
+                </apex:pageBlockSection> 
+                <apex:pageBlockSection title="Out of Compliance Details" rendered="{!If(ISBLANK(test.Id),false,true)}">    
+                    <apex:inputField value="{!test.Action__c}"/>
+                    <apex:inputField value="{!test.Status__c}"/>
+              </apex:pageBlockSection> 
+              <apex:pageBlockSection title="Approval Details" rendered="{!If(ISNULL(test.Id),false,true)}">   
+                    <apex:inputField value="{!test.Approval_Process__c}"/>
+                    <apex:inputField value="{!test.Approver_Two__c}"/>
+                    <apex:inputField value="{!test.Approver_One__c}"/>
+                    <apex:inputField value="{!test.Approver_Three__c}"/>
+              </apex:pageblockSection>        
+
+            <apex:commandButton id="testSubmitid" value="Save" action="{!closeDialog}" rerender="testDialog"/>
+            <apex:commandButton id="testCancelid" value="Cancel" action="{!cancelDialog}" immediate="true" rerender="testDialog"/>    
+        </apex:pageblock>
+      </apex:outputPanel>
+    </apex:outputPanel>
+</apex:form>
+</apex:component>

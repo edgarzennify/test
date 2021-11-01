@@ -1,0 +1,212 @@
+.THIS {
+    margin: 0 -.75rem;
+}
+
+.THIS .document-list-header-wrap {
+    padding:0 1rem;
+    border-bottom:1px solid #ebeced;
+}
+
+.THIS .breadcrumbs ul li,
+.THIS .list-count p {
+    font-size: 1rem;
+    color:#5d6368;
+}
+
+.THIS .search-upload-wrap {
+    margin-top: 32px;
+}
+
+.THIS .pright {
+    border-left: 1px solid rgb(216, 221, 230);
+}
+.THIS .cusMenuBtn div
+{
+	margin-top: -7.127rem !important;
+}
+.THIS .slds-card__header
+{
+	/*margin-bottom: 12px !important;*/
+}
+.THIS .divViewMode .forceContentFileCard{
+	width:auto !important;
+}
+
+.THIS .slds-table th, .THIS .slds-table td {
+	padding: 0rem .5rem !important;
+}
+.THIS .slds-tree [aria-level="1"]>.slds-tree__item {
+	padding-left: 0.4rem !important;
+}
+.THIS .slds-tree [aria-level="2"]>.slds-tree__item {
+	padding-left: 1.7rem !important;
+}
+.THIS .slds-tree [aria-level="3"]>.slds-tree__item {
+	padding-left: 3.2rem !important;
+}
+.THIS .slds-tree [aria-level="4"]>.slds-tree__item {
+	padding-left: 4.7rem !important;
+}
+
+.THIS .divViewMode .forceContentFileCard .uiImage{
+	display:none !important;
+}
+.THIS .divViewMode .forceContentFileCard .slds-file__crop{
+	padding-top: 51px !important;
+    z-index: 990;
+}
+.THIS .divViewMode .slds-image__title_card, .THIS .divViewMode .slds-image__title--card, .THIS .divViewMode .slds-file__title_card, .THIS .divViewMode .slds-file__title--card,
+.THIS .divViewMode .slds-image_card, .THIS .divViewMode .slds-image--card, .THIS .divViewMode .slds-file_card, .THIS .divViewMode .slds-file--card 
+{
+	background: transparent !important;
+}
+.THIS .divViewMode .slds-image_card, .THIS .divViewMode .slds-image--card, .THIS .divViewMode .slds-file_card, .THIS .divViewMode .slds-file--card
+{
+	border: 0px !important;
+}
+.THIS .cusItemDL,.THIS .cusItemDel
+{
+	padding: 5px;
+}
+.THIS .slds-table thead th
+{
+	background-color: transparent !important;
+}
+.THIS .slds-button_icon-more, .THIS .slds-button--icon-more {
+	padding: 0 5px !important;
+}
+.THIS .slds-file-selector_files .slds-file-selector__text, .THIS .slds-file-selector--files .slds-file-selector__text,
+.THIS .slds-file-selector_files .slds-file-selector__button, .THIS .slds-file-selector--files .slds-file-selector__button
+{
+	white-space: nowrap;
+}
+.THIS .slds-button_icon-more, .THIS .slds-button--icon-more
+{
+	line-height: auto !important;
+}
+.THIS .cusItemDL:hover
+{
+	background-color: #59b2ff;
+}
+.THIS .cusItemDL:hover svg, .THIS .cusItemDel:hover svg
+{
+	fill: white;
+}
+.THIS .cusItemDel:hover
+{
+	background-color: #c23934;
+}
+.THIS .rSideInnerDoc
+{
+	padding: 0px !important;
+}
+.THIS .fUploadCus .slds-form-element__label, .THIS .hideIcon, .THIS .slds-file__icon
+{
+	display:none !important;
+}
+.THIS .divViewMode .slds-file__crop, .THIS .divViewMode .slds-file__crop img {
+    outline : none !important;
+    border : 0 !important;
+    
+}
+
+.THIS .searchInp {
+	height:24px;
+    width: 75%;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.THIS .search-box .slds-button {
+    height:36px;
+    margin-top:-1px;
+}
+
+.THIS .list-details-wrap {
+    background-color: #f8f8f8;
+    border: 1px solid #ebeced;
+    margin: 32px 0px 16px;
+    padding: 8px 16px;
+}
+
+.THIS .slds-has-dividers_right>.slds-item:last-child {
+    margin:0px;
+    padding:0px;
+}
+
+.THIS .slds-has-dividers_right>.slds-item {
+    margin-right: 4px;
+    padding-right: 24px;
+}
+
+.THIS .slds-has-dividers_right > .slds-list__item::before,
+.THIS .slds-has-dividers--right > .slds-list__item::before,
+.THIS .slds-has-dividers_right > .slds-item::before,
+.THIS .slds-has-dividers--right > .slds-item::before {
+    content: "";
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    background-color: rgba(22, 50, 92, 0);
+    border-radius: 0;
+    
+    position: absolute;
+    top: 6px;
+    right: 0;
+    border-left: 5px solid #5d6368;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    
+}
+
+.THIS .slds-has-dividers_right > .slds-list__item::after,
+.THIS .slds-has-dividers--right > .slds-list__item::after,
+.THIS .slds-has-dividers_right > .slds-item::after,
+.THIS .slds-has-dividers--right > .slds-item::after {
+    content: "";
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    background-color: rgba(22, 50, 92, 0);
+    border-radius: 0;
+    
+    position: absolute;
+    right: 2px;
+    top: 8px;
+    border-left: 3px solid #f8f8f8;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    
+}
+
+.THIS .slds-has-dividers_right > .slds-list__item:last-child::after,
+.THIS .slds-has-dividers--right > .slds-list__item:last-child::after,
+.THIS .slds-has-dividers_right > .slds-item:last-child::after,
+.THIS .slds-has-dividers--right > .slds-item:last-child::after,
+.THIS .slds-has-dividers_right > .slds-list__item:last-child::before,
+.THIS .slds-has-dividers--right > .slds-list__item:last-child::before,
+.THIS .slds-has-dividers_right > .slds-item:last-child::before,
+.THIS .slds-has-dividers--right > .slds-item:last-child::before {
+    content: none;
+}
+
+.THIS .tools-wrap .tool-item {
+    float: right;
+    margin-left: 24px;
+}
+
+.THIS .divViewMode .slds-file--card .slds-icon--x-small
+{
+	width: 32px !important;
+    height: 37px !important;
+}
+.THIS .divViewMode .slds-file--card .slds-media__body
+{
+	padding-left:12px;
+	color: rgb(0, 112, 210);
+	font-size: .8125rem;
+    font-weight: 400;
+    line-height: 1.5;	
+}
+.THIS .slds-tree__item a:link, .THIS .slds-tree__item a:visited, .THIS .slds-tree__item a:hover, .THIS .slds-tree__item a:focus, .THIS .slds-tree__item a:active
+{
+	text-decoration: none !important;
+}

@@ -1,0 +1,146 @@
+<apex:page title="Developer Dashboard" controller="DeveloperDashboardController" showHeader="true" tabStyle="Developer_Dashboard__tab" >
+	<script type="text/javascript">var __sfdcSessionId = '{!GETSESSIONID()}';</script>
+	<script src="/soap/ajax/19.0/connection.js" type="text/javascript"></script>
+	<script src="/soap/ajax/19.0/apex.js" type="text/javascript"></script>
+    <apex:form >
+	    <apex:sectionHeader title="Utilities" subtitle="Developer Dashboard" />
+	    <apex:pageBlock mode="maindetail">
+	        <apex:pageBlockSection columns="2">
+	            <apex:pageBlockSectionItem >
+	                <apex:outputLabel value="Environment" />
+	                <apex:outputText value="{!EnvironmentName}" />
+	            </apex:pageBlockSectionItem>
+	        </apex:pageBlockSection>
+	    </apex:pageBlock>
+	    <apex:tabPanel selectedTab="classes">
+	        <apex:tab label="Classes" name="classes">
+	            <apex:pageBlock title="Classes" >
+	                <apex:pageBlockTable var="c" value="{!ApexClasses}" >
+	                    <apex:column headerValue="Name" value="{!c.Name}" />
+	                    <apex:column headerValue="LastModifiedDate" value="{!c.LastModifiedDate}" />
+	                    <apex:column headerValue="LastModifiedBy" value="{!c.LastModifiedById}" />
+	                    <apex:column headerValue="CreatedDate" value="{!c.CreatedDate}" />
+	                    <apex:column headerValue="CreatedBy" value="{!c.CreatedById}" />
+	                </apex:pageBlockTable>
+	            </apex:pageBlock>
+	        </apex:tab>
+	        <apex:tab label="Components" name="components">
+	            <apex:pageBlock title="Components" >
+	                <apex:pageBlockTable var="c" value="{!ApexComponents}" >
+	                    <apex:column headerValue="Name" value="{!c.Name}" />
+	                    <apex:column headerValue="LastModifiedDate" value="{!c.LastModifiedDate}" />
+	                    <apex:column headerValue="LastModifiedBy" value="{!c.LastModifiedById}" />
+	                    <apex:column headerValue="CreatedDate" value="{!c.CreatedDate}" />
+	                    <apex:column headerValue="CreatedBy" value="{!c.CreatedById}" />
+	                </apex:pageBlockTable>
+	            </apex:pageBlock>
+	        </apex:tab>
+	        <apex:tab label="Pages" name="pages">
+	            <apex:pageBlock title="Pages" >
+	                <apex:pageBlockTable var="p" value="{!ApexPages}" >
+	                    <apex:column headerValue="Name" value="{!p.Name}" />
+	                    <apex:column headerValue="LastModifiedDate" value="{!p.LastModifiedDate}" />
+	                    <apex:column headerValue="LastModifiedBy" value="{!p.LastModifiedById}" />
+	                    <apex:column headerValue="CreatedDate" value="{!p.CreatedDate}" />
+	                    <apex:column headerValue="CreatedBy" value="{!p.CreatedById}" />
+	                </apex:pageBlockTable>
+	            </apex:pageBlock>
+	        </apex:tab>
+	        <apex:tab label="Triggers" name="triggers">
+	            <apex:pageBlock title="Triggers" >
+	                <apex:pageBlockTable var="t" value="{!ApexTriggers}" >
+	                    <apex:column headerValue="Name" value="{!t.Name}" />
+	                    <apex:column headerValue="LastModifiedDate" value="{!t.LastModifiedDate}" />
+	                    <apex:column headerValue="LastModifiedBy" value="{!t.LastModifiedById}" />
+	                    <apex:column headerValue="CreatedDate" value="{!t.CreatedDate}" />
+	                    <apex:column headerValue="CreatedBy" value="{!t.CreatedById}" />
+	                </apex:pageBlockTable>
+	            </apex:pageBlock>
+	        </apex:tab>
+	        <apex:tab label="Objects" name="objects">
+	            <apex:pageBlock title="Objects" >
+	                <apex:pageBlockTable var="o" value="{!Objects}" >
+	                    <apex:column >
+	                       <a href="javascript:showFields('{!o.Name}');">{!o.Name}</a>
+		                   <!--<apex:commandLink value="{!o.Name}" action="{!showObjectFields}" >
+		                       <apex:param name="objectName" assignTo="{!objectDrilldown}" value="{!o.Name}" />
+		                   </apex:commandLink>-->
+	                    </apex:column>
+	                    <apex:column headerValue="Label" value="{!o.Label}" />
+	                    <apex:column headerValue="Type" value="{!o.Type}" />
+	                </apex:pageBlockTable>
+	            </apex:pageBlock>
+	        </apex:tab>
+			<apex:tab label="Custom Settings" name="customSettings">
+			    <apex:pageBlock title="Custom Settings" >
+			        <apex:pageBlockTable var="cs" value="{!CustomSettings}" >
+			            <apex:column >
+			                <a href="javascript:showFields('{!cs.Name}');">{!cs.Name}</a>
+                            <!-- <apex:commandLink value="{!cs.Name}" action="{!showObjectFields}" >
+                               <apex:param name="objectName" assignTo="{!objectDrilldown}" value="{!cs.Name}" />
+                           </apex:commandLink>-->
+                        </apex:column>
+			            <apex:column headerValue="Label" value="{!cs.Label}" />
+			            <apex:column headerValue="Type" value="{!cs.Type}" />
+			        </apex:pageBlockTable>
+			    </apex:pageBlock>
+			</apex:tab>
+	    </apex:tabPanel>
+        <apex:outputPanel id="FieldsPopup">
+            <apex:outputPanel id="PopupInnerPannel" styleClass="popupBackground" layout="block" rendered="{!popupVisible}"/>
+            <apex:outputPanel styleClass="popupWindow" layout="block" rendered="{!popupVisible}">
+                <apex:pageBlock title="{!objectDrilldown}'s Fields" >
+                    <apex:outputPanel styleClass="popupContent" layout="block" >
+	                    <apex:pageBlockTable var="f" value="{!drillDownFields}" >
+							<apex:column headerValue="Name" value="{!f.Name}" />
+							<apex:column headerValue="Label" value="{!f.Label}" />
+							<apex:column headerValue="Type" value="{!f.Type}" />
+	                    </apex:pageBlockTable>
+	                </apex:outputPanel>	                
+                </apex:pageBlock>
+                <div align="center"><button type="button" onclick="javascript:closeWindow();">Close</button></div>
+            </apex:outputPanel>
+        </apex:outputPanel>
+        <apex:actionFunction name="showObjectFields" action="{!showObjectFields}" rerender="FieldsPopup" >
+            <apex:param name="objectDrilldown" assignTo="{!objectDrilldown}" value="" />
+        </apex:actionFunction>
+        <apex:actionFunction name="closePopup" action="{!closePopup}" rerender="FieldsPopup" />
+    </apex:form>
+    <script>
+        function showFields(objectName){            
+            showObjectFields(objectName);
+        }
+        function closeWindow(){
+            //alert('close');
+            closePopup();
+        }
+    </script>
+    <style type="text/css">
+        .popupWindow{
+            background-color: white;
+            border: solid 2px #999;
+            z-index: 9998;
+            left: 33%;
+            padding:10px;
+            position: fixed;
+            width: 75%;
+            margin-left: -250px;
+            top: 5%;            
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9997;
+        }
+        .popupContent{
+            height:300px;
+            overflow: auto;
+        }
+    </style>
+</apex:page>

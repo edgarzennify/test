@@ -1,0 +1,5 @@
+<apex:page controller="LoanTransactionRequestController" showHeader="true" tabStyle="Loan_Transaction__tab" >
+   
+    <apex:iframe height="800"  scrolling="true" src="https://ebk.enterprisebank.com/dev/ebwire.nsf/xMainLoanTransactions.xsp?EnteredBy={!$User.FirstName} {!$User.LastName}&Email={!$User.Email}&ApprovalCheck={!$User.Email}"  id="theIframe"/>
+  
+</apex:page>

@@ -1,0 +1,210 @@
+<aura:component controller="SL_ObjectListController">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:attribute name="SObjectRecord" type="Object" />
+    <aura:attribute name="SObjectName" type="String" />
+    <aura:attribute name="FieldsetResults" type="Object" />
+    <aura:attribute name="DetailFieldsetResults" type="Object" />
+    <aura:attribute name="ShowFieldLabel" type="Boolean" />
+    <aura:attribute name="DisableLinks" type="Boolean" />
+    <aura:attribute name="displayModalDetailButton" type="Boolean" default="false" />
+    <aura:attribute name="firstFieldValue" type="String" access="public" />
+    <aura:attribute name="firstFieldPath" type="String" access="public" />
+    <aura:attribute name="firstFieldType" type="String" access="public" />
+    <aura:attribute name="secondField" type="String" access="public" />
+    <aura:attribute name="strFirstFieldUserImage" type="String" default="" />
+    <aura:attribute name="isLoaded" type="Boolean" access="public" />
+    <aura:attribute name="DetailBehaviour" type="String" access="global" />
+    <aura:attribute name="isShowModal" type="Boolean" description="" default="false" access="global" />
+    <aura:attribute name="componentTimeId" type="String" access="public" />
+    <aura:attribute name="auraId" type="String" access="public" />
+    <aura:attribute name="filesOnly" type="Boolean" default="true" />
+
+    <aura:attribute name="RecordExpandCollapse" type="String" access="public" />
+    <aura:attribute name="IsExpanded" type="Boolean" />
+    <aura:attribute name="IsCardExpEnabled" default="true" type="Boolean" access="global" />
+    <aura:attribute name="IsDetailCard" default="false" type="Boolean" access="global" />
+    <aura:attribute name="ModalPopupHeaderText" type="String" access="public" />
+    <aura:attribute name="showAttachmentsInList" type="Boolean" access="public" default="false" />
+
+    <aura:attribute name="BoolForModelPopup" type="Boolean" access="global" default="false" />
+    <aura:attribute name="BoolForDropDown" type="Boolean" access="global" default="false" />
+
+    <aura:attribute name="ShowAttachmentDetail" type="Boolean" access="public" default="false" />
+    <aura:attribute name="ShowAttListPopu" type="Boolean" access="public" default="false" />
+    <aura:attribute name="NotInModelpopup" type="Boolean" access="public" default="false" />
+    <aura:attribute name="width" type="String" />
+
+
+    <aura:attribute name="lstAttachments" type="Object[]" />
+    <aura:attribute name="lstFiles" type="Object[]" />
+    <aura:attribute name="ShowFiles" type="Boolean" default="false" />
+    <aura:attribute name="recordDisplay" type="Boolean" default="true" />
+    <aura:registerEvent name="ShowObjectDetailEvent" type="c:ShowObjectDetailEvent" />
+
+    <aura:if isTrue="{!v.isShowModal}">
+        <div class="modal-container">
+            <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open slds-align--absolute-center modalProperty">
+                <div class="slds-modal__container modal-container__wrapper">
+                    <aura:if isTrue="{!v.ModalPopupHeaderText!=''}">
+                        <div class="slds-modal__header object-modal__header">
+                            <h2 id="header43" class="slds-text-heading--medium slds-float--left">
+                                {!v.ModalPopupHeaderText}
+                            </h2>
+                            <aura:if isTrue="{!v.displayModalDetailButton}">
+                                <lightning:button class="slds-button slds-button--neutral slds-float--right" label="Detail" onclick="{!c.redirectToRecordDetail}"
+                                />
+                            </aura:if>
+                        </div>
+                    </aura:if>
+                    <button class="slds-button slds-modal__close close-modal slds-button--icon-inverse" title="Close" onclick="{!c.closeModal}">
+                        <lightning:icon iconName="utility:close" size="small" class="closeIcon" />
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <div class="slds-modal__content slds-p-top_medium slds-p-bottom_medium object-modal-wrapper">
+
+                        <div class="object-modal-content">
+                            <aura:iteration items="{!v.DetailFieldsetResults}" var="objField" indexVar="index">
+                                <aura:if isTrue="{!index == 0}">
+                                    <h1 class="object-modal-content__heading">
+                                        <c:SL_ObjListDetail_DisplayField record="{!v.SObjectRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                            fieldLabel="{!objField.label}" showFieldLabel="{!v.ShowFieldLabel}" />
+                                    </h1>
+                                    <aura:set attribute="else">
+                                        <c:SL_ObjListDetail_DisplayField record="{!v.SObjectRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                            fieldLabel="{!objField.label}" showFieldLabel="{!v.ShowFieldLabel}" />
+                                    </aura:set>
+                                </aura:if>
+                            </aura:iteration>
+                            <aura:if isTrue="{!v.ShowAttachmentDetail}">
+                                <header class="slds-card__header slds-grid object-record__show-attachments" onclick="{!c.openCloseAttachments1}">
+                                    <div aura:id="attachHeadercontainer" class="slds-media media--center slds-has-flexi-truncate headerContainer" style="padding: 5px 0rem;">
+                                        <div class="slds-media__body " style="font-size: .75rem; padding: 0rem 0rem;">
+                                            <h2 class="itemTitle slds-truncate slds-text-align--center">Attachments
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div style="max-height:150px;" class="slds-scrollable--y">
+                                    <aura:if isTrue="{!v.ShowFiles}">
+                                        <aura:if isTrue="{!v.recordDisplay}">
+                                            <div class="slds-grid slds-wrap divViewMode">
+                                                <c:SL_FilesAndAttachments lstAttachments="{!v.lstAttachments}" lstFiles="{!v.lstFiles}" />
+                                            </div>
+                                            <aura:set attribute="else">
+                                                <div class="noRecAlert">
+                                                    <lightning:icon iconName="utility:info" size="small" class="infoIcon" />&nbsp;&nbsp;No Attachments found.
+                                                </div>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:if>
+                                </div>
+                            </aura:if>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>
+        </div>
+    </aura:if>
+    <!-- border: 1px solid rgb(221, 219, 218); -->
+    <div aura:id="cardHeader" class="{!v.IsExpanded ? 'slds-card card--compact _open' : 'slds-card card--compact'}">
+        <div class="{!(v.strFirstFieldUserImage != ''?'object-main-content':'object-main-content object-main-content--start')}">
+            <aura:if isTrue="{!v.isLoaded}">
+                <div class="object-text-info">
+                    <aura:if isTrue="{!v.auraId.length == 24}">
+                        <div class="{! (v.DisableLinks ? 'object-text-heading--no-links':'')+ ' object-text-heading test'}" onclick="{!c.navigateToRecord}">
+                            <aura:if isTrue="{!v.strFirstFieldUserImage != ''}">
+                                <div class="object-photo" onclick="{!c.openClose}">
+                                    <img src="{!v.strFirstFieldUserImage}" />
+                                </div>
+                            </aura:if>
+                            <c:SL_ObjListDetail_DisplayField record="{!v.SObjectRecord}" fieldApiName="{!v.firstFieldPath}" fieldType="{!v.firstFieldType}"
+                                fieldLabel="" showFieldLabel="false" showBorder="false" />
+                        </div>
+                        <aura:set attribute="else">
+                            <c:SL_ObjListDetail_DisplayField record="{!v.SObjectRecord}" fieldApiName="{!v.firstFieldPath}" fieldType="{!v.firstFieldType}"
+                                fieldLabel="" showFieldLabel="false" showBorder="false" />
+                        </aura:set>
+                    </aura:if>
+                    <section class="slds-card-body">
+                        <aura:if isTrue="{!v.FieldsetResults.length > 0}">
+                            <aura:iteration items="{!v.FieldsetResults}" var="objField">
+                                <aura:if isTrue="{!!(objField.fieldPath == v.firstFieldPath || objField.fieldPath == v.secondField)}">
+                                    <c:SL_ObjListDetail_DisplayField record="{!v.SObjectRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                        fieldLabel="{!objField.label}" showFieldLabel="{!v.ShowFieldLabel}" />
+                                </aura:if>
+                            </aura:iteration>
+                        </aura:if>
+                    </section>
+                </div>
+            </aura:if>
+        </div>
+
+        <aura:if isTrue="{! v.showAttachmentsInList &amp;&amp; v.IsExpanded == true }">
+            <div aura:id="AttachmentSection" class="slds-card card--compact" style="margin-top:0.5rem">
+                <header class="slds-card__header slds-grid" onclick="{!c.openCloseAttachments}" style="cursor:pointer;">
+                    <div aura:id="attachHeadercontainer" class="slds-media media--center slds-has-flexi-truncate headerContainer " style="margin: auto;">
+                        <div class="slds-media__body " style="font-size: .75rem;">
+                            <h2 class="itemTitle slds-truncate slds-text-align--center">Attachments
+                            </h2>
+                        </div>
+                    </div>
+                </header>
+            </div>
+            <aura:if isTrue="{!v.NotInModelpopup}">
+                <aura:if isTrue="{!v.BoolForDropDown}">
+                    <section class="slds-card-body slds-scrollable--y" style="max-height: 200px;">
+                        <aura:if isTrue="{!v.ShowFiles}">
+                            <aura:if isTrue="{!v.recordDisplay}">
+                                <div class="slds-grid slds-wrap divViewMode">
+                                    <c:SL_FilesAndAttachments lstAttachments="{!v.lstAttachments}" lstFiles="{!v.lstFiles}" />
+                                </div>
+                                <aura:set attribute="else">
+                                    <div class="noRecAlert">
+                                        <lightning:icon iconName="utility:info" size="small" class="infoIcon" />&nbsp;&nbsp;No Attachments found.
+                                    </div>
+                                </aura:set>
+                            </aura:if>
+                        </aura:if>
+                    </section>
+                </aura:if>
+                <aura:if isTrue="{!v.BoolForModelPopup &amp;&amp; v.ShowFiles }">
+                    <div class="demo-only" style="height: 640px; ">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
+                            class="slds-modal slds-fade-in-open" style="top: 100px;">
+                            <div class="slds-modal__container">
+                                <header class="slds-modal__header">
+                                    <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModelpopUp}">
+                                        X
+                                        <span class="slds-assistive-text">Close</span>
+                                    </button>
+                                    <h2 id="header43" class="slds-text-heading--medium slds-float--left">Attachments </h2>
+                                </header>
+                                <div class="slds-modal__content slds-p-around_medium slds-scrollable--y" id="modal-content-id-1" style="max-height:450px;">
+                                    <section class="slds-card-body">
+                                        <aura:if isTrue="{!v.recordDisplay}">
+                                            <div class="slds-grid slds-wrap divViewMode">
+                                                <c:SL_FilesAndAttachments lstAttachments="{!v.lstAttachments}" lstFiles="{!v.lstFiles}" />
+                                            </div>
+                                            <aura:set attribute="else">
+                                                <div class="noRecAlert">
+                                                    <lightning:icon iconName="utility:info" size="small" class="infoIcon" />&nbsp;&nbsp;No Attachments found.
+                                                </div>
+                                            </aura:set>
+                                        </aura:if>
+                                    </section>
+                                </div>
+                                <footer class="slds-modal__footer">
+                                </footer>
+                            </div>
+                        </section>
+                        <div class="slds-backdrop slds-backdrop_open"></div>
+                    </div>
+                </aura:if>
+            </aura:if>
+        </aura:if>
+    </div>
+</aura:component>

@@ -1,0 +1,79 @@
+<apex:page standardController="Agreement__c" extensions="AgreementEditController" showHeader="true">  
+    <apex:form >
+        <apex:pageblock title="New Lending Agreement" rendered="{!!IsUpdate}">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!saveClicked}" id="saveButton" onclick="javascript:this.style.visibility='hidden';" />  
+                <apex:commandButton value="Cancel" action="{!CancelClicked}" immediate="true" id="cancelButton"/>     
+            </apex:pageBlockButtons>
+            <apex:pageblocksection title="Borrower Details" columns="1" showHeader="false" >
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement__c.Fields.Borrower_Name__c.inlineHelpText}">
+                    <apex:outputLabel value="Borrower Name" />
+                    <apex:inputField value="{!agmt.Borrower_Name__c}" required="true" style="width:50%"/>  
+                </apex:pageBlockSectionItem>
+                <apex:inputField id="Comments" value="{!agmt.Comments__c}" style="width:50%"/>
+            </apex:pageblocksection>
+        </apex:pageblock>
+     
+        <apex:pageblock title="Lending Agreement Edit" rendered="{!IsUpdate}" mode="edit" id="editBlock">
+            <apex:pageMessages />
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!saveClicked}" id="saveButton" />  
+                <apex:commandButton value="Cancel" action="{!CancelClicked}" immediate="true" id="cancelButton" />     
+            </apex:pageBlockButtons>
+            <apex:pageblocksection title="Summary Details" columns="2" >
+                <apex:outputField value="{!agmt.Name}"/>
+                <apex:inputField value="{!agmt.Agreement_Date__c}" required="{!!isAgreementNew}" rendered="{!canEditAgreement}"/>
+                <apex:outputField value="{!agmt.Agreement_Date__c}" rendered="{!!canEditAgreement}"/>
+                <apex:outputField value="{!agmt.Primary_Borrower__c}"/>
+                <apex:inputField value="{!agmt.Last_Amendment_Date__c}" rendered="{!canEditAgreement}"/>
+                <apex:outputField value="{!agmt.Last_Amendment_Date__c}" rendered="{!!canEditAgreement}"/>
+            </apex:pageblocksection>
+            <apex:pageBlockSection columns="1"  rendered="{!canEditAgreement}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Comments"/>
+                    <apex:inputField id="Comments" value="{!agmt.Comments__c}" style="width:70%" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1"  rendered="{!!canEditAgreement}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputText value="Comments"/>
+                    <apex:outputField id="Comments" value="{!agmt.Comments__c}" style="width:70%" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Loan Doc Request" >
+                <apex:inputField value="{!agmt.Business_Loan_Agreement_Documents__c}" required="true" rendered="{!canEditAgreement}" />
+                <apex:outputField value="{!agmt.Business_Loan_Agreement_Documents__c}" rendered="{!!canEditAgreement}" />
+                <apex:inputField value="{!agmt.Subordination_Intercreditor_Documents__c}" required="true" rendered="{!canEditAgreement}"/>
+                <apex:outputField value="{!agmt.Subordination_Intercreditor_Documents__c}" rendered="{!!canEditAgreement}"/>
+                <apex:inputField value="{!agmt.Guarantee_Agreement_Documents__c}" required="true" rendered="{!canEditAgreement}"/>           
+                <apex:outputField value="{!agmt.Guarantee_Agreement_Documents__c}" rendered="{!!canEditAgreement}"/> 
+                <apex:inputField value="{!agmt.Loan_Documents_Prepared_By__c}" required="true" rendered="{!canEditAgreement}">
+                    <apex:actionSupport event="onchange" action="{!bogus}" reRender="editBlock" /> 
+                </apex:inputField>
+                <apex:outputField value="{!agmt.Loan_Documents_Prepared_By__c}" rendered="{!!canEditAgreement}">
+                    <apex:actionSupport event="onchange" action="{!bogus}" reRender="editBlock" /> 
+                </apex:outputField>
+                <apex:pageBlockSectionItem id="blankSection" rendered="{!showLawFirm}" />
+                <apex:pageBlockSectionItem id="lawFirm" rendered="{!showLawFirm}" >
+                    <apex:outputLabel value="Law Firm" />
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" rendered="{!canEditAgreement}" />
+                        <apex:inputField value="{!agmt.Law_Firm__c}" rendered="{!canEditAgreement}" />
+                        <apex:outputField value="{!agmt.Law_Firm__c}" rendered="{!!canEditAgreement}" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Workflow Information" columns="2" >
+                <apex:inputField value="{!agmt.Loan_Coordinator__c}" required="true"/>
+                <apex:inputField value="{!agmt.Credit_Analyst__c}" rendered="{!Is_OAI}"/>
+                <apex:inputField value="{!agmt.DocumentationRep__c}" rendered="{!Is_OAI}"/>
+                <apex:inputField value="{!agmt.Booking_Rep__c}" rendered="{!Is_OAI}"/>
+                <apex:inputField value="{!agmt.Checkback_Rep__c}" rendered="{!Is_OAI}"/>
+                <apex:inputField value="{!agmt.File_Review_Rep__c}" rendered="{!Is_OAI}"/>
+                <apex:inputField value="{!agmt.Image_Prep_Rep__c}" rendered="{!Is_OAI}"/>
+                <apex:inputField value="{!agmt.Shred_File_Rep__c}" rendered="{!Is_OAI}"/>            
+            </apex:pageBlockSection>
+        </apex:pageblock>
+     </apex:form>
+</apex:page>

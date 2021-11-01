@@ -1,0 +1,25 @@
+<apex:component controller="ObjectActionLogController">
+    <apex:attribute name="objectId" type="String" required="true" description="" assignTo="{!objectIdAttribute}"/>
+    <apex:attribute name="actionType" type="String" required="true" description="" assignTo="{!actionTypeAttribute}"/>
+    <apex:attribute name="title" type="String" required="false" description="" assignTo="{!titleAttribute}"/>
+    <apex:attribute name="height" type="Integer" required="true" description="" assignTo="{!heightAttribute}"/>
+
+    <apex:pageBlock title="{!titleAttribute}" >
+        <apex:outputPanel layout="block" style="overflow:auto;height:{!heightAttribute}px">
+            <apex:pageBlockTable value="{!logs}" var="log" cellpadding="3" >
+                <apex:column headerValue="Created Date">
+                    <apex:outputLabel value="{!log.LocalizedCreatedDate}" />                            
+                </apex:column>
+                <apex:column headerValue="Created By">
+                    <apex:outputLabel value="{!log.CreatedBy.Name}" />                                
+                </apex:column>
+                <apex:column headerValue="Stage">
+                    <apex:outputLabel value="{!log.Action}" />                                
+                </apex:column>
+                <apex:column headerValue="Cycle Time">
+                    <apex:outputLabel value="{!log.TimeInStageBusinessDaysHours}" />                                
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:outputPanel>
+    </apex:pageBlock>
+</apex:component>

@@ -1,0 +1,5 @@
+<apex:page standardController="Opportunity" showHeader="false" sidebar="false">
+    <div style="text-align:center;height:auto;">
+	    <apex:outputLink value="/apex/ParentRelationshipManagerView?id={!Opportunity.AccountId}&retURL={!URLFOR($Action.Opportunity.View,Opportunity.Id)}" rendered="{!NOT(ISNULL(Opportunity.Entity_Relationship_Review_Required__c))}" target="_parent">{!Opportunity.Entity_Relationship_Review_Required__c}</apex:outputLink>
+    </div>
+</apex:page>

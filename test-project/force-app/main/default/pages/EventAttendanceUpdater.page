@@ -1,0 +1,44 @@
+<apex:page standardController="EB_Event_Session__c" extensions="EventAttendanceUpdaterController" sidebar="false">
+    <apex:form >
+        <apex:pageMessages />
+        <apex:pageBlock title="{!EB_Event_Session__c.Event_Name__c}">
+            <apex:PageBlockSection columns="1">
+                <apex:outputLink value="/{!EB_Event_Session__c.Id}" title="Event Session:">Return to session</apex:outputLink>
+                <apex:outputField label="Region" value="{!EB_Event_Session__c.Region__c}" />
+                <apex:outputField label="Category" value="{!EB_Event_Session__c.Category__c}" />
+                <apex:outputField label="Date and Time of Event" value="{!EB_Event_Session__c.Date_Time_of_Event__c}" />
+                <apex:outputField label="Instructor" value="{!EB_Event_Session__c.Instructor_1__r.Name}" />
+                <br/>
+                <apex:pageBlockSection >
+                    <apex:pageBlockSectionItem >
+                        <apex:inputFile value="{!fileBody}" />
+                        <apex:commandButton value="Import File" action="{!importFile}"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:PageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+        <apex:pageBlock id="summaryTableBlock" rendered="{!renderSummary}">
+            <apex:pageBlock title="Created EB Event Attendees">
+                <apex:pageBlockTable value="{!vm.createdAttendees}" var="attendee" title="Created EB Event Attendees">
+                    <apex:column value="{!attendee.Attendee__c}"/>
+                    <apex:column value="{!attendee.Email_Address__c}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Created Event Attendances">
+                <apex:pageBlockTable value="{!vm.createdAttendanceRecords}" var="attendance" title="Created Event Attendances">
+                    <apex:column value="{!attendance.Event_Attendee__r.Email_Address__c}"/>
+                    <apex:column value="{!attendance.Event_Session__r.Event_Name__c}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Updated Event Attendances">
+                <apex:pageBlockTable value="{!vm.attendanceRecords}" var="attendance" title="Updated Event Attendances">
+                    <apex:column value="{!attendance.Event_Attendee__r.Email_Address__c}"/>
+                    <apex:column value="{!attendance.Record_Attendance__c}"/>
+                    <apex:column value="{!attendance.Event_Session__r.Event_Name__c}"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

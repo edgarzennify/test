@@ -1,0 +1,28 @@
+<apex:page title="TM Service Request"
+   standardcontroller="TM_Service_Request__c"
+    extensions="TmBoardingController"
+    docType="html-5.0"
+    showHeader="true" 
+    sidebar="false"
+    standardStylesheets="false" 
+    applyHtmlTag="true"
+    >
+
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <link href="{!URLFOR($Resource.TmBoarding, '/vendor.css')}" rel="stylesheet" type="text/css" />
+            <title>TM Boarding</title>
+        </head>
+        <body>
+            <div id="react-app"></div>
+            <script type="text/javascript">
+                var recordJson = {!recordJson};
+                 var LogStateSetting = "Error";
+            var __publicPath = "{!URLFOR($Resource.TmBoarding, "/")}";
+            </script>
+            <script src="{!URLFOR($Resource.TmBoarding, '/vendor.js')}" />
+            <script src="{!URLFOR($Resource.TmBoarding, '/main.js')}" />
+        </body>
+    </html>
+</apex:page>

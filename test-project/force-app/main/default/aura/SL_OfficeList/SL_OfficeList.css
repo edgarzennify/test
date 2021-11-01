@@ -1,0 +1,68 @@
+.THIS.container {	width: 100%;
+	padding: 10px 0px;
+	margin: 0px;
+}
+
+.THIS .center {
+	margin: 0px auto;
+}
+
+.THIS .content {
+	max-width: 768px;
+	font-size: 12px;
+	color: #3c3d3e;
+}
+
+.THIS ._office_image{
+	width: 100%;
+	/*height:150px;*/
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	display: block;
+}
+
+.THIS ._showMap{
+	cursor: pointer;
+}
+
+.THIS._hide_labels dt.slds-item_label{
+	display: none;
+}
+.THIS._hide_labels .slds-list_horizontal .slds-item_detail{
+	width: 100%;
+	margin-top: 3px;
+}
+
+.THIS  .slds-item_detail ul{
+	list-style: inherit; 
+	padding-left: 15px;
+}
+.THIS  .slds-item_detail ol{
+	list-style: inherit; 
+	padding-left: 15px;
+}
+
+.THIS .office__button--close {
+    padding: .5rem 1.5rem;
+    border-radius: 15rem;
+    border: 1px solid rgb(216, 221, 230);
+    display: inline-block;
+    margin: .5rem 0 0 0;
+    background-color: #2359a8;
+    color: #fff;    
+}
+
+.THIS .office__button--close:hover {
+    text-decoration: underline;
+}
+
+.THIS .slds-card__body_inner.slds-has-dividers_top-space {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.THIS .slds-card__body_inner .slds-card__item {
+    width: 49%;
+    font-size: 130%;
+}

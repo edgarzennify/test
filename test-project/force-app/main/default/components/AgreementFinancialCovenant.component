@@ -1,0 +1,122 @@
+<apex:component id="AgreementFinancialCovenantId" controller="AgreementFinancialCovenantComponent" allowDML="true" >
+    <apex:attribute type="Agreement__c" name="AgreementObject" assignTo="{!agmt}" description="Financial Covenant" />
+    <apex:attribute type="Boolean" Name="canEdit" assignTo="{!canEditFinancialCovenant}" description="canEdit" />
+    <apex:form >
+    <a id="RelatedCovenants" />
+   <apex:pageBlock id="relatedCovenents"  title="Covenants" >
+      <apex:pageBlockButtons location="top" rendered="{!isEditable}">
+      <apex:commandButton value="New Covenant" action="{!AddCovenant}" rerender="CovenantDialog"/>
+      </apex:pageBlockButtons>
+      <apex:pageBlockTable value="{!Covenants}" var="o" rendered="{!NOT(ISNULL(Covenants))}">
+        <apex:column headerValue="Action" width="60" rendered="{!isEditable}" >
+          <apex:commandLink value="Edit" action="{!EditCovenant}" style="text-decoration:none;color: #015ba7;" rerender="CovenantDialog"  >
+            <apex:param name="addId" assignTo="{!selectedCovenantId}" value="{!o.id}" />
+          </apex:commandLink>
+          |<apex:commandLink value=" Del" action="{!DeleteCovenant}" style="text-decoration:none;color: #015ba7;"  onclick="return showConfirm('delete \'{!o.Name}\' ');"  >
+             <apex:param name="delId" assignTo="{!selectedCovenantId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Action" width="60" rendered="{!!isEditable}" >
+          <apex:commandLink value="View" action="{!ViewCovenant}" style="text-decoration:none;color: #015ba7;" rerender="CovenantDialog"  >
+            <apex:param name="addId" assignTo="{!selectedCovenantId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Title" value="{!o.Title__c}" />
+        <apex:column headerValue="Type" value="{!o.Covenant_Type__c}" />
+        <apex:column headerValue="Entity" value="{!o.EntitiesInText__c}" />
+        <apex:column headerValue="Start Date" value="{!o.Start_Date__c}" />
+        <apex:column headerValue="Testing Frequency" value="{!o.Testing_Frequency__c}" />
+        <apex:column headerValue="Threshold" value="{!o.Covenant_Measures_Long__c}" />
+        <apex:column headerValue="Definitions / Comments" value="{!o.Comments_Long__c}" />
+        <!-- <apex:column headerValue="Covenant Name" >
+            <apex:outputLink value="{!URLFOR($Action.Agreement_Financial_Covenant__c .View,o.Id)}" >{!o.Name}</apex:outputLink>       
+        </apex:column>       
+          -->
+      </apex:pageBlockTable>
+     </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+    <apex:outputPanel id="CovenantDialog">
+    <apex:outputPanel id="CovenantInnerPanel" styleClass="popupBackground" layout="block" rendered="{!displayDialog}"/>
+        <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayDialog}">
+            <apex:PageMessages />
+            <apex:pageblock title="Edit - Covenant" mode="edit" tabStyle="Agreement_Financial_Covenant__c">
+                <apex:pageBlockButtons location="top" >
+                   <apex:outputLink value="{!StandardCovenantDefinitionsUrl}" target="_new" >Standard Covenant Definition</apex:outputLink>
+                </apex:pageBlockButtons>
+                <apex:pageblockSection >
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement_Financial_Covenant__c.Fields.Covenant_Type__c.inlineHelpText}" >
+                         <apex:outputlabel value="Covenant Type"  />
+                            <apex:selectList value="{!dropdownCovenantStatusId}" id="CovenantStatus" size="1">
+                                <apex:selectOptions value="{!ConvenantTypes}"/>
+                                <apex:actionSupport event="onchange" action="{!showCovenantFields}" reRender="CovenantDialog" />  
+                            </apex:selectList>
+                     </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem helpText="{!IF(covenantCustomFieldsVisible,$ObjectType.Agreement_Financial_Covenant__c.Fields.Covenant_Title__c.inlineHelpText,'')}"  >
+                        <apex:outputPanel id="covenantTitle">
+                            <apex:outputlabel value="Covenant Title" styleclass="requiredBlock" rendered="{!covenantCustomFieldsVisible}"/>
+                            <apex:outputlabel value="Standard Covenant" rendered="{!covenantStandardFieldsVisible}"/>
+                        </apex:outputPanel>
+                        <apex:outputPanel id="covenentData" layout="block" styleClass="{!IF(isStandardCovenantRequired || isCovenantTitleRequired,'requiredInput','')}">
+                            <apex:outputpanel layout="block"  styleClass="{!IF(isStandardCovenantRequired || isCovenantTitleRequired,'requiredBlock','')}"/>
+                            <apex:inputField value="{!Covenant.Covenant_Title__c}"  rendered="{!covenantCustomFieldsVisible}"/>   
+                            <apex:selectList value="{!dropdownCovenantTitleId}" id="CovenantStatus" size="1" rendered="{!covenantStandardFieldsVisible}" >
+                                  <apex:selectOptions value="{!ConvenantTitles}"/>
+                                  <apex:actionSupport event="onchange"  reRender="CovenantDialog" />  
+                            </apex:selectList>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    <apex:inputfield value="{!Covenant.Start_Date__c}" />
+                    <apex:pageblocksectionitem >
+                    <apex:outputlabel >Testing Frequency</apex:outputlabel>
+                        <apex:outputpanel layout="block" styleClass="{!IF(isTestingFrequencyRequired,'requiredInput','')}">
+                            <apex:outputpanel layout="block" styleClass="{!IF(isTestingFrequencyRequired,'requiredBlock','')}"/>
+                           <apex:inputField value="{!Covenant.Testing_Frequency__c}" />
+                        </apex:outputpanel>
+                    </apex:pageblocksectionitem>
+                    <apex:pageBlockSectionItem />
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement_Financial_Covenant__c.Fields.Testing_Based_On__c.inlineHelpText}" >
+                    <apex:outputLabel >Based On</apex:outputLabel>
+                       <apex:outputPanel layout="block" styleClass="requiredInput">
+                           <apex:outputPanel layout="block" styleClass="requiredBlock" />
+                              <apex:selectList value="{!dropdownCovenantTestingBasedOnId}" id="CovenantTestbasedOn" size="1">
+                                <apex:selectOptions value="{!TestingBasedOn}"/>
+                                <apex:actionSupport event="onchange" action="{!showCovenantFields}" reRender="CovenantDialog" />  
+ 						      </apex:selectList>
+                          </apex:outputPanel>
+                 </apex:pageBlockSectionItem>                                     
+                    <apex:pageblocksectionitem helpText="{!IF(covenantStandardFieldsVisible,$ObjectType.Agreement_Financial_Covenant__c.Fields.Comments_Long__c.inlineHelpText,'Custom definition must be entered as it is to appear in loan document. Distinguish special instructions from definition as applicable.')}">
+                        <apex:outputlabel >Definitions/ Comments</apex:outputlabel>
+                        <apex:outputpanel layout="block" styleClass="{!IF(isCommentsRequired,'requiredInput','')}">
+                            <apex:outputpanel layout="block" styleClass="{!IF(isCommentsRequired,'requiredBlock','')}" />
+                            <apex:inputField value="{!Covenant.Comments_Long__c}"  />
+                        </apex:outputpanel>
+                    </apex:pageblocksectionitem>           
+                    <apex:pageblocksectionitem helpText="{!$ObjectType.Agreement_Financial_Covenant__c.Fields.Covenant_Measures_Long__c.inlineHelpText}">
+                        <apex:outputlabel >Covenant Threshold</apex:outputlabel>
+                        <apex:outputpanel layout="block" styleClass="{!IF(isThresholdRequired,'requiredInput','')}">
+                            <apex:outputpanel layout="block" styleClass="{!IF(isThresholdRequired,'requiredBlock','')}"/>
+                            <apex:inputField value="{!Covenant.Covenant_Measures_Long__c}"  />
+                        </apex:outputpanel>
+                    </apex:pageblocksectionitem>                    
+                </apex:pageblockSection>
+            </apex:pageblock>
+            <apex:pageBlock >  
+                <apex:pageblockSection title="Related Entities" collapsible="false" columns="1" />                    
+                <div class="relatedEntitiesSection">          
+                    <apex:pageblockSection collapsible="false" columns="1" >                
+                     <apex:pageblockSectionItem helpText="{!$ObjectType.Agreement_Financial_Covenant__c.Fields.EntitiesInText__c.inlineHelpText}">
+                        <apex:outputLabel value="Related Entities"></apex:outputLabel>
+                        <apex:selectCheckboxes id="EntityCheckboxes" value="{!SelectedEntities}" layout="pageDirection" style="text-align:left;">
+                            <apex:selectOptions value="{!Entities}"/>
+                        </apex:selectCheckboxes>
+                     </apex:pageblockSectionItem>                 
+                    </apex:pageblockSection>
+                </div>
+            <apex:commandButton id="CovenantSubmitid" value="Save" action="{!saveDialog}" rerender="CovenantDialog"/>
+            <apex:commandButton id="CovenantCancelid" value="Cancel" action="{!cancelDialog}" immediate="true" rerender="CovenantDialog"/>    
+        </apex:pageblock>
+      </apex:outputPanel>
+    </apex:outputPanel>
+</apex:form>
+</apex:component>

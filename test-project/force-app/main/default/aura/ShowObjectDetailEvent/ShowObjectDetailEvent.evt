@@ -1,0 +1,5 @@
+<!--c:ShowObjectDetailEvent-->
+<aura:event type="APPLICATION" description="Event fired from Object List widget to dispaly Detail of the record">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="strSObjectName" type="String"/>
+</aura:event>

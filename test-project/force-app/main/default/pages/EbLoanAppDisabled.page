@@ -1,0 +1,10 @@
+<apex:page standardController="EB_Loan_Application__c" title="loanForce Disabled" >
+    <apex:sectionHeader title="Loan Applications" subtitle="loanForce Disabled" />
+    <apex:pageblock mode="detail" >
+        <apex:pageBlockSection columns="1" >
+            <div style="padding:20px;text-align:center;font-size:18px;">
+                Creating new "loanForce" applications has been disabled. Please use Ncino loan system to originate loans.
+            </div>
+        </apex:pageBlockSection>
+    </apex:pageblock>
+</apex:page>

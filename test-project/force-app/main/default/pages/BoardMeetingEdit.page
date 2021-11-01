@@ -1,0 +1,31 @@
+<apex:page standardController="Board_Meeting__c" extensions="BoardMeetingController" showHeader="true">
+<apex:form >
+	<apex:pageBlock title="Board Meeting Edit" mode="edit">
+             
+           <apex:pageBlockButtons >
+               <apex:commandButton action="{!BoardMeetingSave}" value="Save"/>
+                <apex:commandButton action="{!BoardMeetingCancel}" value="Cancel"  immediate="true"/>
+                
+            </apex:pageBlockButtons>
+          
+            <apex:pageBlockSection title="Information" columns="2">
+
+			<apex:inputField value="{!bm.Name}" required="false" rendered="false"/> 
+			<apex:inputField value="{!bm.Name__c}" required="false" rendered="false"/>
+			<apex:inputField value="{!bm.Board__c}" required="true"/>		 
+			<apex:inputField value="{!bm.Date__c}" required="true"/>
+			<apex:inputField value="{!bm.Attendance__c}" required="false" rendered="false"/>
+			<apex:inputField value="{!bm.Location__c}" required="false"/>
+			<apex:inputField value="{!bm.Complete__c}" required="false"/>			
+					
+            </apex:pageBlockSection>
+           
+           
+           <apex:detail subject="{!bm.Id}" relatedList="false" title="true"  inlineEdit="true"/> 
+           
+           
+        </apex:pageBlock>
+        
+       
+</apex:form>
+</apex:page>

@@ -1,0 +1,19 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c"
+    extensions="Loan_PluginController"
+    showHeader="false"
+    sidebar="false"
+    action="{!initialize}"
+    LightningStylesheets="true">
+    
+  <apex:relatedList subject="{!ebAccount}" list="EB_Loan_Actions__r" rendered="{! ebAccount != NULL }" />
+  <apex:pageBlock title="Account Actions" tabStyle="LLC_BI__Loan__c" rendered="{! ebAccount == NULL }"  >
+    <apex:pageBlockButtons location="top">
+      <input value="New Account Action" />
+    </apex:pageBlockButtons>
+    <apex:outputText >No Account Actions available for <i>{! loan.LLC_BI__lookupKey__c }</i></apex:outputText>
+  </apex:pageBlock>
+  <c:Eb_PluginHelper newObjectButtonText="New Account Action"
+      newObjectButtonUrl="/setup/ui/recordtypeselect.jsp?ent=01I300000015P4E&retURL=%2F{!loan.Id}%3Fnooverride%3D1&save_new_url=%2Fa0X%2Fe%3FCF00N30000006FQZb%3D{!ebAccount.Name}%26CF00N30000006FQZb_lkid%3D{!ebAccount.Id}%26retURL%3D%252F{!loan.Id}%253Fnooverride%253D1" />
+      
+</apex:page>

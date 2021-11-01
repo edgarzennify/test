@@ -1,0 +1,7 @@
+<apex:page standardController="EB_Collateral__c"  
+    showHeader="false" 
+    sidebar="false" >    
+
+    <c:EbtDocNavigator objectId="{!EB_Collateral__c.Id}" />
+    
+</apex:page>

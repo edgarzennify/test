@@ -1,0 +1,176 @@
+.THIS .objectListTitle {
+    color: rgb(22, 50, 92);
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.25;
+    display: inline;
+}
+
+.THIS .slds-card .slds-card-body {
+    display: none;
+}
+
+.THIS .slds-card._open .slds-card-body {
+    display: block;
+}
+
+.THIS .showMoreBtn {
+    padding: .5rem 1.5rem;
+    border-radius: 15rem;
+    border: 1px solid rgb(216, 221, 230);
+    background-color: rgb(255, 255, 255);
+    display: inline-block;
+    margin: 0.5rem 0 0 0;
+}
+
+.THIS .showMoreBtn:hover {
+    background-color: rgb(0, 95, 178);
+    color: white;
+}
+
+.THIS .picklistDiv {
+    padding-top: .5rem;
+    max-width: 15rem;
+}
+
+.THIS .noRecAlert {
+    margin-top: 0.25rem;
+    padding: 0.75rem;
+    background-color: lightgoldenrodyellow;
+    border-radius: 0.5rem
+}
+
+.THIS .infoIcon .slds-icon {
+    fill: rgb(84, 105, 141) !important;
+}
+
+.THIS .closeBtn {
+    border: none;
+    background: none;
+}
+
+.THIS .hide {
+    display: none;
+}
+
+.THIS .searchClearIcon .slds-icon {
+    fill: rgb(204, 204, 204);
+}
+
+.THIS .searchClearIcon .slds-icon:hover {
+    fill: rgb(158, 156, 156) !important;
+}
+
+.THIS .spinnerIcon {
+    position: relative;
+    float: right;
+    padding: 1rem 2rem;
+}
+
+.THIS .filterDiv {
+    margin-top: .5rem;
+    width: 15rem;
+}
+
+.THIS .customPicklist {
+    width: 100%;
+}
+
+.THIS .filterDiv button {
+    width: 100%;
+    text-align: left;
+}
+
+.THIS .filterDiv button .dropDownIcon {
+    float: right;
+}
+
+.THIS .slds-picklist .slds-truncate {
+    color: #3e3e3c;
+}
+
+.THIS .slds-dropdown {
+    border-radius: 0;
+}
+
+.THIS .slds-dropdown__item>a {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.THIS .slds-text-heading_small {
+    font-weight: 700;
+}
+
+.THIS .label {
+    display: inline;
+    color: rgb(84, 105, 141);
+    font-size: .75rem;
+    font-weight: 400;
+    padding-right: 1rem;
+    flex: 2;
+    max-width: 125px;
+}
+
+.THIS .value {
+    display: inline;
+    font-size: .75rem;
+    font-weight: 400;
+    flex: 3;
+}
+
+.THIS .forceListRecord .itemTitle {
+    color: rgb(22, 50, 92);
+    font-size: .875rem;
+    font-weight: 400;
+    font-weight: 400;
+    line-height: 1.5;
+    padding-bottom: 3px;
+}
+
+.THIS .slds-card__header {
+    padding: .75rem 0.5rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.THIS #btnShowMore {
+    background-color: #2359A8;
+    color: #fff;
+}
+
+.THIS #btnShowMore:hover {
+    text-decoration: underline;
+}
+
+.THIS .customIcon .slds-icon {
+    fill: #2359A8;
+}
+
+.THIS .card-header {
+    padding: .75rem;
+    border-bottom: 1px solid rgb(216, 221, 230);
+}
+
+.THIS .card-header.card-header--expandable {
+    cursor: pointer;
+}
+
+.THIS .forceBaseCard {
+    margin: 0px;
+    margin-top: .5rem;
+    border: 1px solid rgb(216, 221, 230);
+    border-radius: .4rem;
+    background-color: white;
+}
+
+.THIS .card-header__heading {
+    white-space: initial;
+}
+
+@media only screen and (min-width: 48em) {
+    .THIS .objectListBody {
+        margin-right: auto;
+        margin-left: auto;
+    }
+}

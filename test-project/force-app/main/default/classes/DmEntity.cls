@@ -1,0 +1,30 @@
+public class DmEntity {
+    public String Id {get;set;}
+    public String Name {get;set;}
+    public String CoreName{get;set;}
+    public String CustomerNumber {get;set;}
+    public String BillingStreet {get;set;}
+    public String BillingCity {get;set;}
+    public String BillingState {get;set;}
+    public String BillingPostalCode {get;set;}
+    public Date BirthDate {get;set;}
+    public String Phone {get;set;}
+    public String Email {get;set;}
+    public String TaxId {get;set;}
+    public String SicCode {get;set;}
+    public String EntityType {get;set;}
+    public String DriversLicense {get;set;}
+    public String RegOCode {get;set;}
+    public Decimal Roe {get;set;}
+    public Decimal Cm {get;set;}
+    public DmEntity Parent {get;set;}
+    public DmEntity PrimaryRelationship {get;set;}
+    public DmRecordType RecordType {get;set;}
+    public DmUser RelationshipManager {get;set;}
+    public DmUser TmRep {get;set;}
+    public List<DmProductOverview> ProductOverviews {get;set;}
+    public List<DmEbAccount> OwnedAccounts {get;set;}
+    public List<DmOpportunity> Opportunities {get;set;}
+    public List<DmTreasuryService> TreasuryServices {get;set;}
+    public List<DmContact> Contacts {get;set;}
+}

@@ -1,0 +1,6 @@
+<apex:page controller="LoanTransactionRequestController" showHeader="true" tabStyle="Loan_Transaction__tab" >
+   
+    <!--<apex:iframe height="800"  scrolling="true" src="{!Url}EnteredBy={!$User.FirstName} {!$User.LastName}&Email={!$User.Email}&ApprovalCheck={!$User.Email}"  id="theIframe"/>-->
+    <div style="padding:50px;text-align:center;">This system is no longer available, please use "Account Actions" to complete your loan transaction request.</div>
+  
+</apex:page>

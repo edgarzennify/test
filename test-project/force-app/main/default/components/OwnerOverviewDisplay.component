@@ -1,0 +1,64 @@
+<apex:component controller="OwnerOverviewComponent" allowDML="true">
+
+    <apex:outputPanel rendered="{!canEditRM}">
+        Change Primary RM from <b>{!owner.Name}</b> to 
+        <apex:selectList value="{!newRMId}" size="1" style="margin:5px;">
+            <apex:selectOptions value="{!availableRMs}" />
+        </apex:selectList> for all entities.
+        <apex:commandButton value="Submit" action="{!updateAllRM}" style="margin:5px;"/>
+        <br/>To change individual entities, please use the form below.<p/>
+    </apex:outputPanel>
+
+    <apex:pageBlock title="Primary RM: {!owner.name}" id="mainpanel">
+        <div class="hierarchyListView">
+            <apex:pageBlockTable value="{!relationshipTreesForDisplay}" var="relateditem">
+                <apex:column headerValue="Entity" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" >
+                      <apex:outputLink value="/{!relateditem.entity.id}" style="margin-left:{!relateditem.nodeLevel}0px;" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" target="_blank">{!relateditem.entity.Name}</apex:outputLink>
+                </apex:column> 
+                <apex:column headerValue="Active Accounts" value="{!relateditem.totalActiveAccounts}" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" style="width:50px;text-align:center;"/>
+                <apex:column headerValue="Relationship To Parent" value="{!relateditem.entity.Relationship_To_Parent__c}" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" style="width:50px;" rendered="{!relationshipsExpanded}"/>
+                <apex:column headerValue="Branch" value="{!relateditem.entity.EB_UnitID__r.Name}" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" />
+                <apex:column headerValue="Primary RM" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')} " rendered="{!canEditRM}" >
+                    <apex:inputField value="{!relateditem.entity.ownerId}" rendered="{!relateditem.isTopLevel}">
+                        <apex:actionSupport event="onchange" action="{!changesMade}" reRender="mainpanel"/>
+                    </apex:inputField>
+                </apex:column> 
+                <apex:column headerValue="Edit Rel" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" style="width:50px;text-align:center;" >
+                   <apex:outputLink value="/apex/ParentRelationshipManagerView?id={!relateditem.entity.id}&retUrl=/Apex/OwnerOverview?id={!owner.id}" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}">Edit</apex:outputLink>
+                </apex:column> 
+                <apex:column headerValue="Flatten Hierarchy" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}" style="width:50px;text-align:center;" rendered="{!canEditRM}" >
+                   <apex:outputLink value="/apex/FlattenRelatedChildrenForEntity?id={!relateditem.entity.id}&retUrl=/Apex/OwnerOverview?id={!owner.id}" styleClass="node {!IF(relateditem.isTopLevel,'parentNode','')}">Flatten</apex:outputLink>
+                </apex:column> 
+            </apex:pageBlockTable>
+        </div>
+
+        <apex:pageBlockButtons location="both" styleClass="noWrapButtons" >
+            <apex:commandButton value=" Save Changes " action="{!saveChanges}" disabled="{!IF(haveChangesBeenMade,'false','true')}" rendered="{!canEditRM}"  />
+            <apex:commandButton value=" Cancel " action="{!cancel}" rendered="{!canEditRM}" />
+            <apex:commandButton value=" Close " action="{!cancel}" rendered="{!IF(canEditRM,'false','true')}" />
+            <apex:commandButton value=" Expand Relationships " action="{!expandRelationships}" rendered="{!IF(relationshipsExpanded,'false','true')}" styleClass="buttonSpaced" />
+            <apex:commandButton value=" Collapse Relationships " action="{!collapseRelationships}" rendered="{!relationshipsExpanded}" styleClass="buttonSpaced"/>
+            <apex:commandButton value=" Next Page " action="{!nextPage}" rendered="{!displayNextPageLink}" styleClass="buttonSpaced"/>
+            <apex:commandButton value=" Prev Page " action="{!prevPage}" rendered="{!displayPrevPageLink}" styleClass="buttonSpaced"/>
+        </apex:pageBlockButtons>
+
+    </apex:pageBlock> 
+
+    <style type="text/css">
+        .node{
+            padding:5px;
+        }
+        .pbTitle {
+    	    white-space: nowrap;
+	    }
+        .parentNode{
+            margin-top:50px;
+            font-weight: bold;  
+            background-color:#eff;        
+        }
+        .buttonSpaced{
+            margin-left:30px;
+        }
+    </style>
+
+</apex:component>

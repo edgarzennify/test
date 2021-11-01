@@ -1,0 +1,31 @@
+<apex:page docType="html-5.0"
+    sidebar="false"
+    standardController="LLC_BI__Collateral__c"
+    extensions="Collateral_PluginController" >
+    
+    <apex:outputPanel rendered="{! ebCollateral == NULL}" >
+        <apex:sectionHeader title="Collateral" subtitle="{! collateral.Name }" />
+        <apex:form >
+            <apex:pageBlock >
+                <div style="padding:20px;">
+                    <div style="padding-bottom:10px;">
+                    'Classic' Collateral cannot be viewed because no Eb Collateral is currently associated with "{! collateral.Name }".
+                    </div>
+                    <div>
+                        <a href="/{!collateral.Id}" class="btn" style="text-decoration:none;" >&lt;&lt; Go back to nCino collateral</a>
+                    </div>
+                </div>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{! ebCollateral != NULL}" >
+        Loading 'Classic' Collateral "{!ebCollateral.Name}"...
+    </apex:outputPanel>
+    
+    <script language="javascript">               
+        if("{! ebCollateral  }" != ''){
+            window.top.location = "/{!ebCollateral.Id}?nooverride=1"; 
+        }       
+  </script>
+    
+</apex:page>

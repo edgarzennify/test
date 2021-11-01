@@ -1,0 +1,20 @@
+<apex:component controller="BarcodeGeneratorController" allowDML="true">
+    <apex:attribute name="objectId" type="String" required="true" description="" assignTo="{!objectIdAttribute}" />
+       
+    <apex:sectionHeader title="Document Imaging" subtitle="Barcode Generator">
+    </apex:sectionHeader>
+    <div style="margin-bottom:10px;display:flex;justify-content:flex-end">
+        <c:BarcodeGeneratorDropzone objectId="{!objectId}" uploadSplit="false"></c:BarcodeGeneratorDropzone>
+    </div>
+    
+    <div id="react-barcode-app">
+        Loading...
+    </div>
+    <script type="text/javascript">
+        var contextId = "{!objectId}";
+        var isLink = true;
+        var buttonText = "Click here to upload files...";
+    </script>
+    
+    <apex:includeScript value="{!URLFOR($Resource.DocumentUploadReactify, '/barcodeClientApp.js')}" />
+</apex:component>

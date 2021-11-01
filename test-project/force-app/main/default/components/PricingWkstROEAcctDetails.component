@@ -1,0 +1,37 @@
+<apex:component controller="PricingWkstComponentROESummary">
+    
+    <apex:attribute name="pricingResult" type="PricingWkstResults" assignTo="{!pricingResults}" required="true" description="" />
+    <apex:attribute name="isEditable" type="Boolean" default="true" description="" />
+    <apex:attribute name="showAllColumns" type="Boolean" default="true" description="" />
+
+        <apex:pageBlockSection id="ROEAcctDetails" title="Existing Account Details" rendered="{!isEditable}" >
+            <apex:pageBlockTable value="{!pricingResults.existingAccountDetails}" var="existingAccountDet" >
+                <apex:column headerValue="Acct" value="{!existingAccountDet.account}" styleClass="medCol left" headerClass="left" footerClass="left" />
+                <apex:column headerValue="Type" value="{!existingAccountDet.accountType}" styleClass="medCol left" headerClass="left" footerClass="left" />
+                <apex:column headerValue="Title" value="{!existingAccountDet.accountTitle}" styleClass="largeCol left" headerClass="left" footerClass="left" />
+                <apex:column headerValue="Committed Amt" styleClass="medCol right" headerClass="right" footerClass="right" >
+                    <apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.committedAmount}"/></apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Avg Balance" styleClass="medCol right" headerClass="right" footerClass="right" >
+                    <apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.averageBalance}"/></apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Income" styleClass="medCol right" headerClass="right" footerClass="right" >
+                    <apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.income}"/></apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Loan Fees" styleClass="medCol right" headerClass="right" footerClass="right" >
+                    <apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.loanFees}"/></apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Risk Expense" styleClass="medCol right" headerClass="right" footerClass="right" >
+                    <apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.riskExpense}"/></apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Capital Requirements" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!showAllColumns}" >
+                    <apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.capitalRequirements}"/></apex:outputText>
+                </apex:column>
+                <apex:column headerValue="Transfer Rate" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!showAllColumns}">
+                    <apex:outputText value="{0, number, 0.000%}"><apex:param value="{!existingAccountDet.transferRate}"/></apex:outputText>
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlockSection>
+
+        <script>twistSection(document.getElementById('{!$Component.ROEAcctDetails}').getElementsByTagName('img')[0])</script>
+</apex:component>

@@ -1,0 +1,96 @@
+<apex:component id="AgreementSubordinationId" controller="AgreementSubordinationComponent" allowDML="true" >
+  <apex:attribute type="Agreement__c" name="AgreementObject" assignTo="{!agmt}" description="Subordination" />
+  <apex:attribute type="Boolean" Name="canEdit" assignTo="{!canEditSubordination}" description="canEdit" />
+  <apex:form >
+    <a id="SubordinationAgreements" />
+    <apex:pageBlock id="SubordinationAgrements" title="Subordination / Intercreditor Agreements" rendered="{!NOT (ISNULL(SubordinationAgreements))}">
+      <apex:pageblockButtons location="top">
+        <apex:commandButton value="New Subordination / Intercreditor Agreement" action="{!AddSubordination}" rendered="{!isEditable}" />
+      </apex:pageblockButtons>
+      <apex:pageblocktable value="{!SubordinationAgreements}" var="sub" rendered="{!NOT (ISNULL(SubordinationAgreements))}">
+        <apex:column headervalue="Action" width="60" rendered="{!isEditable}" >
+          <apex:commandLink value="Edit" action="{!EditSubordination}"  style="text-decoration:none; color:#015ba7;" >
+            <apex:param name="editId" assignTo="{!selectedSubordinationId}" value="{!sub.id}" /> 
+          </apex:commandLink>
+          |&nbsp;
+          <apex:commandLink value="Del" action="{!DeleteSubordination}" style="text-decoration:none;color:#015ba7;" onclick="return showConfirm('delete \'{!sub.Name}\' ');" >
+            <apex:param name="delId" assignTo="{!selectedSubordinationId}" value="{!sub.id}" /> 
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Action" width="60" rendered="{!!isEditable}" >
+          <apex:commandLink value="View" action="{!ViewSubordination}" style="text-decoration:none;color:#015ba7;" rerender="SubordinationDialog"  >
+            <apex:param name="viewId" assignTo="{!selectedSubordinationId}" value="{!sub.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headervalue="Primary Creditor" value="{!sub.Creditor__c}"/>
+        <apex:column headervalue="Secondary Creditor" value="{!sub.Secondary_Creditor__c}"/>
+        <apex:column headervalue="Obligation Summary" value="{!sub.Obligation_Summary__c}"/>  
+        <apex:column headervalue="Limitation" value="{!sub.Limitation__c}"/>
+        <apex:column headervalue="Payment Summary" value="{!sub.Payment_Summary__c}"/>
+        <apex:column headervalue="Comments" value="{!sub.Comments__c}"/>
+        <apex:column headervalue="Related Entities" value="{!sub.EntitiesInText__c}"/>
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+  </apex:form>
+  <apex:form >
+    <apex:outputPanel id="SubordinationDialog">
+      <apex:outputPanel id="SubordinationInnerPanel" styleClass="popupBackground" layout="block" rendered="{!displayDialog}"/>
+      <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayDialog}">
+        <apex:pageMessages />
+        <apex:pageblock title="Edit - Subordination / Intercreditor Agreements" mode="edit" tabStyle="Agreement_Subordination__c">
+          <apex:pageblockSection >
+            <apex:inputField value="{!Subordination.Creditor__c}" />
+            <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement_Subordination__c.Fields.Limitation__c.inlineHelpText}">
+                <apex:outputLabel value="Limitation" />
+                <apex:outputPanel layout="block" styleClass="{!IF(isLimitationRequired,'requiredInput','')}" >
+                    <apex:outputpanel styleClass="{!IF(isLimitationRequired,'requiredBlock','')}" />
+                    <apex:inputField value="{!Subordination.Limitation__c}" />
+                </apex:outputPanel>                            
+            </apex:pageBlockSectionItem>
+            <apex:inputField value="{!Subordination.Secondary_Creditor__c}" />
+            <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement_Subordination__c.Fields.Payment_Allowed__c.inlineHelpText}">
+                <apex:outputLabel value="Payment Allowed" />
+                <apex:outputPanel layout="block" styleClass="{!IF(isPaymentAllowedRequired,'requiredInput','')}" >
+                    <apex:outputpanel styleClass="{!IF(isPaymentAllowedRequired,'requiredBlock','')}" />
+                    <apex:inputField value="{!Subordination.Payment_Allowed__c}" />
+                </apex:outputPanel>                            
+            </apex:pageBlockSectionItem>
+            <apex:inputField value="{!Subordination.Obligation_Type__c}" >
+                <apex:actionSupport event="onchange" reRender="SubordinationDialog" />
+            </apex:inputField>          
+            <apex:inputField value="{!Subordination.Payment_Type__c}" />  
+            <apex:inputField value="{!Subordination.Obligation_Amount__c}" />
+            <apex:inputField value="{!Subordination.Payment_Frequency__c}" />
+            <apex:pageBlockSectionItem />           
+            <apex:inputField value="{!Subordination.Payment_Amount__c}" />
+          </apex:pageblockSection>
+          <apex:pageblockSection columns="1" >            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Comments" />
+                <apex:outputPanel layout="block" styleClass="{!IF(isCommentsRequired,'requiredInput','')}" >
+                    <apex:outputpanel styleClass="{!IF(isCommentsRequired,'requiredBlock','')}" />
+                    <apex:inputField value="{!Subordination.Comments__c}" style="width:90%;" />
+                </apex:outputPanel>                            
+            </apex:pageBlockSectionItem>
+          </apex:pageblockSection>
+        </apex:pageBlock>        
+          <apex:pageBlock >
+              <apex:pageblockSection title="Related Entities" collapsible="false" columns="1" />                    
+                <div class="relatedEntitiesSection">    
+                  <apex:pageBlockSection collapsible="false" columns="1" >
+                    <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement_Subordination_Entity_Rel__c.Fields.Entity__c.inlineHelpText}">
+                      <apex:outputLabel value="Related Entities" />
+                      <apex:selectCheckboxes id="EntityCheckboxes" value="{!SelectedEntities}" layout="pageDirection" style="text-align:left;">
+                        <apex:selectOptions value="{!Entities}"/>
+                      </apex:selectCheckboxes>
+                    </apex:pageBlockSectionItem>
+                  </apex:pageBlockSection>
+                </div>  
+          <apex:commandButton value="Save" action="{!SaveDialog}" rerender="SubordinationDialog"/>
+          <apex:commandButton value="Cancel" action="{!CancelDialog}" immediate="true" rerender="SubordinationDialog"/>
+        </apex:pageblock>
+
+      </apex:outputPanel>
+    </apex:outputPanel>
+  </apex:form>
+</apex:component>

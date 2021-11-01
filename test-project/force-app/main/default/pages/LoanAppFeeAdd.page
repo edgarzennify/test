@@ -1,0 +1,60 @@
+<apex:page standardController="EB_Loan_Fee__c" extensions="LoanAppFeeAddController" >
+   <apex:pageMessages />
+   <style>
+    TEXTAREA {
+      /* background-color: navy;
+      border: black 2px solid;
+      color: white;*/
+      font-family: arial, verdana, ms sans serif;
+      font-size: 10pt;
+      font-weight: normal;
+      width:100%;
+      Height:35px;
+    }  
+  </style>
+  <apex:form >
+    <apex:sectionHeader title="Loan Fee for {!Quotes}{!getLoanApplicationName}{!Quotes}" />
+    <apex:pageBlock mode="edit">        
+      <apex:pageBlockButtons > 
+        <apex:commandButton value="Save"  action="{!SaveLoanFee}" />
+        <apex:commandButton value="Save and New"  action="{!SaveAndNewLoanFee}"  />
+        <apex:commandButton value="Cancel" action="{!CancelLoanFee}" immediate="true" />
+      </apex:pageBlockButtons>       
+        <apex:pageBlockSection title="Fee Details" columns="1" >
+        <apex:pageblocksectionItem >
+          <apex:outputLabel value="Related Collateral"></apex:outputLabel>
+          <apex:selectList value="{!dropdownCollateralId}"  size="1" id="CollateralList"  >
+            <apex:selectOptions value="{!CollateralDescs}"  />                              
+          </apex:selectList>
+        </apex:pageBlockSectionItem>
+        <apex:pageblocksectionItem >
+            <apex:outputLabel value="Type of Fee"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                <apex:selectList value="{!dropdownTypeOfFeeId}" required="true" size="1" id="TypeOfFeeList" >
+                    <apex:selectOptions value="{!TypeOfFees}"  />                              
+                </apex:selectList>
+            </apex:outputPanel>
+        </apex:pageblocksectionItem>
+        <apex:pageblocksectionItem >
+            <apex:outputLabel for="FeeAmount" value="Fee Amount"></apex:outputLabel>
+            <apex:inputField value="{!r.Fee_Amount__c}" id="FeeAmount" />
+        </apex:pageblocksectionItem>
+         <apex:pageblocksectionItem >
+            <apex:outputLabel value="Fee Handling"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+                <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                <apex:selectList value="{!dropdownFeeHandlingId}" required="true" size="1" id="FeeHandlingList" >
+                    <apex:selectOptions value="{!FeeHandling}"  />                              
+                </apex:selectList>
+            </apex:outputPanel>
+        </apex:pageblocksectionItem>
+        <apex:pageblocksectionItem >
+            <apex:outputLabel for="payableto" value="Payable To"></apex:outputLabel>
+            <apex:inputField value="{!r.Payable_To__c}" id="payableto" />
+        </apex:pageblocksectionItem>
+       <!-- <apex:outputLabel value="{!err}" /> -->
+      </apex:pageBlockSection> 
+    </apex:pageBlock> 
+  </apex:form>
+</apex:page>

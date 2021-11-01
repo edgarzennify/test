@@ -1,0 +1,35 @@
+<apex:page standardController="EB_Loan_Application__c" extensions="LoanAppAgreementAddController"  >
+    <apex:pageMessages />
+    <script language="javascript">
+        function showConfirm(selected_text){ 
+            agmt = "{!getLoanApplicationName}";  
+            agreement = selected_text; 
+            return confirm("Are you sure you want to add agreement \"" + agreement + "\" to \"" + agmt + "\"?"); 
+        }        
+    </script>
+    <apex:form >
+        <apex:pageBlock title="Add Lending Agreement To {!getLoanApplicationName}" mode="edit"  >
+            <apex:pageBlockButtons location="top" >        
+                <apex:commandButton value="Cancel" action="{!CancelAgreement}" />
+            </apex:pageBlockButtons>
+            <div style="padding:4px;">
+                <apex:outputPanel rendered="{!ContainsAgreements}">
+                    <div style="padding:4px;">Please select an existing lending agreement to be attached to &quot;{!getLoanApplicationName}&quot;.</div>
+                    <apex:pageBlockTable id="dlAgreement" value="{!AgreementLinkList}" frame="hsides" var="c">
+                        <apex:column headerValue="Lending Agreement">
+                            <apex:commandLink onclick="return showConfirm('{!c.Name}');" action="{!SaveExistingAgreement}" id="txt" value="{!c.Name}">
+                                <apex:param assignTo="{!selectedAgreementId}" name="selectedAgreement" value="{!c.Id}" />
+                            </apex:commandLink>
+                        </apex:column>
+                        <apex:column headerValue="Borrower" value="{!c.Borrower_Name__c}" />
+                         <apex:column headerValue="Status" value="{!c.RecordTypeId}" />
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!!ContainsAgreements}">
+                    <div class="message warningM4" style="margin-left:4px;"><img src="/s.gif" alt="Warning" class="msgIcon" title="Warning" /> No existing agreement available to attach. Click "Add a New Agreement" to create a new agreement for this application.</div>
+                </apex:outputPanel>  
+                <apex:commandButton value="Add A New Lending Agreement" action="{!AddNewAgreement}" style="margin-top:4px;margin-left:4px;" />
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

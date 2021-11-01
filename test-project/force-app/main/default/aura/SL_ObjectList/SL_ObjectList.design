@@ -1,0 +1,47 @@
+<design:component label="Silverline Object List">
+    <design:attribute name="Heading" label="Heading" description="Heading displayed for the component." />
+    <design:attribute name="SObjectName" label="Object Name" description="Name of the object for which the records needs to be displayed."
+    />
+    <design:attribute name="ListViews" label="List Views" description="Comma separated valid List View names" />
+    <design:attribute name="ListViewFilterLabel" label="List view label" default="Filter by List View" description="Filter will be shown with this default text."
+    />
+    <design:attribute name="FieldsetName" label="Object List Field Set" description='API name of the field set on the specified object that determines what fields will be displayed in the list component.'
+    />
+    <design:attribute name="DetailFieldsetName" label="Object Detail Field Set" description="API name of the field set on the specified object that determines what fields will be displayed in the detail modal. Provide value if you are choosing detail behaviour to Modal Popup"
+    />
+    <design:attribute name="DetailBehaviour" label="Object Detail Behaviour" datasource="Redirect to Detail Page, Object Detail Component, Modal Popup"
+        default="Object Detail Component" description="Redirect to Detail will take user to the standard detail page, Object Detail Component option will broadcast an event and show details on the object detail component and Modal Popup option will show the details on the Modal Window based on the fieldset provided in the Object Detail Field Set property"
+    />
+    <design:attribute name="ModalPopupHeader" label="Modal Popup Header" default="" description="Header text displayed when the Object Detail Behavior is 'Modal Popup'"
+    />
+    <design:attribute name="ShowAttachmentDetail" label="Show Attachments in Model popup" default="" description="attachments are displayed when the Object Detail Behavior is 'Modal Popup'"
+    />
+    <design:attribute name="MaxRecords" label="Maximum records to fetch" description="Maximum records to fetch. Default value is 20."
+    />
+    <design:attribute name="RecordsOnLoad" label="Maximum records on load" description="Maximum records to be visible when the page loads. Also the maximum count of additional records to be visible on click of the show more button. Default value is 4."
+    />
+    <design:attribute name="RelationshipField" label="Record Filter Field" description="Relationship field name ex. AccountId for Account-Contact relationship"
+    />
+    <design:attribute name="FilterCriteria" label="Filter Criteria" description="Records can be filtered using this. Please provide a valid filter criteria for the specified object."
+    />
+    <design:attribute name="PicklistFilter" label="Picklist Filter" description="A valid picklist field can be placed here. According to this picklist the records can be filtered."
+    />
+    <design:attribute name="PicklistFilterLabel" label="Picklist label" default="Filter by Picklist" description="Filter will be shown with this default text."
+    />
+    <design:attribute name="ComponentExpandCollapse" label="Component Expand/Collapse" datasource="Allow-default expanded, Allow-default collapsed, Don't allow-always expanded"
+        default="Allow-default expanded" description="Expand / Collapse the component" />
+    <design:attribute name="RecordExpandCollapse" label="Record Card Expand/Collapse" datasource="Allow-default expanded, Allow-default collapsed, Don't allow-always expanded"
+        default="Allow-default expanded" description="Expand / Collapse the record cards" />
+    <design:attribute name="ShowSearchBox" label="Display Search Box" description="Search box appears where the records can be searched."
+    />
+    <design:attribute name="displayModalDetailButton" label="Display Modal Detail Button" description="Uncheck to remove Detail button from modal window"
+    />
+    <design:attribute name="ShowFieldLabel" label="Show field label" description="Field labels are displayed when checked." />
+    <design:attribute name="DisableLinks" label="Disable Links" description="Switch between clickable and non-clickable records."
+    />
+    <design:attribute name="showAttachments" label="show Attachments" description="show Attachments tab?" />
+    <design:attribute name="Attachmentsdisplay" label="View Attachments as" datasource="Card, Model Popup" default="Card" description="To view list of Attachments"
+    />
+
+
+</design:component>

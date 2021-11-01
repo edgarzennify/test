@@ -1,0 +1,2 @@
+<apex:page Controller="IncrementAccountActionActionStatusUpdate" action="{!IncrementActionStatusUpdate}" lightningstylesheets="true">
+</apex:page>

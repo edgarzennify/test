@@ -1,0 +1,20 @@
+<apex:component controller="AttachmentController" allowDML="true">
+
+	<apex:attribute name="idOfParent" type="String" assignTo="{!parentId}" required="true" description="" />
+	<apex:attribute name="refreshNeeded" type="Boolean" assignTo="{!refreshAttachments}" required="true" description="" />
+
+
+	<apex:pageblock id="account" title="Attachments" >
+	    <apex:pageblockTable value="{!attachmentsMaxLimited}" var="attach">
+		    <apex:column headerValue="Action">
+				<apex:outputLink value="{!URLFOR($Action.Attachment.Download, attach.Id)}" 
+				target="_blank">View</apex:outputLink>
+		    </apex:column>
+		    <apex:column value="{!attach.Name}" headerValue="File Name"/>
+		    <apex:column value="{!attach.Owner.Name}" headerValue="Owner Name"/>
+		    <apex:column value="{!attach.LastModifiedDate}" headerValue="Last Modified Date"/>  
+	    </apex:pageblockTable>
+	</apex:pageblock>
+
+
+</apex:component>

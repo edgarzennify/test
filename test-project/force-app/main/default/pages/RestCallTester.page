@@ -1,0 +1,7 @@
+<apex:page standardController="EB_Loan_Application__c" extensions="RestCallTesterController" action="{!CalloutRest}" >
+  <apex:pageMessages />
+
+  <apex:outputLabel value="Status : {!getStatus}"></apex:outputLabel>
+  <br/>
+  <apex:outputLabel value="Response : {!getCallOutResponse}"></apex:outputLabel>
+</apex:page>

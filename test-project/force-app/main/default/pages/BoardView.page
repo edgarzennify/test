@@ -1,0 +1,103 @@
+<apex:page standardController="Board__c" extensions="BoardController" tabStyle="Board__c">
+	<style>
+    	.activeTab {background-color: #E3F3FF; color:#000000;background-image:none; font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:bold}
+    	.inactiveTab { background-color: lightgrey; color:black; background-image:none; font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:bold}
+	</style>
+    <apex:detail subject="{!board.Id}" relatedList="false" title="true"  inlineEdit="true"/> 
+    <apex:form >
+    	<apex:pageblock title="Directors"> 
+        	<apex:pageBlockButtons location="top">
+            	    <apex:commandButton value="New Director" action="{!newBoardMembership}" rendered="{!canEdit}"/> 
+        	</apex:pageBlockButtons>
+	    	<!-- Create Tab panel --> 
+			<apex:tabPanel switchType="client" selectedTab="Active" id="BoardTabPanel" tabClass="activeTab" inactiveTabClass="inactiveTab">
+          		<apex:tab label="Active" name="Active" id="Active">  
+        			<div style=" height : 200px; overflow:auto;" >
+        				<apex:pageblock >
+        					<apex:pageBlockSection columns="1" collapsible="false">
+								<apex:pageblocktable value="{!board.Board_Director_Associations__r}" var="a" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:normal">
+            						<apex:column headerValue="Action" rendered="{!IF(a.Role__c != 'Retired' && canEdit == 'true',true,false)}"  style="text-decoration:none;color:blue;">
+                   						<!--   <apex:outputLink value="/{!a.Id}" style="text-decoration:none;color:#015BA7;">Edit</apex:outputLink>-->
+                    					<apex:commandLink action="{!editMembership}" style="text-decoration:none;color:#015BA7;">
+                    						Edit
+                    						<apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    					</apex:commandLink>
+                    					<apex:outputLabel rendered="{!CanDelete=='true'}" style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+                    					<apex:commandLink rendered="{!CanDelete=='true'}" action="{!deleteMembership}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+                    						Del
+                    						<apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    					</apex:commandLink>
+                					</apex:column>           
+                					<apex:column headervalue="Director"  rendered="{!a.Role__c != 'Retired'}">
+                						<apex:outputLink value="/{!a.EB_Team_Member__r.Id}">{!a.EB_Team_Member__r.Name}</apex:outputLink>
+                					</apex:column>
+			                		<apex:column headervalue="Role" value="{!a.Role__c}" rendered="{!a.Role__c != 'Retired'}"/>
+			                		<apex:column headervalue="Date Elected" value="{!a.Date_Elected__c}" rendered="{!a.Role__c != 'Retired'}"/>
+			                		<apex:column headervalue="Compensation"  value="{!a.Compensation_Type__c}" rendered="{!a.Role__c != 'Retired'}"/>
+			 						<!-- <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton,cancelButton" hideOnEdit="editButton" />-->
+ 			 					</apex:pageblocktable>
+        					</apex:pageBlockSection>           
+        				</apex:pageblock>
+        			</div>
+        		</apex:tab>
+                <apex:tab label="Retired/Resigned" name="Retired" id="Retired">
+			        <div style=" height : 200px; overflow : auto;">
+			        	<apex:pageblock >         
+							<apex:pageBlockSection columns="1" collapsible="false">
+			           			<apex:pageblocktable value="{!board.Board_Director_Associations__r}" var="a" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:normal">
+			            			<apex:column headerValue="Action" rendered="{!IF(a.Role__c != 'Vice Chairman' && a.Role__c != 'Chairman' && a.Role__c != 'Member' && a.Role__c != 'Advisory' && canEdit=='true',true,false)}"  style="text-decoration:none;color:blue;">
+			                   			<apex:commandLink action="{!editMembership}" style="text-decoration:none;color:#015BA7;">
+			                    			Edit
+			                    			<apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+			                    		</apex:commandLink>
+			                     		<apex:outputLabel rendered="{!CanDelete=='true'}" style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+			                    		<apex:commandLink rendered="{!CanDelete=='true'}" action="{!deleteMembership}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+			                    			Del
+			                    			<apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+			                    		</apex:commandLink>
+			                		</apex:column>         
+			                		<apex:column headervalue="Director"  rendered="{!IF(a.Role__c != 'Vice Chairman' && a.Role__c != 'Chairman' && a.Role__c != 'Member' && a.Role__c != 'Advisory' ,true,false)}">
+			                 			<apex:outputLink value="/{!a.EB_Team_Member__r.Id}">{!a.EB_Team_Member__r.Name}</apex:outputLink>
+			                 		</apex:column>
+			                		<apex:column headervalue="Role" value="{!a.Role__c}" rendered="{!IF(a.Role__c != 'Vice Chairman' && a.Role__c != 'Chairman' && a.Role__c != 'Member' && a.Role__c != 'Advisory' ,true,false)}"/>
+			                		<apex:column headervalue="Date Elected" value="{!a.Date_Elected__c}" rendered="{!IF(a.Role__c != 'Vice Chairman' && a.Role__c != 'Chairman' && a.Role__c != 'Member' && a.Role__c != 'Advisory' ,true,false)}"/>
+			                    	<apex:column headervalue="Date Resigned" value="{!a.Date_Resigned__c}" rendered="{!IF(a.Role__c != 'Vice Chairman' && a.Role__c != 'Chairman' && a.Role__c != 'Member' && a.Role__c != 'Advisory' ,true,false)}"/>
+			                    	<apex:column headervalue="Compensation"  value="{!a.Compensation_Type__c}" rendered="{!IF(a.Role__c != 'Vice Chairman' && a.Role__c != 'Chairman' && a.Role__c != 'Member' && a.Role__c != 'Advisory' ,true,false)}"/>
+			 				 	</apex:pageblocktable>
+			        		</apex:pageBlockSection>
+			    		</apex:pageblock>
+			      	</div>
+	    		</apex:tab>
+    		</apex:tabPanel>
+    	</apex:pageblock>
+    
+	    <apex:pageblock title="Meetings"> 
+	    	<apex:pageBlockButtons location="top">
+	        	<apex:commandButton value="New Meeting" action="{!newBoardMeeting}" rendered="{!canEdit}"/> 
+	        </apex:pageBlockButtons>
+		    <div style=" height : 200px; overflow:auto;" >
+		        <apex:pageblock >
+		        	<apex:pageBlockSection columns="1" collapsible="false">
+		        		<apex:pageblocktable value="{!board.Board_Meetings__r}" var="a" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:normal">
+		            		<apex:column headerValue="Action" style="text-decoration:none;color:blue;" rendered="{!canEdit}">
+		                    	<apex:outputLink value="/{!a.Id}" style="text-decoration:none;color:#015BA7;" >Edit</apex:outputLink>
+		                    	<apex:outputLabel rendered="{!CanDelete=='true'}" style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+								<apex:commandLink rendered="{!CanDelete=='true'}" action="{!deleteMeeting}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+		                    		Del
+		                    		<apex:param name="boardMeetingChosen" value="{!a.Id}" assignTo="{!boardMeetingChosen}" /> 
+		                    	</apex:commandLink>
+		                	</apex:column>         
+		                    <apex:column headervalue="Board Meeting" >
+		                		<apex:outputLink value="/{!a.Id}">{!a.Name__c}</apex:outputLink>
+		                	</apex:column>
+		                	<!-- <apex:column headervalue="Board Meeting" value="{!a.Name__c}"/> -->
+		                	<apex:column headervalue="Date" value="{!a.Date__c}"/>
+		                	<apex:column headervalue="Location"  value="{!a.Location__c}"/>
+		                	<apex:column headervalue="Attendance"  value="{!a.Attendance__c}"/>
+		 			 	</apex:pageblocktable>
+		        	</apex:pageBlockSection>  
+		        </apex:pageblock>
+		    </div>         
+		</apex:pageblock>
+	</apex:form>   
+</apex:page>

@@ -1,0 +1,27 @@
+.THIS .objectDetailTitle {
+    color: rgb(22, 50, 92);
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.25;
+    display: inline;
+}
+.THIS .slds-card .slds-card-body {
+    display: none;
+}
+.THIS .slds-card._open .slds-card-body {
+    display: block;
+}
+.THIS .infoIcon .slds-icon {
+    fill: rgb(84, 105, 141)!important;
+}
+.THIS .closeIcon .slds-icon {
+    fill: rgb(204, 204, 204);
+}
+.THIS .closeIcon .slds-icon:hover {
+    fill: rgb(0, 112, 210)!important;
+}
+.THIS .noRecAlert {
+    padding: 0.75rem; 
+    background-color: lightgoldenrodyellow; 
+    border-radius: 0.5rem
+}

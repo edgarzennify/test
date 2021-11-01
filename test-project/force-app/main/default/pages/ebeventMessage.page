@@ -1,0 +1,32 @@
+<apex:page standardcontroller="EB_Event_Attendees__c" extensions="EBEventConfirmation" showHeader="false" tabStyle="EB_Event_Session__c">
+    <apex:form >
+        <apex:sectionHeader title="Your registration has been submitted." />
+        <apex:pageBlock mode="edit" >
+            <apex:pageBlockSection columns="1" title="Please print this page for your records.">                 
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Name:</apex:outputLabel>
+                    <apex:outputText value="{!Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Event:</apex:outputLabel>
+                    <apex:outputField value="{!s.EB_Event__r.Name}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Location:</apex:outputLabel>
+                    <apex:outputField value="{!s.Event_Location__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel ></apex:outputLabel>
+                    <apex:outputField value="{!s.Address__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Date &amp; Time:</apex:outputLabel>
+                    <apex:outputText value="{!Time}"/>  
+                </apex:pageBlockSectionItem>                        
+            </apex:pageBlockSection>            
+            <apex:pageBlockButtons location="bottom" >
+                <apex:commandButton value=" Print " onclick="javascript:print();"/>             
+            </apex:pageBlockButtons>
+        </apex:pageBlock> 
+    </apex:form>
+ </apex:page>

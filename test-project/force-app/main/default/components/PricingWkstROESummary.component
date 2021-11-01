@@ -1,0 +1,209 @@
+<apex:component controller="PricingWkstComponentROESummary">
+	<apex:attribute name="pricingResult" type="PricingWkstResults" assignTo="{!pricingResults}" required="true" description="" />
+	<apex:attribute name="isEditable" type="Boolean" default="true" description="" />
+
+		<apex:pageBlock id="roeSummaryPanel" title="ROE Summary">
+	    	<apex:panelGrid columns="4" id="roeSummaryGrid" columnClasses="roeSummaryTableLabel,roeSummaryTableColumn,roeSummaryTableColumn">
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="EXISTING" />
+		    	<apex:outputLabel value="PROPOSED" />
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Total Income:" />
+		    	<apex:outputText value="{0, number, $###,###,###}" >
+		    		<apex:param value="{!pricingResults.existingSummary.income}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, $###,###,###}" >
+		    		<apex:param value="{!pricingResults.proposalSummary.income}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Total Expenses:" />
+		    	<apex:outputText value="{0, number, $###,###,###}"  >
+		    		<apex:param value="{!pricingResults.existingSummary.expenses}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, $###,###,###}">
+		    		<apex:param value="{!pricingResults.proposalSummary.expenses}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Pre-Tax Net Income:" />
+		    	<apex:outputText value="{0, number, $###,###,###}"  >
+		    		<apex:param value="{!pricingResults.existingSummary.preTaxNetIncome}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, $###,###,###}">
+		    		<apex:param value="{!pricingResults.proposalSummary.preTaxNetIncome}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Less Taxes:" />
+		    	<apex:outputText value="{0, number, $###,###,###}"  >
+		    		<apex:param value="{!pricingResults.existingSummary.taxes}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, $###,###,###}">
+		    		<apex:param value="{!pricingResults.proposalSummary.taxes}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Post-Tax Net Income:" />
+		    	<apex:outputText value="{0, number, $###,###,###}"  >
+		    		<apex:param value="{!pricingResults.existingSummary.postTaxNetIncome}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, $###,###,###}">
+		    		<apex:param value="{!pricingResults.proposalSummary.postTaxNetIncome}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Capital Required:" />
+		    	<apex:outputText value="{0, number, $###,###,###}"  >
+		    		<apex:param value="{!pricingResults.existingSummary.capitalRequired}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, $###,###,###}">
+		    		<apex:param value="{!pricingResults.proposalSummary.capitalRequired}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+		    	<apex:outputLabel value="Return On Equity:" />
+		    	<apex:outputText value="{0, number, ##0.00 %}"  >
+		    		<apex:param value="{!pricingResults.existingSummary.returnOnEquity}" />
+		    	</apex:outputText>
+		    	<apex:outputText value="{0, number, ##0.00 %}">
+		    		<apex:param value="{!pricingResults.proposalSummary.returnOnEquity}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="{!roeMessage}" style="background-color: yellow"/>
+		    	<apex:outputLabel value="Target ROE:" />
+		    	<apex:outputLabel value="" />
+		    	<apex:outputText value="{0, number, ##0.00 %}">
+		    		<apex:param value="{!pricingResults.targetReturnOnEquity}" />
+		    	</apex:outputText>
+		    	<apex:outputLabel value="" />
+	    	</apex:panelGrid>
+
+			<apex:pageBlockSection id="ROEAcctSummary" title="Existing Account Summary" >
+				<apex:pageBlockTable value="{!pricingResults.existingAccountsSummaries}" var="existingAccountsSummary" >
+					<apex:column headerValue="" styleClass="medCol left" headerClass="left" footerClass="left">
+						<apex:outputText value="{!existingAccountsSummary.accountType}" />
+						<apex:facet name="footer">
+							<apex:outputText value="TOTALS:" />
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="COMMITTED"  styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.committedAmount}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!committedTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="BAL/FEE"  styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.balanceOrFees}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!balFeeTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="INCOME"  styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.income}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!incomeTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="LN FEES"  styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.loanFees}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!loanFeesTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="RISK EXP"  styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.riskExpense}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!riskExpenseTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="ADMIN EXP" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.adminExpense}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!adminExpenseTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+					<apex:column headerValue="CAPITAL"  styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,###}">
+							<apex:param value="{!existingAccountsSummary.capitalRequirements}" />
+						</apex:outputText>
+						<apex:facet name="footer">
+							<apex:outputText value="{0, number, $###,###,###}" >
+								<apex:param value="{!capitalTotal}" />
+							</apex:outputText>
+						</apex:facet>
+					</apex:column>
+				</apex:pageBlockTable>
+			</apex:pageBlockSection>
+			<script>twistSection(document.getElementById('{!$Component.roeSummaryPanel.ROEAcctSummary}').getElementsByTagName('img')[0])</script>
+		
+			<apex:pageBlockSection id="ROEAcctDetails" title="Existing Account Details" rendered="{!isEditable}" onclick="toggleExistingAccounts();" >
+				<apex:pageBlockTable value="{!existingAccountDetails}" var="existingAccountDet" rendered="{!displayAccountDetails}" >
+					<apex:column headerValue="Acct" value="{!existingAccountDet.account}" styleClass="medCol left" headerClass="left" footerClass="left" />
+					<apex:column headerValue="Type" value="{!existingAccountDet.accountType}" styleClass="medCol left" headerClass="left" footerClass="left" />
+					<apex:column headerValue="Title" value="{!existingAccountDet.accountTitle}" styleClass="largeCol left" headerClass="left" footerClass="left" />
+					<apex:column headerValue="Committed Amt" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.committedAmount}"/></apex:outputText>
+					</apex:column>
+					<apex:column headerValue="Avg Balance" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.averageBalance}"/></apex:outputText>
+					</apex:column>
+					<apex:column headerValue="Income" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.income}"/></apex:outputText>
+					</apex:column>
+					<apex:column headerValue="Loan Fees" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.loanFees}"/></apex:outputText>
+					</apex:column>
+					<apex:column headerValue="Risk Expense" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.riskExpense}"/></apex:outputText>
+					</apex:column>
+					<apex:column headerValue="Capital Requirements" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, $###,###,##0.00}"><apex:param value="{!existingAccountDet.capitalRequirements}"/></apex:outputText>
+					</apex:column>
+					<apex:column headerValue="Transfer Rate" styleClass="medCol right" headerClass="right" footerClass="right" >
+						<apex:outputText value="{0, number, 0.000%}"><apex:param value="{!existingAccountDet.transferRate}"/></apex:outputText>
+					</apex:column>
+				</apex:pageBlockTable>
+			</apex:pageBlockSection>
+
+			<!-- Used with js to properly expand/collapse the existing accounts via viewstate -->
+			<apex:actionFunction name="hideAccountDetails" action="{!hideAccountDetails}" ></apex:actionFunction>
+			<apex:actionFunction name="showAccountDetails" action="{!showAccountDetails}" ></apex:actionFunction>
+			
+			<script>
+				{!displayAccountDetails} ? expandExistingAccounts() : collapseExistingAccounts();
+				
+                function toggleExistingAccounts() {
+                    let element = document.getElementById('{!$Component.roeSummaryPanel.ROEAcctDetails}').getElementsByTagName('img')[0]; 
+                    let altAttribute = element.getAttribute('alt');
+					
+					altAttribute.toLowerCase().includes('hide') ? showAccountDetails() : hideAccountDetails();
+                }
+
+				function collapseExistingAccounts() {
+					twistSection(document.getElementById('{!$Component.roeSummaryPanel.ROEAcctDetails}').getElementsByTagName('img')[0]); // collapsed
+				}
+
+				function expandExistingAccounts() {
+					twistSection(document.getElementById('{!$Component.roeSummaryPanel.ROEAcctDetails}').getElementsByTagName('img')[1]); // expanded
+				}
+			</script>
+        </apex:pageBlock>
+</apex:component>

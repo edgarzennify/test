@@ -1,0 +1,49 @@
+<apex:component controller="PricingWkstComponentAcctRemovals" allowDML="true">
+
+	<apex:attribute name="pricingWkst" type="Pricing_Worksheet__c" assignTo="{!currentWorksheet}" required="true" description="" />
+	<apex:attribute name="pricingReq" type="PricingWkstRequest" assignTo="{!pricingRequest}" required="true" description="" />
+	<apex:attribute name="pricingResult" type="PricingWkstResults" assignTo="{!pricingResults}" required="true" description="" />
+	<apex:attribute name="isEditable" type="Boolean" default="true" description="" />
+	
+	<apex:outputPanel id="entireAcctRemovals" >
+		<apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!popupDisplayed}"/>
+		<apex:outputPanel styleClass="popupAcctRemoval" layout="block" rendered="{!popupDisplayed}">
+		    <apex:pageBlock title="Proposed Account Removals" id="popupPanel" >
+ 			    <apex:pageblockButtons location="bottom" >
+				    <apex:commandButton value=" Save " action="{!addNewItems}" rendered="{!If(popupType='add',true,false)}"/>
+ 				    <apex:commandButton value=" Yes, delete item " action="{!deleteItems}" rendered="{!If(popupType='deletesingle',true,false)}"/>
+				    <apex:commandButton value=" Yes, delete all " action="{!deleteItems}" rendered="{!If(popupType='deleteall',true,false)}"/>
+				    <apex:commandButton value=" Cancel " action="{!hidePopup}" rerender="entireAcctRemovals" />
+			    </apex:pageblockButtons>
+			    <apex:outputLabel value="Are you sure you want to delete this proposed account removal?" rendered="{!If(popupType='deletesingle',true,false)}" styleClass="msg" />
+			    <apex:outputLabel value="Are you sure you want to delete all proposed account removals?" rendered="{!If(popupType='deleteall',true,false)}" styleClass="msg" />
+		        <apex:selectList value="{!accountsSelectedToRemove}" multiselect="true" rendered="{!If(popupType='deletesingle'||popupType='deleteall',false,true)}" styleClass="selList" size="10">
+			        <apex:selectOptions value="{!accountsAvailableToRemove}" rendered="{!If(popupType='deletesingle'||popupType='deleteall',false,true)}"/>
+				</apex:selectList>
+		    </apex:pageBlock>
+		</apex:outputPanel>
+
+	    <apex:pageBlock id="proposedAcctRemovalsPanel" title="Proposed Account Removals" >
+
+	 	 	<div class="propAcctRemovalsSection">
+		    <apex:pageblockButtons location="top" styleClass="propAcctRemovalsSection" rendered="{!isEditable}" >
+			    <apex:commandButton value="Add Removals" action="{!showAddPopup}" rerender="entirePage" />
+ 			    <apex:commandButton value="Delete All" action="{!showDeletePopupForAllItems}" rerender="entirePage" />
+		    </apex:pageblockButtons>
+		        <apex:pageBlockTable value="{!existingItems}" var="existingItem" >
+			        <apex:column headerValue="Delete" styleClass="smallCol centered" headerClass="centered" rendered="{!isEditable}">
+				        <apex:commandLink value="Del" action="{!showDeletePopupForSingleItem}" rerender="entirePage"  >
+				        	<apex:param name="addIdForDel" assignTo="{!selectedId}" value="{!existingItem.Id}" />
+				        </apex:commandLink>
+				    </apex:column>
+	 		        <apex:column headerValue="Account Removed" value="{!existingItem.EB_Account__r.Name}" styleClass="medCol left" headerClass="left" />
+			        <apex:column headerValue="Account Type" value="{!existingItem.EB_Account__r.ApplicationDescription__c}" styleClass="medCol left" headerClass="left" />
+			        <apex:column headerValue="Balance" value="{!existingItem.EB_Account__r.Core_Current_Balance__c}" styleClass="medCol right" headerClass="right" />
+		        </apex:pageBlockTable>
+	        </div>
+	    </apex:pageBlock>
+	</apex:outputPanel>
+
+
+
+</apex:component>

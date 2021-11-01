@@ -1,0 +1,33 @@
+<apex:page docType="html-5.0"
+    standardController="EB_Collateral__c"
+    extensions="EbCollateral_InterstitialController"
+    title="EB Collateral: {! ebCollateral.Name }"
+    action="{!redirect}">
+
+    <apex:sectionHeader title="EB Collateral" subtitle="{! ebCollateral.Name }" />
+    <apex:outputText rendered="{! forwardingInfo.Url != '' }" >
+        <div style="padding:5px 15px;">
+            Redirecting to <a href="{! forwardingInfo.Url }" target="_top">{! forwardingInfo.ObjectLabel }: {! forwardingInfo.RecordName }</a>
+            &nbsp;
+            <button class="btn" onclick="navigateToOriginal()" >Cancel</button>
+        </div>
+    </apex:outputText>
+    
+    <script language="javascript">               
+        if("{! forwardingInfo.Url }" != ''){
+            // use setTimeout if forwarded page is loading too fast
+            //setTimeout(function(){forward()},1000);
+            forward();
+        }
+        else{
+            navigateToOriginal();
+        }
+
+        function forward(){
+            window.top.location = "{! forwardingInfo.Url }"; 
+        }
+        function navigateToOriginal(){
+            window.top.location = "{! originalUrl }"; 
+        }        
+  </script>
+</apex:page>

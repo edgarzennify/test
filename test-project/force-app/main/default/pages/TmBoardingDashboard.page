@@ -1,0 +1,23 @@
+<apex:page title="TM Boarding Dashboard"
+           controller="TmBoardingDashboardController"
+           docType="html-5.0"
+    showHeader="true" 
+    sidebar="false"
+    lightningStylesheets="true"
+    standardStylesheets="false" 
+    applyHtmlTag="true"
+    >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <style type='text/css'>
+        button {
+            background: none;
+        }
+    </style>
+    <div id="react-app">
+       Loading...
+    </div>
+    
+    <script src="{!URLFOR($Resource.TmBoardingDashboardReactify, '/vendor.js')}"></script>
+    <script src="{!URLFOR($Resource.TmBoardingDashboardReactify, '/main.js')}"></script>
+</apex:page>

@@ -1,0 +1,9 @@
+<apex:page showHeader="true" tabStyle="Wire_Transaction__tab" >
+    <!--<apex:outputText value="{!$User.FirstName} {!$User.LastName} | {!$User.Email}" ></apex:outputText>-->
+    <!--<apex:iframe height="800" scrolling="true" src="https://ebk.enterprisebank.com/ebwire.nsf/xMain3.xsp?EnteredBy={!$User.FirstName} {!$User.LastName}&Email={!$User.Email}"  id="theIframe" frameborder="0" />-->
+    <div style="padding:35px;font-size:14px;">
+    Beginning June 4, 2013 all wire transfer requests should be entered through the GfxWeb system.
+    <br/>
+    If you need to request a wire transfer and do not have access to the new system, please contact the Wire Department for assistance.
+    </div>
+</apex:page>

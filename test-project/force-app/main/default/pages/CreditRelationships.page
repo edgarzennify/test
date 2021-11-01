@@ -1,0 +1,175 @@
+<apex:page standardController="Credit_Relationship__c" extensions="CreditRelationshipController" >
+  <apex:form id="formdetail2" >
+    
+    <!-- quick links -->
+    <div style="padding-bottom:5px;">
+      <apex:outputLink value="/a1T" style="font-size:8pt; text-decoration: none; color: #015BA7;">&lt;&lt; Back to List: Credit Relationships</apex:outputLink>
+    </div>
+    <div style="padding-bottom:10px;text-align:center;">
+      <a href="#ArchivedReports" title="click to view Archived Reports">Archived Reports</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#RelatedEntities" title="click to view Related Entities">Related Entities</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#RelatedAccounts" title="click to view Related Accounts">Related Accounts</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#PossibleRelatedEntities" title="click to view Possible Related Entities">Possible Related Entities</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Minutes" title="click to view Possible Minutes">Minutes</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#SituationAnalysis" title="click to view Possible Situation Analysis">Situation Analysis</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Attachments" title="click to view Attachments">Attachments</a>
+    </div>
+   
+    <!-- main content -->
+    <apex:pageMessages /> 
+    <apex:detail relatedList="false" subject="{!Credit_Relationship__c}"   inlineEdit="false"/>
+
+    <!-- archived reports -->
+    <a id="ArchivedReports" />
+    <apex:pageBlock title="Archived Reports" >
+      <apex:pageBlockButtons location="top" >
+        <apex:commandButton value="Save Report" action="{!saveReport}" oncomplete="window.open('{!reportUrl}');" rendered="{!IF(HasPermissionAdmin, 'true','false')}"  />
+        <apex:commandButton value="Preview Report" oncomplete="window.open('{!reportUrl}');" />
+      </apex:pageBlockButtons>
+      <apex:pageBlockTable value="{!vm.archivedReports}" var="o" rendered="{!NOT(ISNULL(vm.archivedReports))}" >
+        <apex:column headerValue="Report Name" >
+          <apex:outputLink value="http://{!o.url}" >{!o.name}, {!o.createdDate}</apex:outputLink>
+        </apex:column>
+        <apex:column headerValue="Created By" value="{!o.createdBy}" />
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+
+    <!-- related entities -->
+    <a id="RelatedEntities" />
+    <apex:pageBlock title="Related Entities" >
+      <apex:pageBlockButtons location="top">
+        <apex:commandButton value="New Related Entity" action="{!NewCreditRelationshipRelatedClient}" rendered="{!IF(HasPermissionAdmin, 'true','false')}" />
+      </apex:pageBlockButtons>
+      <apex:pageBlockTable value="{!vm.relatedEntities}" var="o" rendered="{!NOT(ISNULL(vm.relatedEntities))}" >
+        <apex:column headerValue="Action" width="60" rendered="{!IF(HasPermissionAdmin, 'true','false')}" >
+          <apex:outputLink value="{!URLFOR($Action.Credit_Relationship_Related_Client__c.Edit,o.id)}" style="text-decoration:none;color:blue;" >Edit</apex:outputLink>
+          &nbsp;|&nbsp;
+          <apex:commandLink value="Del" action="{!deleteRelatedEntity}" style="text-decoration:none;color:blue;" >
+            <apex:param name="delrelId" assignTo="{!selectedRelatedEntityId}" value="{!o.id}" />
+          </apex:commandLink>                      
+        </apex:column>
+        <apex:column headerValue="Related Entity" >
+          <apex:outputLink value="{!URLFOR($Action.Account.View,o.entityId)}" >{!o.name}</apex:outputLink>
+        </apex:column>
+        <apex:column headerValue="Address" value="{!o.street}, {!o.city}, {!o.state}, {!o.zip}" />       
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+
+    <!-- related accounts -->
+    <a id="RelatedAccounts" />
+    <apex:pageBlock title="Related Accounts" >
+      <apex:pageBlockTable value="{!vm.relatedAccounts}" var="o" rendered="{!NOT(ISNULL(vm.relatedAccounts))}" >
+        <apex:column headerValue="Action" width="60" rendered="{!IF(HasPermissionAdmin, 'true','false')}" >
+          <apex:commandLink value="Exclude" action="{!excludeRelatedAccount}" style="text-decoration:none;color:red;">
+            <apex:param name="addId" assignTo="{!selectedRelatedAccountId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Account Number" >
+          <apex:outputLink value="/{!o.id}" >{!o.accountNumber}</apex:outputLink>
+        </apex:column>        
+        <apex:column headerValue="Account Title" value="{!o.accountTitle}" />
+        <apex:column headerValue="Risk Rating" value="{!o.riskRating}" />
+        <apex:column headerValue="Contribution Margin" value="{!o.contributionMargin}" />
+        <apex:column headerValue="Primary Owner" value="{!o.primaryOwner}" />
+      </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <!-- excluded accounts -->
+    <a id="ExcludedEBAccounts" />
+    <apex:pageBlock title="Excluded Accounts">
+      <apex:pageblocktable value="{!vm.excludedAccounts}" var="o" rendered="{!NOT(ISNULL(vm.excludedAccounts))}">
+        <apex:column headerValue="Action" width="100" rendered="{!IF(HasPermissionAdmin, 'true','false')}" >
+          <apex:commandLink value="Include" action="{!deleteAccountExclusion}" style="text-decoration:none;color:blue;" >
+            <apex:param name="addId" assignTo="{!selectedExcludedAccountId}" value="{!o.id}" />
+          </apex:commandLink>  
+        </apex:column>
+        <apex:column headerValue="Account Number" value="{!o.accountNumber}" />
+        <apex:column headerValue="Account Title" value="{!o.accountTitle}" />
+        <apex:column headerValue="Risk Rating" value="{!o.riskRating}" />
+        <apex:column headerValue="Contribution Margin" value="{!o.contributionMargin}" />
+        <apex:column headerValue="Primary Owner" value="{!o.primaryOwner}" />
+      </apex:pageblocktable>
+    </apex:pageBlock>
+  
+    <!-- possible related entities -->
+    <a id="PossibleRelatedEntities" />
+    <apex:pageBlock title="Possible Related Entities" >
+      <apex:pageBlockTable value="{!vm.possibleRelatedEntities}" var="o" rendered="{!NOT(ISNULL(vm.possibleRelatedEntities))}">
+        <apex:column headerValue="" width="100" rendered="{!IF(HasPermissionAdmin, 'true','false')}" >
+          <apex:commandLink value="Add Relationship" action="{!addEntityToRelationship}" style="text-decoration:none;color:blue;">
+            <apex:param name="addId" assignTo="{!selectedPossibleRelatedEntityId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Client Name" >
+          <apex:outputLink value="{!URLFOR($Action.Account.View,o.id)}" >{!o.Name}</apex:outputLink>
+        </apex:column>
+        <apex:column headerValue="Client Address" value="{!o.street}, {!o.city}, {!o.state}, {!o.zip}" />
+      </apex:pageBlockTable>
+    </apex:pageBlock>    
+    
+    <!-- minutes -->
+    <a id="Minutes" />
+    <apex:pageblock title="Minutes" >
+      <apex:pageBlockButtons location="top">
+        <apex:commandButton value="New Minute" action="{!NewMinute}" rendered="{!IF(HasPermissionAdmin, 'true','false')}"   />
+      </apex:pageBlockButtons>
+      <apex:actionRegion rendered="{!MinuteDiaryRendered}" >
+        <apex:inputTextarea id="minuteDiary" richText="True" value="{!noteSm.diary}" />
+        <br/>  
+        <apex:commandLink value="Save" action="{!SaveMinute}" />
+        &nbsp;
+        <apex:commandLink value="Cancel" action="{!CancelRecord}" />
+        <br/><br/>
+      </apex:actionRegion>      
+      <apex:pageBlockTable value="{!vm.minutes}" var="o" rendered="{!NOT(ISNULL(vm.minutes))}">
+        <apex:column headerValue="Action" width="60" rendered="{!IF(HasPermissionAdmin, 'true','false')}"  >
+          <apex:outputLink value="{!URLFOR($Action.Credit_Relationship_Note__c.Edit,o.id)}" style="text-decoration:none;color:blue;" >Edit</apex:outputLink>
+          &nbsp;|&nbsp; 
+          <apex:commandLink value="Del" action="{!deleteNote}" style="text-decoration:none;color:blue;">
+            <apex:param name="delId" assignTo="{!selectedNoteId}" value="{!o.id}" />
+          </apex:commandLink>                      
+        </apex:column>
+        <apex:column headerValue="Link" rendered="{!IF(HasPermissionAdmin, 'true','false')}">
+          <apex:outputLink value="{!URLFOR($Action.Credit_Relationship_Note__c.View,o.id)}" >{!o.name}</apex:outputLink>  
+        </apex:column>
+        <apex:column headerValue="Created By" value="{!o.createdBy}" />
+        <apex:column headerValue="Entry" >
+          <apex:outputText escape="False" value="{!o.diary}" />
+        </apex:column>
+      </apex:pageBlockTable>
+    </apex:pageblock>
+
+    <!-- situation analysis -->
+    <a id="SituationAnalysis" />
+    <apex:pageblock title="{!IF(Credit_Relationship__c.Credit_Relationship_Status__c='6 Rated Credit', 'Current Status', 'Situation Analysis')}" >
+      <apex:pageBlockButtons location="top">
+        <apex:commandButton value="{!IF(Credit_Relationship__c.Credit_Relationship_Status__c='6 Rated Credit', 'New Current Status', 'New Situation Analysis')}" action="{!NewAnalysis}" rendered="{!IF(HasPermissionToEdit, 'true','false')}"   />
+      </apex:pageBlockButtons>
+        <apex:actionRegion rendered="{!AnalysisDiaryRendered}" >
+          <apex:inputTextarea id="analysisDiary" richText="True" value="{!noteSm.diary}" />
+          <br/>  
+          <apex:commandLink value="Save" action="{!SaveAnalysis}" />
+          &nbsp;
+          <apex:commandLink value="Cancel" action="{!CancelRecord}" />
+          <br/><br/>
+        </apex:actionRegion>
+      <apex:pageBlockTable title="Analysis" value="{!vm.situationAnalysis}" var="o" rendered="{!NOT(ISNULL(vm.situationAnalysis))}">
+        <apex:column headerValue="Action" width="60" rendered="{!IF(HasPermissionToEdit, 'true','false')}"  >
+          <apex:outputLink value="{!URLFOR($Action.Credit_Relationship_Note__c.Edit,o.id)}" style="text-decoration:none;color:blue;" rendered="{!IF(o.locked=true,'false','true')}"  >Edit&nbsp;|&nbsp;</apex:outputLink> 
+          <apex:commandLink value="Del" action="{!deleteNote}" style="text-decoration:none;color:blue;" rendered="{!IF(o.locked=true,'false','true')}">
+            <apex:param name="delId" assignTo="{!selectedNoteId}" value="{!o.id}" />
+          </apex:commandLink>                      
+        </apex:column>
+        <apex:column headerValue="Link" rendered="{!IF(HasPermissionToEdit, 'true','false')}">
+          <apex:outputLink value="{!URLFOR($Action.Credit_Relationship_Note__c.View,o.id)}" >{!o.name}</apex:outputLink>  
+        </apex:column>
+        <apex:column headerValue="Created By" value="{!o.createdBy}" />
+        <apex:column headerValue="Entry" >
+          <apex:outputText escape="False" value="{!o.diary}" />
+        </apex:column>
+      </apex:pageBlockTable>
+    </apex:pageBlock>     
+  </apex:form>
+   <a id="Attachments" />
+  <apex:relatedList subject="{!Credit_Relationship__c}" list="CombinedAttachments" />
+</apex:page>

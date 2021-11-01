@@ -1,0 +1,8 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c" 
+    showHeader="false" 
+    sidebar="false" >
+
+    <c:EbtDocManager objectId="{!LLC_BI__Loan__c.Id}" />
+
+</apex:page>

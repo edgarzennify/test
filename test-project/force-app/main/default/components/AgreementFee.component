@@ -1,0 +1,59 @@
+<apex:component id="AgreementFeeId" controller="AgreementFeeComponentController" allowDML="true" >
+     <apex:attribute type="Agreement__c" name="AgreementObject" assignTo="{!agmt}" description="Financial Fee" />
+    <apex:attribute type="Boolean" Name="canEditAgmtFee" assignTo="{!canEditAgreementFee}" description="canEditAgmtFee" />
+    
+    <apex:form >
+    <a id="AgmtFees" />
+   <apex:pageBlock id="relatedFees"  title="Agreement Fees" >
+      <apex:pageBlockButtons location="top" rendered="{!isEditable}">
+      <apex:commandButton value="New Agreement Fee" action="{!AddFee}" rerender="feeDialog"/>
+      </apex:pageBlockButtons>
+      <apex:pageBlockTable value="{!fees}" var="o" rendered="{!NOT(ISNULL(fees))}">
+        <apex:column headerValue="Action" width="60" rendered="{!isEditable}" >
+          <apex:commandLink value="Edit" action="{!EditFee}" style="text-decoration:none;color: #015ba7;" rerender="feeDialog"  >
+            <apex:param name="addId" assignTo="{!selectedAgreementFeeId}" value="{!o.id}" />
+          </apex:commandLink>
+          |<apex:commandLink value=" Del" action="{!DeleteFee}" style="text-decoration:none;color: #015ba7;"  onclick="return showConfirm('delete \'{!o.Name}\' ');" >
+             <apex:param name="delId" assignTo="{!selectedAgreementFeeId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+        <apex:column headerValue="Action" width="60" rendered="{!!isEditable}" >
+          <apex:commandLink value="View" action="{!ViewFee}" style="text-decoration:none;color: #015ba7;" rerender="feeDialog"  >
+            <apex:param name="addId" assignTo="{!selectedAgreementFeeId}" value="{!o.id}" />
+          </apex:commandLink>
+        </apex:column>
+           <apex:column HeaderValue="Agreement Fee">
+            <apex:outputLink value="{!URLFOR($Action.Agreement_Fee__c.View,o.Id)}" style="text-decoration:none;color: #015ba7;"  >{!o.Name}</apex:outputLink>
+        </apex:column>
+        <!--<apex:column headerValue="Agreement Fee" value="{!o.Id}" /> -->
+        <apex:column headerValue="Fee Type" value="{!o.Fee_Type__c}" />
+        <apex:column headerValue="Fee Amount" value="{!o.Fee_Amount__c}" />
+        <apex:column headerValue="Fee Date" value="{!o.Fee_Date__c}" />
+        <apex:column headerValue="Payable To" value="{!o.Payable_To__c}" />
+      <!-- <apex:column headerValue="Covenant Name" >
+            <apex:outputLink value="{!URLFOR($Action.Agreement_Financial_Covenant__c .View,o.Id)}" >{!o.Name}</apex:outputLink>       
+        </apex:column>       
+          -->
+      </apex:pageBlockTable>
+     </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+    <apex:outputPanel id="feeDialog">
+    <apex:outputPanel id="FeeInnerPanel" styleClass="popupBackground" layout="block" rendered="{!displayDialog}"/>
+        <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayDialog}">
+            <apex:PageMessages />
+            <apex:pageblock title="Edit - Agreement Fee" mode="edit" tabStyle="Agreement_Fee__c">
+                <apex:pageblockSection > 
+                    <apex:inputField value="{!fee.Fee_Type__c}"/>
+                     <apex:inputField value="{!fee.Fee_Amount__c}"/>
+                     <apex:inputField value="{!fee.Fee_Date__c}"/>
+                     <apex:inputField value="{!fee.Payable_To__c}"/>
+                </apex:pageblockSection>        
+
+            <apex:commandButton id="feeSubmitid" value="Save" action="{!closeDialog}" rerender="feeDialog"/>
+            <apex:commandButton id="feeCancelid" value="Cancel" action="{!cancelDialog}" immediate="true" rerender="feeDialog"/>    
+        </apex:pageblock>
+      </apex:outputPanel>
+    </apex:outputPanel>
+</apex:form>
+</apex:component>

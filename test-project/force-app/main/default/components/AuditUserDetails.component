@@ -1,0 +1,42 @@
+<apex:component >
+
+	<apex:attribute name="userDetails" type="AuditUserDetails[]" required="true" description="A list of user detail items." />
+	<apex:attribute name="totalUsersInList" type="Integer" required="false" description="Total Users In List" />
+
+    <apex:pageBlock title="Users With Access ({!totalUsersInList})">
+        <div class="userTable">
+        <apex:pageBlockTable var="uw" value="{!userDetails}" >
+            <apex:column headerValue="User" >
+                <apex:outputLink value="/{!uw.userId}?noredirect=1" target="_blank">{!uw.userName}</apex:outputLink>
+            </apex:column>
+            <apex:column headerValue="Read Access" value="{!uw.readAccess}" styleClass="readEditAccessCol" headerClass="readEditAccessCol"/>
+            <apex:column headerValue="Edit Access" value="{!uw.editAccess}" styleClass="readEditAccessCol" headerClass="readEditAccessCol"/>
+            <apex:column headerValue="Permission Set" styleClass="permissionSetColumn" headerClass="permissionSetColumn">
+                 <apex:repeat var="permSet" value="{!uw.permissionSets}" >
+                    <apex:outputText value="{!permSet.permissionSetName}     " />
+                 </apex:repeat>
+            </apex:column>
+            <apex:column headerValue="Profile" value="{!uw.profile.profileName}">
+            </apex:column>
+        </apex:pageBlockTable>
+        </div>
+    </apex:pageBlock>
+
+    <style type="text/css">
+	    .readEditAccessCol{
+	        max-width: 100px;
+	        width: 100px;
+	    }
+	    .permissionSetColumn{
+	        max-width: 350px;
+	        width: 350px;
+	    }
+	    .userTable {
+	        width:auto;
+	        min-width: 600px;
+	        max-width: 1000px;
+	    }
+	</style>
+
+
+</apex:component>

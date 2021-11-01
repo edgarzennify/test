@@ -1,0 +1,12 @@
+<apex:page docType="html-5.0"
+    standardController="Entity_Action__c"
+    showHeader="false" 
+    sidebar="false" >
+    
+     <c:ObjectActionLog objectId="{!Entity_Action__c.Id}"
+        actionType="Stage Logging"
+        title="Stage Logs"
+        height="175"
+     />
+
+</apex:page>

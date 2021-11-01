@@ -1,0 +1,8 @@
+<apex:page tabStyle="User" title="Relationship Managers" sidebar="false" >
+	<apex:form >
+	    <div style="width:300px">
+		    <c:OwnerSelection />
+	    </div>
+	</apex:form>
+
+</apex:page>

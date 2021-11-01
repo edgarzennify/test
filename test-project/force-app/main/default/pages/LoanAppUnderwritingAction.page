@@ -1,0 +1,12 @@
+<apex:page controller="XStageActionController"  action="{!RedirectAction}" >
+<apex:pageMessages />
+<apex:form >
+    <apex:pageblock >
+        <apex:pageblocksection columns="1">
+            <apex:pageblocksectionItem >
+                <apex:outputLabel value="Error loading page: Insufficient permissions to perform this action."/>
+            </apex:pageblocksectionItem>            
+        </apex:pageblocksection>
+    </apex:pageblock>
+</apex:form>
+</apex:page>

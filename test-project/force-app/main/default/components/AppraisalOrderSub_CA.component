@@ -1,0 +1,136 @@
+<apex:component >
+<apex:attribute type="EB_Appraisal_Order__c" name="appraisalOrder" description="CA"/>
+<apex:pageBlockSection title="{!appraisalOrder.Related_Collateral__r.Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Mobile Home Pads" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Number_of_Mobile_Home_Pads__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Total_Land_Area_Acres__c.inlineHelpText}">
+    <apex:outputLabel value="Total Land Area/Acres" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Total_Land_Area_Acres__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Mobile Home Park Rating" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Mobile_Home_Park_Rating__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:outputLabel />
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Septic Tank" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Septic_Tank__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="City Sewer" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.City_Sewer__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="City Water" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.City_Water__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Well Water" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Well_Water__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Type of Pad" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Type_of_Pad__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Other Type of Pad" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Other_Type_of_Pad__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="{!appraisalOrder.OREO_Account__r.OREO_Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Mobile Home Pads" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Number_of_Mobile_Home_Pads__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Account__c.Fields.Total_Land_Area_Acres__c.inlineHelpText}">
+    <apex:outputLabel value="Total Land Area/Acres" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Total_Land_Area_Acres__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Mobile Home Park Rating" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Mobile_Home_Park_Rating__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:outputLabel />
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Septic Tank" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Septic_Tank__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="City Sewer" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.City_Sewer__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="City Water" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.City_Water__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Well Water" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Well_Water__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Type of Pad" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Type_of_Pad__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Other Type of Pad" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Other_Type_of_Pad__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:component>

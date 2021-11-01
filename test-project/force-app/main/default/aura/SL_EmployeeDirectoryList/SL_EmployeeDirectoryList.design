@@ -1,0 +1,16 @@
+<design:component label="Employee Directory List">
+    <design:attribute name="SObjectName" label="Object Name" description="Name of the object for which the records needs to be displayed."/>
+    <design:attribute name="ListViews" label="List Views" description="Comma separated valid List View Label"/> 
+    <design:attribute name="ComponentPlacement" label="Component Placement" description="Picklist to detect the placement of component whether it is on main section or in sidebar section" datasource="Main, Sidebar" default="Main"/>
+    <design:attribute name="EmpListHeading" label="Employee List Heading" description="Heading displayed for the list component."/>
+    <design:attribute name="EmpDetailHeading" label="Employee Detail Heading" description="Heading displayed for the detail modal popup."/>
+    <design:attribute name="ListFieldsetName" label="Employee List Field Set" description='API name of the field set on the user object that determines what fields will be displayed in the component.'/>
+    <design:attribute name="DetailFieldsetName" label="Employee Detail Field Set" description='API name of the field set on the user object that determines what fields will be displayed on the detail modal popup. If blank then it will redirect you to the user profile page' />
+    <design:attribute name="RecordsOnLoad" label="Page Size" description="Maximum records visible at a time. Default value is 4." />
+    <design:attribute name="FilterCriteria" label="Filter Criteria" description="Records can be filtered using this. Please provide a valid filter criteria for the specified object." />
+    <design:attribute name="FieldForAlphabeticFilter" label="Search Field For Alphabetic Filters" description="Search the records based on the field specified, will return the records where field value starts with the selected char" />
+    <design:attribute name="IsExpanded" default="false" label="Expand component by default" description="Switch between the expanded and collapsed component." />
+    <design:attribute name="ShowSearchBox" label="Display Search Box" description="Search box appears where the records can be searched." />
+    <design:attribute name="ShowDetailBtn" label="Display Detail Button" description="show/hide Detail button on modal popup."/>
+    <design:attribute name="ShowFieldLabel" label="Show field label" description="Field labels are displayed when checked." />
+</design:component>

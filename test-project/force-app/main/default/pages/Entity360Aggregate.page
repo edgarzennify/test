@@ -1,0 +1,40 @@
+<apex:page standardController="Account" extensions="Entity360Controller" showHeader="false" sidebar="false" lightningStylesheets="true">
+  <apex:stylesheet value="{!URLFOR($Resource.Entity360_css)}"/>
+  <apex:form >
+    <div style="padding-top:20px;">
+      <div>
+        <span>
+          <a href="/apex/ParentRelationshipHierarchy?id={!entityAggregateViewModel.EntityId}" style="text-decoration: none"  target="_blank" >      
+            <span>
+                <span class="primary-relationship" ><u>"{!entityAggregateViewModel.EntityName}" Relationship</u></span>
+            </span>
+          </a> 
+        </span>
+      </div>
+      <div style="padding-top:5px;">
+        <table width="100%">
+          <tr>
+            <td width="50px">
+               <apex:image url="{!$Resource.Entity360Logo}" styleClass="entity-360-logo"/>
+            </td>
+            <td class="mywell">
+              <apex:repeat value="{!entityAggregateViewModel.Elements}" var="e" >
+                <c:Entity360Element elementSymbol="{!e.elementSymbol}"
+                    elementType="{!e.elementType}"
+                    elementSummary="{!e.elementSummary}"
+                    existingValue="{!e.existingValue}"
+                    existingSummary="{!e.existingSummary}"
+                    existingPercent="{!e.existingPercent}"
+                    opportunityValue="{!e.opportunityValue}"
+                    opportunityPercent="{!e.opportunityPercent}"
+                    opportunityProbability="{!e.opportunityProbability}"
+                    opportunitySummary="{!e.opportunitySummary}"
+                     />
+              </apex:repeat>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </apex:form>
+</apex:page>

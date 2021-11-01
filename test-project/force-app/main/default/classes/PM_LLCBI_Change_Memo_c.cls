@@ -1,0 +1,31 @@
+public class PM_LLCBI_Change_Memo_c extends PM_SObject {
+    public String LLCBI_Memo_Type_c {get;set;}
+    public String LLCBI_Description_c {get;set;}
+    public Boolean Add_Collateral_c {get;set;}
+    public Boolean LLCBI_Approval_Required_c {get;set;}
+    public Boolean Changing_Borrower_s_Name_Address_or_Tax_c {get;set;}
+    public Boolean LLCBI_Collateral_Change_c {get;set;}
+    public Boolean Collateral_going_from_lesser_position_to_c {get;set;}
+    public Boolean Covenant_Changes_c {get;set;}
+    public Boolean LLCBI_Equity_Injection_Change_c {get;set;}
+    public Boolean Fees_Change_c {get;set;}
+    public Boolean LLCBI_Guarantor_Added_c {get;set;}
+    public Boolean LLCBI_Guarantor_Removed_c {get;set;}
+    public Boolean LLCBI_Life_Insurance_Change_c {get;set;}
+    public Boolean LLCBI_Amount_Change_c {get;set;}
+    public Boolean LLCBI_Loan_Term_Change_c {get;set;}
+    public Boolean Maturity_Date_Change_c {get;set;}
+    public Boolean LLCBI_New_Rate_Requested_c {get;set;}
+    public Boolean LLCBI_Notify_Attorney_c {get;set;}
+    public Boolean LLCBI_Other_c {get;set;}
+    public Boolean Post_Approval_Requirements_changes_c {get;set;}
+    public Boolean LLCBI_Post_Close_Items_c {get;set;}
+    public Boolean LLCBI_Ready_for_Approval_c {get;set;}
+    public Boolean LLCBI_Re_approval_After_Expiration_c {get;set;}
+    public Boolean LLCBI_Seller_Note_Change_c {get;set;}
+    public Boolean Shortening_Maturity_Date_or_Amortization_c {get;set;}
+    public Boolean LLCBI_Use_of_Proceeds_Change_c {get;set;}
+    public Boolean LLCBI_User_Initiated_c {get;set;}
+    public PM_LLCBI_Loan_c LLCBI_Loan_r {get;set;}
+    public PM_User Loan_Officer_r {get;set;}
+}

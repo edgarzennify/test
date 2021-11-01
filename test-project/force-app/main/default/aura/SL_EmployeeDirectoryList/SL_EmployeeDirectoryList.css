@@ -1,0 +1,139 @@
+.THIS {
+    position: relative;
+}
+
+.THIS .objectListTitle {
+    color: rgb(22, 50, 92);
+    font-size: 1.125rem;
+    font-weight: 300;
+    line-height: 1.25;
+}
+
+.THIS .slds-spinner {
+    top: 2rem;
+}
+
+.THIS .slds-spinner_container {
+    right: inherit !important;
+}
+
+.THIS .customIcon .slds-icon {
+    fill: rgb(84, 105, 141) !important;
+}
+
+.THIS .closeIcon .slds-icon {
+    fill: white !important;
+}
+
+.THIS .noRecAlert {
+    padding: 0.75rem;
+    background-color: lightgoldenrodyellow;
+    border-radius: 0.5rem
+}
+
+.THIS .infoIcon .slds-icon {
+    fill: rgb(84, 105, 141) !important;
+}
+
+.THIS .dropDownIcon {
+    padding-left: 1rem !important;
+}
+
+.THIS .showMoreBtn {
+    padding: .5rem 1.5rem;
+    border-radius: 15rem;
+    border: 1px solid rgb(216, 221, 230);
+    background-color: rgb(255, 255, 255);
+    display: inline-block;
+}
+
+.THIS .closeBtn {
+    border: none;
+    background: none;
+}
+
+.THIS .hide,
+.THIS.hide {
+    display: none;
+}
+
+.THIS .showMoreBtn:hover {
+    background-color: rgb(0, 95, 178);
+    color: white;
+}
+
+.THIS .filterDiv {
+    padding: 0.5rem;
+}
+
+.THIS .slds-wc-input--fix {
+    border: 1px solid #CECECE;
+}
+
+.THIS .slds-wc-input--fix:focus {
+    outline: 0;
+    border-color: #26ddd1;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 3px #26ddd1;
+}
+
+.THIS .picklistBtn {
+    font-family: 'SalesforceSans-Regular', Arial, sans-serif;
+    color: rgb(22, 50, 92);
+    font-size: .75rem;
+    letter-spacing: .05em;
+}
+
+.THIS .listItem {
+    font-size: 0.8rem;
+    line-height: 0.5 !important;
+}
+
+.THIS .filterbackground {
+    background: #2574a9;
+    color: #fff;
+    border-radius: 0.15rem;
+}
+
+.THIS .centerAlign,
+.THIS.centerAlign {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+}
+
+.THIS .slds-row--fix {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.THIS .slds-button._emp-button {
+    color: #fff;
+    background-color: #2574a9;
+}
+
+.THIS .slds-button._emp-button:disabled {
+    background-color: transparent;
+    text-decoration: none;
+    color: #d3d3d3;
+}
+
+.THIS .card-header {
+    display: flex;
+    flex-direction: column;
+    padding: .75rem;
+}
+
+.THIS .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.THIS .slds-button._emp-button:hover,
+.THIS .slds-button._emp-button:focus {
+    text-decoration: underline;
+    color: #fff;
+}

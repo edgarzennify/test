@@ -1,0 +1,131 @@
+<apex:page Controller="AppraisalOrderViewController" showHeader="true" tabStyle="EB_Appraisal_Order__c">
+<apex:form >
+  <apex:sectionHeader title="Appraisal Order" subtitle="{!AppraisalOrder.Name}" />
+     <apex:pageBlock >
+        <apex:pageBlockSection title="Order Details" columns="2">
+            <apex:outputField value="{!appraisalOrder.Reference__c}" />
+            <apex:outputField value="{!appraisalOrder.Cost_Center__c}" />
+            <apex:outputField value="{!appraisalOrder.Order_Type__c}"/>
+            <apex:outputLabel />
+            <apex:outputField label="Relationship Manager" value="{!appraisalOrder.Relationship_Manager__r.Name}"/> 
+            <apex:outputField label="Loan Coordinator" value="{!appraisalOrder.Loan_Coordinator__r.Name}"/> 
+            <apex:outputField value="{!appraisalOrder.Date_Appraisal_Needed__c}"/>
+            <apex:outputLabel />
+            <apex:outputField value="{!appraisalOrder.Last_Appraisal_Date__c}"/>
+            <apex:outputField value="{!appraisalOrder.Last_Appraisal_Company__c}"/>
+            <apex:outputField value="{!AppraisalOrder.Tax_Increment_Financing_TIF__c}" label="TIF (Tax Increment Financing)"/>
+            <apex:outputField value="{!AppraisalOrder.Tax_Credit_Involved__c}" label="Tax Credit"/>
+            <apex:outputField value="{!AppraisalOrder.Estimated_Closing_Date__c}" label="Estimated Closing Date"/>
+            <apex:outputField value="{!AppraisalOrder.Tax_Abatement__c}" label="Tax Abatement"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Property Owner Information" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+            <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Collateral Owner"/>
+                    <apex:outputLabel value="{!Collateral_Owner}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Property/Collateral Information / Collateral Code - {!appraisalOrder.Related_Collateral__r.Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.Street__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.City__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.State__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.Zip_Code__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.EB_Appraisal_County__r.Name}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Property/Collateral Information / Collateral Code - {!appraisalOrder.OREO_Account__r.OREO_Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+            <apex:outputField value="{!appraisalOrder.OREO_Account__r.OREO_Address__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Property Inspection Information" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.Inspection_Contact_Name__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.Inspection_Contact_Phone__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.Inspection_Contact_Sec_Phone__c}"/>
+            <apex:outputField value="{!appraisalOrder.Related_Collateral__r.Inspection_Contact_Email_Address__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Property Inspection Information" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+            <apex:outputField value="{!appraisalOrder.OREO_Account__r.Inspection_Contact_Name__c}"/>
+            <apex:outputField value="{!appraisalOrder.OREO_Account__r.Inspection_Contact_Phone__c}"/>
+            <apex:outputField value="{!appraisalOrder.OREO_Account__r.Inspection_Contact_Sec_Phone__c}"/>
+            <apex:outputField value="{!appraisalOrder.OREO_Account__r.Inspection_Contact_Email_Address__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Other Information" columns="2">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Interest To Be Appraised" />
+            	<apex:outputField value="{!appraisalOrder.Property_Ownership__c}"/>
+            </apex:pageBlockSectionItem>  
+            <apex:pageBlockSectionItem >
+                 <apex:outputLabel value="Appraisal Premise" />
+            	<apex:outputField value="{!appraisalOrder.Appraisal_Order_Scope__c}"/>   
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Appraisal Other User" />
+                <apex:outputField value="{!appraisalOrder.Appraisal_User_Other__c}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Specify Other User" />
+                <apex:outputField value="{!appraisalOrder.Specify_Other_User__c}"/>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Transaction Type"/>
+                <apex:outputField value="{!appraisalOrder.Transaction_Type__c}"/>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Occupancy Relationship"/>
+                <apex:outputField value="{!appraisalOrder.Occupancy_Relationship__c}"/>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Occupancy Status"/>
+                <apex:outputField value="{!appraisalOrder.Occupancy_Status__c}"/>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Property Status"/>
+                <apex:outputField value="{!appraisalOrder.Property_Status__c}"/>
+        </apex:pageBlockSectionItem>
+            <apex:outputField value="{!appraisalOrder.Details_Related_to_Subject__c}"/>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Special Instructions to Appraisal Review Team" />
+                <apex:outputField value="{!appraisalOrder.Special_Instructions_to_Bank_Officer__c}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Loan Information" columns="2">
+            <apex:outputField value="{!appraisalOrder.Loan_Exceeds_2M__c}"/>
+            <apex:outputField value="{!appraisalOrder.Will_RM_Seek_Waiver__c}" rendered="{!If(appraisalOrder.Loan_Exceeds_2M__c='No',False,True)}"/>
+            <apex:outputLabel rendered="{!If(appraisalOrder.Loan_Exceeds_2M__c='No',True,False)}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Summary Details">
+ 			<apex:outputField value="{!appraisalOrder.Related_Collateral__r.Appraisal_Order_Summary__c}" rendered="{!appraisalOrder.Related_Collateral__c != null}"/>
+ 			<apex:outputField value="{!appraisalOrder.OREO_Account__r.Appraisal_Order_Summary__c}" rendered="{!appraisalOrder.Related_Collateral__c = null}"/>
+    	</apex:pageBlockSection> 
+        <apex:pageBlockSection title="Oasis Appraisal Results" rendered="{!canEdit}">
+            <!-- <apex:pageBlockSectionItem > -->
+                <apex:inputField value="{!appraisalOrder.Oasis_Order_Number__c}"/>
+            <!-- </apex:pageBlockSectionItem> -->
+            <!-- <apex:pageBlockSectionItem > -->
+                <apex:inputField value="{!appraisalOrder.Appraised_Value_reviewed__c}" />
+            <!-- </apex:pageBlockSectionItem> -->
+            <apex:inputField value="{!appraisalOrder.As_Is_Value__c}"/>
+            <apex:inputField value="{!appraisalOrder.Valuation_Date__c}"/>
+            <apex:inputField value="{!appraisalOrder.As_Stabilized_Value__c}"/>
+            <apex:inputField value="{!appraisalOrder.Appraisal_Company_Used__c}"/> 
+            <apex:inputField value="{!appraisalOrder.As_Completed_Value__c}"/>
+            <apex:inputField value="{!appraisalOrder.FDIC_Valuation_Type__c}"/>         
+            <apex:inputField value="{!appraisalOrder.As_Liquidated_Value__c}"/>
+            <apex:inputField value="{!appraisalOrder.USPAP_Compliant__c}"/>
+        </apex:pageBlockSection>
+         <apex:pageBlockSection title="Oasis Appraisal Results" rendered="{!canEdit == false}">
+            <apex:outputField value="{!appraisalOrder.Oasis_Order_Number__c}"/>
+            <apex:outputField value="{!appraisalOrder.Appraised_Value_reviewed__c}"/>
+            <apex:outputField value="{!appraisalOrder.As_Is_Value__c}"/>
+            <apex:outputField value="{!appraisalOrder.Valuation_Date__c}"/>
+            <apex:outputField value="{!appraisalOrder.As_Stabilized_Value__c}"/>
+            <apex:outputField value="{!appraisalOrder.Appraisal_Company_Used__c}"/>
+            <apex:outputField value="{!appraisalOrder.As_Completed_Value__c}"/>
+            <apex:outputField value="{!appraisalOrder.FDIC_Valuation_Type__c}"/>
+            <apex:outputField value="{!appraisalOrder.As_Liquidated_Value__c}"/>
+            <apex:outputField value="{!appraisalOrder.USPAP_Compliant__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockButtons location="both">
+            <apex:commandButton value="Save" action="{!save}" rendered="{!canEdit}"/>
+            <apex:commandButton value="Cancel" action="{!cancel}"/>
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+</apex:form>	
+</apex:page>

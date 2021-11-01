@@ -1,0 +1,112 @@
+<apex:component controller="PricingWkstComponentDeposits" allowDML="true">
+
+	<apex:attribute name="pricingWkst" type="Pricing_Worksheet__c" assignTo="{!currentWorksheet}" required="true" description="" />
+	<apex:attribute name="pricingReq" type="PricingWkstRequest" assignTo="{!pricingRequest}" required="true" description="" />
+	<apex:attribute name="pricingResult" type="PricingWkstResults" assignTo="{!pricingResults}" required="true" description="" />
+	<apex:attribute name="isEditable" type="Boolean" default="true" description="" />
+
+		<apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!popupDisplayed}"/>
+		<apex:outputPanel styleClass="popupDataDeposits" layout="block" rendered="{!popupDisplayed}">
+
+		    <apex:pageBlock title="Proposed Deposits" id="popupPanel" >
+			    <apex:pageblockButtons location="top" >
+				    <apex:commandButton value="Add Another Line" action="{!createNewItem}" rerender="popupPanel" rendered="{!If(popupType='add',true,false)}" immediate="true"/>
+			    </apex:pageblockButtons>
+			    <apex:pageblockButtons location="bottom">
+				    <apex:commandButton value=" Save New Deposits " action="{!addNewItems}" rendered="{!If(popupType='add',true,false)}"/>
+				    <apex:commandButton value="   Save Changes   " action="{!updateItems}" rendered="{!If(popupType='update',true,false)}"/>
+				    <apex:commandButton value=" Yes, delete item " action="{!deleteItems}" rendered="{!If(popupType='deletesingle',true,false)}"/>
+				    <apex:commandButton value=" Yes, delete all " action="{!deleteItems}" rendered="{!If(popupType='deleteall',true,false)}"/>
+				    <apex:commandButton value=" Cancel " action="{!hidePopup}" rerender="entirePage" immediate="true"/>
+			    </apex:pageblockButtons>
+			    <apex:outputLabel value="Are you sure you want to delete this proposed Deposit?" rendered="{!If(popupType='deletesingle',true,false)}" styleClass="msg" />
+			    <apex:outputLabel value="Are you sure you want to delete all proposed Deposits?" rendered="{!If(popupType='deleteall',true,false)}" styleClass="msg" />
+			    <apex:messages />
+		        <apex:pageBlockTable value="{!popupData}" var="popupItem" rendered="{!If(popupType='deletesingle'||popupType='deleteall',false,true)}" >
+			        <apex:column headerValue="Deposit Type" headerClass="largeDepCol left" styleClass="largeDepCol left">
+		 		        <apex:inputField value="{!popupItem.Deposit_Type__c}" >
+		 		        	<apex:actionSupport event="onchange" rerender="popupPanel"/>
+		 		        </apex:inputField>
+			        </apex:column>
+			        <apex:column headerValue="Avg Balance" headerClass="medDepCol centered" styleClass="medDepCol centered">
+		 		        <apex:inputField value="{!popupItem.Average_Balance__c}" />
+				        </apex:column>
+			        <apex:column headerValue="Int Rate" headerClass="medDepCol centered" styleClass="medDepCol centered">
+		 		        <apex:inputField value="{!popupItem.Interest_Rate__c}" styleClass="{!If(popupItem.Deposit_Type__c='CD' || popupItem.Deposit_Type__c='MMA' || popupItem.Deposit_Type__c='Personal' || popupItem.Deposit_Type__c='Sweep Investment','','hidden')}"/>
+				        </apex:column>
+			        <apex:column headerValue="Gross Monthly S/C" headerClass="medDepCol centered" styleClass="medDepCol centered">
+		 		        <apex:inputField value="{!popupItem.Gross_Monthly_Service_Charge__c}" styleClass="{!If(popupItem.Deposit_Type__c='CD','hidden','')}"/>
+				        </apex:column>
+			        <apex:column headerValue="CD Term"  headerClass="medDepCol centered" styleClass="medDepCol centered">
+		 		        <apex:inputField value="{!popupItem.CD_Term__c}" styleClass="{!If(popupItem.Deposit_Type__c='CD','','hidden')}"/>
+				        </apex:column>
+			        <apex:column headerValue="Waived" headerClass="smallDepCol centered" styleClass="smallDepCol centered" >
+		 		        <apex:inputField value="{!popupItem.Waived__c}" styleClass="{!If(popupItem.Deposit_Type__c='Sweep Operating','','hidden')}"/>
+				        </apex:column>
+			    </apex:pageBlockTable>
+		    </apex:pageBlock>
+		</apex:outputPanel>
+
+	    <apex:pageBlock id="proposedDepositsPanel" title="Proposed Deposits">
+
+	 	 	<div class="propDepositsSection">
+		    <apex:pageblockButtons location="top" rendered="{!isEditable}">
+			    <apex:commandButton value="   New Deposits    " action="{!showAddPopup}" rerender="entirePage" />
+			    <apex:commandButton value="Edit Multiple Items" action="{!showUpdatePopupForAllItems}" rerender="entirePage" />
+			    <apex:commandButton value="Delete All" action="{!showDeletePopupForAllItems}" rerender="entirePage" />
+		    </apex:pageblockButtons>
+		        <apex:pageBlockTable value="{!existingItems}" var="existingItem">
+			        <apex:column headerValue="Edit" styleClass="smallCol centered" headerClass="centered" rendered="{!isEditable}">
+				        <apex:commandLink value="Edit" action="{!showUpdatePopupForSingleItem}" rerender="entirePage"  >
+				        	<apex:param name="addId" assignTo="{!selectedId}" value="{!existingItem.proposedDeposit.Id}" />
+				        </apex:commandLink>
+				    </apex:column>
+			        <apex:column headerValue="Del" styleClass="smallCol centered" headerClass="centered" rendered="{!isEditable}" >
+				        <apex:commandLink value="Del" action="{!showDeletePopupForSingleItem}" rerender="entirePage"  >
+				        	<apex:param name="addIdForDel" assignTo="{!selectedId}" value="{!existingItem.proposedDeposit.Id}" />
+				        </apex:commandLink>
+				    </apex:column>
+	
+	 		        <apex:column headerValue="Deposit Type" value="{!existingItem.proposedDeposit.Deposit_Type__c}" styleClass="medCol left" headerClass="left" footerClass="left" footerValue="TOTALS:"/>
+			        <apex:column headerValue="Avg Balance" value="{!existingItem.proposedDeposit.Average_Balance__c}" styleClass="medCol right" headerClass="right" footerClass="right">
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!avgBalTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+			        </apex:column>
+			        <apex:column headerValue="Int Rate" value="{!existingItem.proposedDeposit.Interest_Rate__c}"  styleClass="medCol right" headerClass="right"/>
+			        <apex:column headerValue="Gross Monthly S/C" value="{!existingItem.proposedDeposit.Gross_Monthly_Service_Charge__c}"  styleClass="medCol right" headerClass="right" />
+			        <apex:column headerValue="CD Term" value="{!existingItem.proposedDeposit.CD_Term__c}" styleClass="medCol right" headerClass="right"/>
+			        <apex:column headerValue="Waived" value="{!existingItem.proposedDeposit.Waived__c}" styleClass="smallCol centered" headerClass="centered" />
+			        <apex:column headerValue="TR" styleClass="medCol right" headerClass="right" >
+	       		    	<apex:outputText value="{0, number, ##0.000 %}"  >
+				    		<apex:param value="{!existingItem.transferRate}" />
+				    	</apex:outputText>
+				    </apex:column>
+			        <apex:column headerValue="Capital" styleClass="medCol right" headerClass="right" footerClass="right" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.capital}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!capitalTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+				    </apex:column>
+			        <apex:column headerValue="Income" styleClass="medCol right" headerClass="right" footerClass="right" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.income}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!incomeTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+		    		</apex:column>
+		        </apex:pageBlockTable>
+	        </div>
+	    </apex:pageBlock>
+
+
+</apex:component>

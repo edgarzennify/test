@@ -1,0 +1,39 @@
+<apex:page controller="RESTTestUtilityController" title="REST Test Utility" >
+   <apex:form >
+    <apex:sectionHeader title="Utilities" subtitle="REST Service Tester" />
+    <apex:pageMessages ></apex:pageMessages>
+    <apex:pageBlock >        
+        <apex:pageBlockSection columns="1" >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Url</apex:outputLabel>
+                <apex:inputText value="{!Url}" maxlength="255" tabindex="1" style="width:600px;" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Body (POST)</apex:outputLabel>
+                <apex:inputTextarea value="{!Body}" tabindex="2" style="width:600px;" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Method</apex:outputLabel>
+                <apex:selectRadio value="{!Method}" >
+                    <apex:selectOption itemValue="GET" itemLabel="GET" />
+                    <apex:selectOption itemValue="POST" itemLabel="POST" />
+                    <apex:selectOption itemValue="PUT" itemLabel="PUT" />
+                </apex:selectRadio>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Results</apex:outputLabel>
+                <apex:outputText value="{!Results}" ></apex:outputText>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel >Time</apex:outputLabel>
+                <apex:outputText value="{!Status}" ></apex:outputText>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <apex:pageBlockButtons location="top" >
+            <apex:commandButton value=" Send Request " action="{!SendRequest}" />
+            <apex:commandButton value=" Clear Form " action="{!ClearForm}" />
+            <apex:commandButton value=" Test /Available " action="{!Available}" />         
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+   </apex:form>
+</apex:page>

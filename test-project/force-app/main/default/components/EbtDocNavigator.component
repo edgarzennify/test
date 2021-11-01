@@ -1,0 +1,111 @@
+<apex:component controller="DocumentController" allowDML="true" >
+    <apex:attribute name="objectId" type="String" required="true" description="" assignTo="{!objectIdAttribute}" />
+    
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_8_3, 'jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.select2release32, '/select2-release-3.2/select2.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.select2release32, '/select2-release-3.2/select2.css')}"/>
+    
+    <apex:form >
+    <div style="padding-bottom:5px;display: flex;">
+        <div style="margin-left:2px; margin-right:2px;">Filter by Document:&nbsp;            
+        <apex:selectList value="{!documentTypeFilterSelectedValue}" size="1" id="filterList" multiselect="true" style="width:250px;" >
+            <apex:selectOptions value="{!documentTypeFilterList}" />
+            <apex:actionSupport event="onchange" action="{!filterResults}" />
+        </apex:selectList>
+        </div>
+        <div style="margin-left:2px; margin-right:2px;">
+        Start Date:&nbsp;
+        <apex:inputField value="{!filterDate.Bogus_Date_1__c}" />
+        </div>
+        <div style="margin-left:2px; margin-right:2px;">
+        End Date:&nbsp;
+        <apex:inputField value="{!filterDate.Bogus_Date_2__c}" />
+        </div>
+        <apex:commandbutton action="{!filterResults}" value="filter"/>
+        <div style="margin-left:2px; margin-right:2px;flex:1;text-align: center;padding-top:7px;">
+        <script type="text/javascript">
+           var isLink = true;
+           var buttonText = "Click here to upload files...";
+       </script>
+        <c:BarcodeGeneratorDropzone objectId="{!objectIdAttribute}" uploadSplit="true"></c:BarcodeGeneratorDropzone>
+        </div>
+        <div style="margin-left:2px; margin-right:2px;align-items: center; display: flex;">
+        <apex:outputLink value="/apex/TreeView?pageKey={!pageKey}&pageKeyType={!pageKeyType}" target="_new">Expanded View</apex:outputLink>
+        </div> 
+        </div>   
+        <!-- -->    
+        <apex:pageBlock mode="maindetail"  >            
+            <apex:pageBlockTable value="{!viewableList}" var="o" rendered="{!NOT(ISNULL(viewableList))}"> 
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Document {!IF(sortParameter=='DocTypeName',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort1">
+                            <apex:param value="DocTypeName" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                    <div style="float:left">
+                        <apex:outputLink value="{!o.DocumentURL}" target="_new">{!o.DocTypeName}</apex:outputLink>
+                    </div>
+                    <div style="float:right;padding-right:1em;">
+                        <apex:outputLink title="Edit" rendered="{!showEditLink}" value="{!o.DocumentURL}&displaysearchwindow=1" target="_new"><apex:image value="/img/icon/custom51_100/pencil16.png" /></apex:outputLink>
+                    </div>
+                </apex:column>
+                <apex:column value="{!o.FormattedDocumentDate}" >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Document Date {!IF(sortParameter=='DocumentDate',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort2">
+                            <apex:param value="DocumentDate" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>                        
+                </apex:column>
+                <apex:column value="{!o.FormattedCreatedDate}" >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Imaged Date {!IF(sortParameter=='CreatedDate',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort5">
+                            <apex:param value="CreatedDate" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>                        
+                </apex:column>
+                <apex:column value="{!o.Comment}"  >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Comment {!IF(sortParameter=='Comment',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort4">
+                            <apex:param value="Comment" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column value="{!o.DrawerName}"  >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Drawer Name {!IF(sortParameter=='DrawerName',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort3">
+                            <apex:param value="DrawerName" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>      
+            </apex:pageBlockTable>
+            <br/>
+            <apex:commandLink action="{!previousPage}" rendered="{!pager.hasPreviousPage}" value="◄ Previous" />
+            <apex:outputLabel value="◄ Previous" rendered="{!!pager.hasPreviousPage}" style="color:#999;" />
+            <span style="padding: 0 10px 0 10px;">
+                <apex:outputLabel value="Page " />
+                <apex:selectList value="{!pager.currentSelectedPage}" size="1" id="pagesList" rendered="{!IF(pager.totalPages>1,true,false)}" >
+                    <apex:selectOptions value="{!pager.pagesList}" />
+                    <apex:actionSupport event="onchange" action="{!skipToSelectedPage}" />
+                </apex:selectList>
+                <apex:outputLabel value="1" rendered="{!IF(pager.totalPages>1,false,true)}" />
+                <apex:outputLabel value=" of " />
+                <apex:outputLabel value="{!pager.totalPages}" />                
+            </span>
+            <apex:commandLink action="{!nextPage}" rendered="{!pager.hasNextPage}" value="Next ►"  />
+            <apex:outputLabel value="Next ►" rendered="{!!pager.hasNextPage}" style="color:#999;" />     
+            <apex:outputLabel value="No records to display" rendered="{!(ISNULL(viewableList))}" styleClass="noRowsHeader"></apex:outputLabel>
+        </apex:pageBlock>
+        <!-- -->    
+    </apex:form>    
+    <style type="text/css">
+        .smalldrop .select2-container-multi .select2-results {max-height: 130px;}
+        .smalldrop .select2-results {max-height: 130px;}
+    </style>
+    <script>
+    function setFocusOnLoad() {}
+    j$ = jQuery.noConflict();  
+    j$(document).ready(function(){     
+        j$('[id$=filterList]').select2({dropdownCssClass: "smalldrop"});
+    });
+    </script>
+</apex:component>

@@ -1,0 +1,12 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Collateral__c"
+    extensions="Collateral_PluginController"
+    showHeader="false" 
+    sidebar="false" 
+    lightningStylesheets="true">
+    
+    <apex:relatedList subject="{!ebCollateral}" list="CombinedAttachments" rendered="{! ebCollateral != NULL }" />
+    <c:Eb_PluginHelper newObjectButtonText="New Appraisal Order"
+      newObjectButtonUrl="{!$Site.Domain}/apex/Collateral_Plugin_Appraisal_Adapter?collateralId={! collateral.Id }&scontrolCaching=1&retURL=%2F{! collateral.Id }&sfdc.override=1" />
+
+</apex:page>

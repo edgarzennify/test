@@ -1,0 +1,372 @@
+<apex:page standardController="EB_Loan_App_Collateral_Relationship__c" extensions="LoanAppCollateralEditController">
+  <apex:pageMessages />
+  <style>TEXTAREA { /* background-color: navy; border: black 2px solid; color: white;*/
+  font-family: arial, verdana, ms sans serif; font-size: 10pt; font-weight: normal; width:100%;
+  Height:35px; } .container{ /*background-color: #E8E8E8; border-style: solid; border-width:1px;*/
+  width: 800px; text-align: center; } .headerStyle{ color: black; font-weight: bold; font-size:
+  24px; padding:5px; }</style>
+  <script language="javascript">
+    function editRedirect(var1 , var2){ 
+      /*var3 = "/" + "apex" + "/" + "AppraisalOrder?id=" + var1 + "&amp;uid=" + var2;*/ 
+      var3 = '/' + 'apex' + '/' +  'AppraisalOrder?id=' + var1 + '&amp;uid=' + var2; 
+      window.open(var3,'_parent'); 
+    }
+  </script>
+  <apex:form >
+    <apex:sectionHeader title="Collateral for {!Quotes}{!getLoanApplicationName}{!Quotes}" />
+    <div style="padding:5px;">Quick Links: 
+    <a href="http://www.realquest.com" target="_blank">RealQuest.com</a>| 
+    <a href="http://ebatwork/eitswebapp/logon.aspx" target="_blank">EITS</a>| 
+    <a href="http://webcapture:8080/isview/index.jsp" target="_blank">Treev</a></div>
+    <apex:pageBlock mode="edit">
+      <apex:pageBlockButtons >
+        <apex:commandButton value="Save" action="{!SaveCollateral}" />
+        <apex:commandButton value="QuickSave" action="{!SaveQuickCollateral}" />
+        <apex:commandButton value="Cancel" action="{!CancelCollateral}" immediate="true" />
+      </apex:pageBlockButtons>
+      <apex:pageBlockSection title="Collateral Details (Required For Approval)" columns="2">
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="Purpose of Collateral"></apex:outputLabel>
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" />
+            <apex:selectList value="{!dropdownPurposeOfCollateralId}" size="1" id="BorrowerList" required="true">
+              <apex:selectOptions value="{!PurposeOfCollateral}" />
+            </apex:selectList>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="cMarketValue" value="Market Value"></apex:outputLabel>
+          <apex:inputfield value="{!c.Market_Value__c}" id="cMarketValue" required="true" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel for="cDescription" value="Collateral Description"></apex:outputLabel>
+          <apex:inputfield value="{!c.Collateral_Description__c}" id="cDescription" required="true" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel for="cDescription" value="Collateral Description"></apex:outputLabel>
+          <apex:outputfield value="{!c.Collateral_Description__c}" id="cDescription" />
+        </apex:pageBlockSectionItem>
+          
+             <apex:pageBlockSectionItem >
+              <apex:outputLabel value="Policy Adv. %" /> 
+             <apex:outputPanel id="PolicyAdvanceRate">  
+                    
+                 <apex:outputField value="{!ccode.Policy_Advance_Rate__c}"/>
+              </apex:outputPanel>
+             </apex:pageBlockSectionItem>
+    
+         <apex:pageBlockSectionItem >
+             <apex:outputLabel value="" />
+         </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="cAdvanceRate" value="Advance Rate %"></apex:outputLabel>
+          <apex:inputfield value="{!c.Advance_Rate__c}" id="cAdvanceRate" required="true" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="Owner"></apex:outputLabel>
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" />
+            <apex:selectList value="{!dropdownBorrowerId}" size="1" id="BorrowerList" tabindex="13" required="false" disabled="{!ReadonlyStatus}">
+              <apex:selectOptions value="{!BorrowerNames}" />
+            </apex:selectList>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel for="BorrowerList" value="Owner"></apex:outputLabel>
+          <apex:outputText value="{!OwnerListForReadOnlyStatus}" id="BorrowerList" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="cExistingDebt" value="Existing Debt"></apex:outputLabel>
+          <apex:inputfield value="{!c.Existing_Debt__c}" id="cExistingDebt" required="true" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(c.Status__c=='Existing','true','false')}">
+          <apex:outputLabel for="coreCollateralCode" value="Core Collateral Code">
+          </apex:outputLabel>
+          <apex:outputField value="{!c.Core_Collateral_Code__c}" id="coreCollateralCode" />
+        </apex:pageBlockSectionItem>
+         <apex:pageBlockSectionItem rendered="{!IF(c.Status__c=='Existing','false','true')}">
+          <apex:outputLabel value="Collateral Code" for="CollateralCodeList" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" />
+            <apex:actionRegion immediate="true">
+              <apex:selectList value="{!dropdownCollateralCodeId}" size="1" id="CollateralCodeList" tabindex="13" required="false">
+                <apex:actionSupport action="{!SetSearch}" event="onchange" timeout="5000" reRender="LoanDetailsPanel,RealEstatePanel,RealEstatePanel2,PolicyAdvanceRate" />
+                <apex:selectOptions value="{!CollateralCodes}" />
+              </apex:selectList>
+            </apex:actionRegion>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="AbundanceOfCaution" value="Abundance of Caution" />
+          <apex:inputField id="AbundanceOfCaution" value="{!r.Abundance_of_Caution__c}" required="true" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(c.Status__c=='Existing','true','false')}">
+          <apex:outputLabel for="changeCollateralCode" value="Change Collateral Code">
+          </apex:outputLabel>
+          <apex:actionRegion immediate="true">
+           <!-- <apex:inputField value="{!c.Change_Collateral_Code__c}" id="changeCollateralCode">
+              <apex:actionSupport action="{!SetSearch}" event="onclick" reRender="ChangeCollateralCodeLabel, ChangeCollateralCodeInput" />
+            </apex:inputField>-->
+             <apex:outputPanel layout="block" styleClass="requiredInput">
+               <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+                 <apex:selectList value="{!dropdownChangeCollateralCodeId}" size="1" id="changecolList">
+                    <apex:actionSupport action="{!SetSearch}" event="onchange" reRender="ChangeCollateralCodeLabel, ChangeCollateralCodeInput" status="Status" />
+                    <apex:selectOptions value="{!ChangeCollateral}" / >
+                    <apex:actionStatus startText=" (Please wait...)" startstyle="color:brown;" id="Status"/>
+            </apex:selectList>
+            </apex:outputpanel>
+          </apex:actionRegion>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(c.Status__c=='Existing','false','true')}">
+          <apex:outputLabel value="" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="AppraisedValue" value="Appraised Value (reviewed)" />
+          <apex:inputField id="AppraisedValue" value="{!c.Appraised_Value__c}" />
+        </apex:pageBlockSectionItem>
+             
+        <apex:pageBlockSectionItem rendered="{!IF(c.Status__c=='Existing','true','false')}" >
+          <apex:outputPanel id="ChangeCollateralCodeLabel" >
+            <apex:outputLabel value="Modified Collateral Code" for="CollateralCodeList" rendered="{!IF(ChangeCollateralCodeStatus=='true','true','false')}" />
+            <apex:outputLabel value="" rendered="{!IF(ChangeCollateralCodeStatus=='true','false','true')}" />
+          </apex:outputPanel>
+          <apex:outputPanel id="ChangeCollateralCodeInput" >
+            <apex:outputPanel layout="block" styleClass="requiredInput" >
+              <apex:outputPanel layout="block" styleClass="requiredBlock" />
+              <apex:actionRegion immediate="true">
+                <apex:selectList value="{!dropdownCollateralCodeId}" size="1" id="CollateralCodeList" tabindex="13" required="false" rendered="{!IF(ChangeCollateralCodeStatus=='true','true','false')}">
+                  <apex:actionSupport action="{!SetSearch}" event="onchange" reRender="LoanDetailsPanel,RealEstatePanel,RealEstatePanel2,PolicyAdvanceRate" />
+                  <apex:selectOptions value="{!CollateralCodes}" />
+                </apex:selectList>
+              </apex:actionRegion>
+            </apex:outputPanel>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(c.Status__c=='Existing','true','false')}">
+          <apex:outputLabel for="cApplicationCrossed" value="Application Crossed With" />
+          <apex:inputField id="cApplicationCrossed" value="{!r.Application_Cross_With__c}" />
+        </apex:pageBlockSectionItem>
+         <apex:pageBlockSectionItem >
+          <apex:outputLabel value="" />
+        
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel for="currentlyCrossed" value="Currently Crossed With" />
+          <apex:outputlabel id="currentlyCrossed" value="{!CurrentCrossedWith}" />
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+      <apex:outputPanel id="AppraisedValuesPanel">
+        <apex:pageBlockSection title="Appraised Values (Most Recent)" columns="2"  rendered="{!LoanDetailsRealEstateRenderStatus}">
+            <apex:outputField value="{!c.Oasis_Order_Number__c}" />
+            <apex:outputField value="{!c.FDIC_Valuation_Type__c}" />
+            <apex:outputField value="{!c.As_Is_Value__c}" />
+            <apex:outputField value="{!c.Valuation_Date__c}" />
+            <apex:outputField value="{!c.As_Stabilized_Value__c}" />
+            <apex:outputField value="{!c.Appraisal_Company_Used__c}" />
+            <apex:outputField value="{!c.As_Liquidated_Value__c}" />
+            <apex:outputlabel />
+            <apex:outputField value="{!c.As_Completed_Value__c}" />
+        </apex:pageBlockSection>
+      </apex:outputPanel>
+      <apex:outputPanel id="LoanDetailsPanel">
+        <apex:pageBlockSection title="Loan Details (Required for Documentation)" columns="2"  rendered="{!LoanDetailsRealEstateRenderStatus}">
+            <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Is_prop_leased_by_borr_or_an_affiliate__c.inlineHelpText}" >
+                <apex:outputlabel value="{!$ObjectType.EB_Collateral__c.Fields.Is_prop_leased_by_borr_or_an_affiliate__c.label}" />
+                <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                    <apex:inputField value="{!c.Is_prop_leased_by_borr_or_an_affiliate__c}" />
+                </apex:outputpanel>
+            </apex:pageBlockSectionItem>
+            <apex:inputField value="{!c.Src_of_repymt_from_50_rental_income__c}" />
+            <apex:inputField value="{!c.Borr_control_20_of_leasing_entities__c}" />
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Loan Details (Required for Documentation)" columns="2"  rendered="{!LoanDetailsLandRenderStatus}">
+            <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Can_land_be_used_as_farmland__c.inlineHelpText}" >
+                <apex:outputlabel value="{!$ObjectType.EB_Collateral__c.Fields.Can_land_be_used_as_farmland__c.label}" />
+                <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                    <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                    <apex:inputField value="{!c.Can_land_be_used_as_farmland__c}" />
+                </apex:outputpanel>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Loan Details (Required for Documentation)" columns="2"  rendered="{!LoanDetailsStockRenderStatus}">
+          <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Is_stock_publicly_traded__c.inlineHelpText}" >
+              <apex:outputlabel value="{!$ObjectType.EB_Collateral__c.Fields.Is_stock_publicly_traded__c.label}" />
+              <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                  <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                  <apex:inputField value="{!c.Is_stock_publicly_traded__c}" />
+              </apex:outputpanel>
+          </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+      </apex:outputPanel>
+      
+      <apex:outputPanel id="RealEstatePanel">
+        <apex:pageBlockSection title="Real Estate Details (Required For Documentation)" columns="2" collapsible="false" rendered="{!RealEstateRenderStatus}">
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cLien" value="Lien Position"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:selectList value="{!dropdownLienId}" size="1" id="cLien">
+                <apex:selectOptions value="{!LienPosition}"></apex:selectOptions>
+              </apex:selectList>
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cValuationType" value="Valuation Type"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+               <apex:selectList value="{!dropdownValuationTypeId}" size="1" id="cValuationType">
+               <apex:actionSupport action="{!updateValuationTypeSelection}" event="onchange" reRender="RealEstatePanel" /> 
+                <apex:selectOptions value="{!ValuationType}"></apex:selectOptions>
+              </apex:selectList>
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+            <apex:pageBlockSectionItem rendered="{!ShowAppraisalEvaluationDate}"></apex:pageBlockSectionItem>
+           <apex:pageBlockSectionItem rendered="{!ShowAppraisalEvaluationDate}">
+            <apex:outputLabel for="cEvaluationAppraisalDate" value="Evaluation/Appraisal Date" />
+            <apex:inputfield value="{!c.Evaluation_Appraisal_Date__c}" id="cEvaluationAppraisalDate" />
+            </apex:pageBlockSectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cStreet" value="Street"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:inputfield value="{!c.Street__c}" id="cStreet" />
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cSurveyRequired" value="Survey Required"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:selectList value="{!dropdownSurveyId}" size="1" id="cSurveyRequired">
+                <apex:selectOptions value="{!Survey}"></apex:selectOptions>
+              </apex:selectList>
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cCity" value="City"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:inputfield value="{!c.City__c}" id="cCity" />
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cFutureAdvanceAmount" value="Future Advance Amount (must be >0)"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:inputfield value="{!c.Future_Advance_Amount__c}" id="cFutureAdvanceAmount" />
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cState" value="State"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:inputfield value="{!c.State__c}" id="cState" />
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cIncreaseAmount" value="Increase Amount" />
+            <apex:inputfield value="{!c.Increase_Amount__c}" id="cIncreaseAmount" />
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cZip" value="Zip"></apex:outputLabel>
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:inputfield value="{!c.Zip_Code__c}" id="cZip" />
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cTotalDeedAmount" value="Total Deed Amount" />
+            <apex:outputField value="{!c.Total_Deed_Amount__c}" id="cTotalDeedAmount"  />
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel value="Appraisal County" />
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:selectList value="{!dropdownCountyId}" size="1" id="companyList">
+                <apex:selectOptions value="{!Counties}" />
+              </apex:selectList>
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="cAssignmentOfRents" value="Assignment of Rents">
+            </apex:outputLabel>
+            <apex:inputfield value="{!c.Assignment_of_Rents__c}" id="cAssignmentOfRents" />
+          </apex:pageblocksectionItem>
+          <apex:pageblocksectionItem >
+            <apex:outputLabel for="RequiresCentralizedDisbursing" value="Requires Centralized Disbursing" />
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+              <apex:inputField id="RequiresCentralizedDisbursing" value="{!r.Requires_Centralized_Disbursing__c}" />
+            </apex:outputPanel>
+          </apex:pageblocksectionItem>
+           <apex:pageBlockSectionItem >
+          <apex:outputLabel value="R/E Taxes Paid"></apex:outputLabel>
+           <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+          <apex:inputField value="{!c.R_E_Taxes_Paid__c}"/>
+           </apex:outputPanel>
+          </apex:pageBlockSectionItem>
+          <!--<apex:pageblocksectionItem >
+            <apex:outputLabel for="cAssignmentOfLeases" value="Assignment Of Leases">
+            </apex:outputLabel>
+            <apex:inputfield value="{!c.Assignment_of_Leases__c}" id="cAssignmentOfLeases" />            
+          </apex:pageblocksectionItem>-->
+        </apex:pageBlockSection>
+      </apex:outputPanel>
+
+      <apex:pageBlockSection title="Collateral Details (Optional)" columns="1">
+        <apex:pageblocksectionItem >
+          <apex:outputLabel for="cComments" value="Comments"></apex:outputLabel>
+          <apex:inputfield value="{!c.Comments__c}" id="cComments" />
+        </apex:pageblocksectionItem>
+      </apex:pageBlockSection>
+    </apex:pageBlock>
+    <apex:outputPanel id="RealEstatePanel2">
+      <apex:pageBlock title="Appraisal Orders" rendered="{!RealEstateRenderStatus}">
+        <apex:pageBlockButtons location="top">
+          <apex:commandButton value="New Appraisal Order" action="{!NewAppraisal}"/>
+        </apex:pageBlockButtons>
+        <apex:pageBlockTable value="{!Appraisals}" var="o" rendered="{!NOT(ISNULL(Appraisals))}">
+          <apex:column headerValue="Action">
+            <!--<apex:commandLink value="Edit" action="{!SaveQuickCollateral}" onclick="editRedirect('{!o.Id}','{!r.Id}');" style="text-decoration:none;color:blue;" />-->
+            <!--<apex:outputLink value="/apex/AppraisalOrder?id={!o.Id}&uid={!r.Id}" style="text-decoration:none;color:blue;">Edit</apex:outputlink>-->
+            <apex:commandLink value="Edit" action="{!EditAppraisal}" style="text-decoration:none;color:blue;"  rendered="{!IF(o.Submit_Order__c, 'false', 'true')}">
+              <apex:param name="editId" assignTo="{!selectedAppraisalId}" value="{!o.id}" />
+            </apex:commandLink>
+             <apex:commandLink value="View" action="{!ViewAppraisal}" style="text-decoration:none;color:blue;"  rendered="{!IF(o.Submit_Order__c, 'true', 'false')}">
+              <apex:param name="viewId" assignTo="{!selectedAppraisalId}" value="{!o.id}" />
+            </apex:commandLink>
+          </apex:column>
+          <apex:column >
+            <apex:facet name="header">Appraisal Order</apex:facet>
+              {!o.Name}
+          </apex:column>
+          <apex:column >
+          <apex:facet name="header">Created By</apex:facet>
+              {!o.CreatedBy.Name}
+          </apex:column> 
+          <apex:column value="{!o.CreatedDate}" />
+          <apex:column value="{!o.Submit_Order__c}" />
+          <!-- <apex:column value="{!o.App_Rec_d__c}" /> -->
+          <apex:column value="{!o.Order_Status__c}" />
+          <apex:column value="{!o.Oasis_Order_Number__c}" />
+          <apex:column >
+          <apex:facet name="header">Last Mofified By</apex:facet>
+              {!o.LastModifiedBy.Name}
+          </apex:column>
+        </apex:pageBlockTable>
+        <apex:outputLabel value="No records to display" rendered="{!(ISNULL(Appraisals))}" styleClass="noRowsHeader"></apex:outputLabel>
+      </apex:pageBlock>
+    </apex:outputPanel>
+  </apex:form>
+  <apex:relatedList subject="{!c}" list="EB_Collateral_Account_Relationships__r">
+    <apex:facet name="header">
+      <div class="pbTitle" style="margin-left:-20px;">
+        <h3>Crossed Accounts</h3>
+      </div>
+    </apex:facet>
+  </apex:relatedList>
+</apex:page>

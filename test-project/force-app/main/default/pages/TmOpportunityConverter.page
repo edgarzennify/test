@@ -1,0 +1,23 @@
+<apex:page title="TM Opportunity Converter"
+    controller="TmOpportunityConverterController"
+    docType="html-5.0"
+    showHeader="false" 
+    sidebar="false"
+    standardStylesheets="false" 
+    applyHtmlTag="false"
+    LightningStylesheets="true">
+    
+     <html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <link href="{!URLFOR($Resource.TmOpportunityConverter, '/site.css')}" rel="stylesheet" type="text/css" />
+        <title>TM Opportunity Converter</title>
+    </head>
+    <body>
+        <div id="react-app"></div>
+        <script src="{!URLFOR($Resource.TmOpportunityConverter, '/vendor.js')}" />
+        <script src="{!URLFOR($Resource.TmOpportunityConverter, '/main.js')}" />
+    </body>
+</html>
+</apex:page>

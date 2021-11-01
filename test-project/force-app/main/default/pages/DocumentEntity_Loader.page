@@ -1,0 +1,8 @@
+<apex:page docType="html-5.0"
+    standardController="Account" 
+    showHeader="false" 
+    sidebar="false" >
+    
+    <c:AsyncPageLoader loadingText="Loading Document Navigator" redirectUrl="/apex/DocumentEntity?id={!Account.Id}" />
+
+</apex:page>

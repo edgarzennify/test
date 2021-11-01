@@ -1,0 +1,94 @@
+<apex:component >
+<apex:attribute type="EB_Appraisal_Order__c" name="appraisalOrder" description="CK IK"/>
+<apex:pageBlockSection title="{!appraisalOrder.Related_Collateral__r.Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Type of School" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Type_of_School__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Collateral__c.Fields.Total_Land_Area_Acres__c.inlineHelpText}">
+    <apex:outputLabel value="Total Land Area/Acres" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Total_Land_Area_Acres__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Existing" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Existing__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Sq. Ft. of Building" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Sq_Ft_of_Building__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="New Construction" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.New_Construction__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Tax Exempt Status" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Tax_Exempt_Status__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+
+</apex:pageBlockSection>
+<apex:pageBlockSection title="{!appraisalOrder.OREO_Account__r.OREO_Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Type of School" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Type_of_School__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Account__c.Fields.Total_Land_Area_Acres__c.inlineHelpText}">
+    <apex:outputLabel value="Total Land Area/Acres" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Total_Land_Area_Acres__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Existing" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Existing__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Sq. Ft. of Building" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Sq_Ft_of_Building__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="New Construction" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.New_Construction__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Tax Exempt Status" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Tax_Exempt_Status__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:component>

@@ -1,0 +1,47 @@
+<apex:component >
+  <apex:attribute name="newObjectButtonText" type="String" description="" />
+  <apex:attribute name="newObjectButtonUrl" type="String" description="" />
+  <script language="javascript">
+        addLoadEvent(ReplaceButton);
+        addLoadEvent(SetTarget);
+        function SetTarget(){
+            var anchors = document.getElementsByTagName('a');
+            for (var i=0; i<anchors.length; i++){
+            anchors[i].setAttribute('target', '_top');
+            }
+        }
+        function ReplaceButton(){
+            var btnToReplace = "{!newObjectButtonText}";
+            var altUrl = "{!newObjectButtonUrl}";
+            var x = document.getElementsByTagName("input")
+            if(x.length > 0){
+                for(i=0;i<x.length;++i){
+                    if(x[i].value==btnToReplace){             
+                        x[i].style.display="none";
+                        var createA = document.createElement('a');
+                        var createAText = document.createTextNode(btnToReplace);
+                        createA.setAttribute('href', altUrl);
+                        createA.setAttribute('class', "btn");
+                        createA.setAttribute('style', "text-decoration:none;padding:2px 3px;");
+                        createA.setAttribute('target', "_top");
+                        createA.appendChild(createAText);
+                        x[i].parentElement.appendChild(createA);
+                    }
+                }
+            }       
+        }
+        function addLoadEvent(func){
+            var oldonload = window.onload;
+            if (typeof window.onload != 'function') {
+                window.onload = func;
+            }else{
+                window.onload = function() {
+                    if (oldonload) {
+                        oldonload();
+                    }
+                    func();
+                }
+           }
+        }
+  </script>
+</apex:component>

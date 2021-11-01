@@ -1,0 +1,5 @@
+<apex:page standardController="EB_Loan_Action__c">
+    <apex:relatedList list="ProcessSteps">
+        <apex:facet name="header">|</apex:facet> <!--This line deletes the standard Submit for Approval button-->
+    </apex:relatedList>
+</apex:page>

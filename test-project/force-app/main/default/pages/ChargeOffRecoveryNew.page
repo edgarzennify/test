@@ -1,0 +1,24 @@
+<apex:page StandardController="Charge_Off_Recovery__c" extensions="ChargeOffRecoveryExtnsion" showHeader="true">
+<apex:form >
+<apex:pageBlock title="{!RecordTypeName}"  mode="edit">
+ <apex:pageBlockSection >     
+           <!--  <apex:pageBlockSectionItem >
+    <apex:outputLabel value="Record Type"/>
+    <apex:outputPanel >
+        <apex:outputText value="{!Charge_Off_Recovery__c.RecordType.Name}"/>
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>-->
+</apex:pageBlockSection>
+           <apex:pageBlockButtons >
+               <apex:commandButton action="{!Save}" value="Save"/>
+                <apex:commandButton action="{!Cancel}" value="Cancel"  immediate="true"/>                
+            </apex:pageBlockButtons>
+          
+            <apex:pageBlockSection title="Information" columns="2">
+            <apex:inputField value="{!Charge_Off_Recovery__c.EB_Account__c}" required="true" rendered="true"/> 
+            <apex:inputField value="{!Charge_Off_Recovery__c.Charge_Off_Amount__c}" required="false" rendered="{!IF(RecordTypeName='Recovery',false,true)}"/>
+            <apex:inputField value="{!Charge_Off_Recovery__c.Recovery_Amount__c}" required="false" rendered="{!IF(RecordTypeName='Charge-Off',false,true)}"/>
+            </apex:pageBlockSection>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

@@ -1,0 +1,50 @@
+<apex:page controller="ModReqUnitRMController" showHeader="true" sidebar="true">
+    <html>
+        <head>
+            <apex:includeLightning />
+        </head>
+        <body class="slds-scope">
+            <div id="flowContainer" />
+            <script>
+            var handleStatusChange = function (event) {
+                if(event.getParam("status") === "FINISHED") {
+                    window.location = "{!URLFOR('/' + entity.Id)}";
+                }        
+            };
+            $Lightning.use("c:LightningFlowContainerApp", function() {               
+                $Lightning.createComponent("lightning:flow", 
+                                           {"onstatuschange":handleStatusChange},
+                                           "flowContainer",
+                                           function (component) {
+                                               var inputVariables = [
+                                                   {
+                                                       name:"Entity", 
+                                                       type:"SObject", 
+                                                       value:{
+                                                           "Id":"{!entity.Id}",
+                                                           "Name":"{!entity.Name}",
+                                                           "OwnerId":"{!entity.OwnerId}",
+                                                           "Owner":{"Name":"{!entity.Owner.Name}"},
+                                                           "EB_UnitID__c":"{!entity.EB_UnitID__c}",
+                                                           "EB_UnitID__r":{
+                                                               "Name":"{!entity.EB_UnitID__r.Name}",
+                                                               "Relationship_Oversight__c":"{!entity.EB_UnitID__r.Relationship_Oversight__c}"
+                                                           },
+                                                       }
+                                                   },
+                                                   {name:"CurrentBranch", type:"String", value:"{!currentBranch}"},
+                                                   {name:"CurrentBranchName", type:"String", value:"{!currentBranchName}"},
+                                                   {name:"CurrentRelationshipManager", type:"String", value:"{!currentRelationshipManager}"},
+                                                   {name:"FirstApproverId", type:"String", value:"{!firstApproverId}"},
+                                                   {name:"ModifyUnit", type:"Boolean", value:{!defaultModifyBranch}},
+                                                   {name:"ModifyRM", type:"Boolean", value:{!defaultModifyRM}},
+                                                   {name:"ModificationRequestName", type:"String", value:"{!modificationRequestName}"}
+                                               ];
+                                               component.startFlow("Branch_RM_Change", inputVariables);
+                                           }
+                                          );
+            });
+            </script>
+        </body>
+    </html>
+</apex:page>

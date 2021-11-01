@@ -1,0 +1,74 @@
+<apex:page controller="AuditFieldPermissionsCtrl"
+            showHeader="true"
+            sidebar="true"
+            title="Audit Field Permissions"
+            action="{!initialize}"
+            tabStyle="Audit_Field_Permissions__tab"
+            lightningStylesheets="true">
+    <apex:form >
+
+        <c:LoadingOverlay />
+
+        <apex:sectionHeader title="EB&T Tools"
+                            subtitle="Audit Field Permissions"/>
+        
+        <apex:outputLabel value="Namespace:" for="namespaceSelection" styleClass="lblWidth"/>
+        <apex:selectList value="{!m_selectedNamespace}" id="namespaceSelection" size="1" styleClass="selectOpt">
+            <apex:selectOptions value="{!m_namespaceList}" />
+            <apex:actionSupport event="onchange" action="{!namespaceSelectedEvent}" reRender="objectSelectionPanel,selectedObjectPanel,fieldSelectionPanel,selectedFieldPanel,results" />
+        </apex:selectList>
+        
+        <br/>
+        
+        <apex:outputPanel id="objectSelectionPanel">
+            <apex:outputLabel value="Object:" for="objectSelection" styleClass="lblWidth"/>
+            <apex:selectList value="{!m_selectedObject}" id="objectSelection" size="1" styleClass="selectOpt">
+                <apex:selectOptions value="{!m_objectList}" />
+                <apex:actionSupport event="onchange" action="{!objectSelectedEvent}" reRender="selectedObjectPanel,fieldSelectionPanel,selectedFieldPanel,results" />
+            </apex:selectList>
+        </apex:outputPanel>
+
+        <apex:outputPanel id="selectedObjectPanel">
+            <apex:outputLabel value="{!m_selectedObject}" />
+        </apex:outputPanel>
+
+        <br/>
+
+        <apex:outputPanel id="fieldSelectionPanel">
+            <apex:outputLabel value="Field:" for="fieldSelection" styleClass="lblWidth" />
+            <apex:selectList value="{!m_selectedField}" id="fieldSelection" size="1" styleClass="selectOpt">
+                <apex:selectOptions value="{!m_fieldList}"/>
+                <apex:actionSupport event="onchange" action="{!fieldSelectedEvent}" reRender="selectedFieldPanel,results" status="loadStatus" />
+            </apex:selectList>
+        </apex:outputPanel>
+
+        <apex:outputPanel id="selectedFieldPanel">
+            <apex:outputLabel value="{!m_selectedField}" />
+        </apex:outputPanel>
+
+        <p>
+            *NOTE: Profiles, Permission Sets, and Users will only appear if access is explicitly granted.  Some fields that appear in the dropdown are not permissionable.  These options will not display any results.&nbsp;&nbsp;
+            <apex:outputLink value="https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_objects_fieldpermissions.htm"
+                                id="theLink">Special Properties for Field Permissions
+                </apex:outputLink>
+        </p>
+
+        <apex:outputPanel id="results">
+            <c:AuditPermissionSetDetails permissionSetDetails="{!m_permissionSetsWithAccess}" />
+            <c:AuditProfileDetails profileDetails="{!m_profilesWithAccess}" />
+            <c:AuditUserDetails userDetails="{!m_usersWithAccess}" totalUsersInList="{!m_usersWithAccessCount}" />
+        </apex:outputPanel>
+    </apex:form>
+
+    <style type="text/css">
+        .lblWidth{
+            width: 125px;
+            display:inline-block;
+        }
+        .selectOpt {
+            width: 300px;
+            margin-right: 10px;
+            margin-left: 0px !important;
+        }
+    </style>
+</apex:page>

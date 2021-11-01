@@ -1,0 +1,32 @@
+<apex:page docType="html-5.0"
+    sidebar="false"
+    standardController="LLC_BI__Loan__c"
+    extensions="Loan_PluginController"
+    action="{!initialize}">
+    
+    <apex:outputPanel rendered="{! ebAccount == NULL}" >
+        <apex:sectionHeader title="Loan" subtitle="{! loan.Name }" />
+        <apex:form >
+            <apex:pageBlock >
+                <div style="padding:20px;">
+                    <div style="padding-bottom:10px;">
+                    'Classic' Loan cannot be viewed because no Eb Account is currently associated with "{! loan.Name }".
+                    </div>
+                    <div>
+                        <a href="/{!loan.Id}" class="btn" style="text-decoration:none;" >&lt;&lt; Go back to nCino loan</a>
+                    </div>
+                </div>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{! ebAccount != NULL}" >
+        Loading 'Classic' Loan "{!ebAccount.Name}"...
+    </apex:outputPanel>
+    
+    <script language="javascript">               
+        if("{! ebAccount }" != ''){
+            window.top.location = "/{!ebAccount.Id}?nooverride=1"; 
+        }       
+  </script>
+    
+</apex:page>

@@ -1,0 +1,67 @@
+<apex:page showHeader="false" 
+    sidebar="false" 
+    standardController="Account" 
+    standardStylesheets="true" 
+    extensions="NewProductViewController"
+    LightningStylesheets="true">
+
+    <script type="text/javascript">
+        window.onload = function(){
+            FixLinks();
+        };
+
+        function FixLinks(){
+            var anchors = document.getElementsByTagName('a');
+            for (var i=0; i<anchors.length; i++){
+                removeMouseOver(anchors[i]);
+                setAnchorTarget(anchors[i],'_top');
+            }
+        }
+
+        function removeMouseOver(anchor){
+            anchor.onmouseover = null;
+        }
+
+        function setAnchorTarget(anchor, target){
+            anchor.setAttribute('target', target);
+        }
+    </script>  
+
+    <div class="bRelatedList">
+        <div class="listRelatedObject Custom17Block">
+            <div class="bPageBlock accountTab brandSecondaryBrd secondaryPalette">
+                <div class="pbHeader">
+                    <div class="pbTitle" style="padding-top:5px; padding-bottom:5px;" >
+                        <img src="/s.gif" class="relatedListIcon" />
+                        <h3>Loans</h3>
+                    </div>  
+                </div>
+                <div class="pbBody">
+                    <table id="loans" class="list" border="0" cellpadding="0" cellspacing="0" >
+                        <thead>
+                            <tr class="headerRow">
+                                <apex:repeat value="{!LoanFields}" var="lf">
+                                    <th>
+                                        <apex:outputLabel value="{!lf.Label}"/>
+                                    </th>
+                                </apex:repeat>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!loans}" var="l">
+                                <tr class="dataRow">
+                                    <apex:repeat value="{!LoanFields}" var="lf">
+                                        <td class="dataCell">
+                                            <apex:outputField value="{!l[lf.fieldPath]}"/>
+                                        </td>
+                                    </apex:repeat>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</apex:page>

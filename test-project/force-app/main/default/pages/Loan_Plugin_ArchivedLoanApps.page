@@ -1,0 +1,21 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c"
+    extensions="Loan_PluginController"
+    showHeader="false"
+    sidebar="false"
+    action="{!initialize}"
+    LightningStylesheets="true">
+
+    <apex:relatedList subject="{!ebAccount}" 
+        list="EB_Booked_Loan_Apps__r" 
+        rendered="{! ebAccount != NULL }" 
+    />
+
+    <apex:pageBlock title="Archived Loan Apps" tabStyle="LLC_BI__Loan__c" rendered="{! ebAccount == NULL }" >
+        <apex:outputText ><i>No Archived Loan Apps available.</i></apex:outputText>
+    </apex:pageBlock>
+
+    <c:Eb_PluginHelper newObjectButtonText=""
+        newObjectButtonUrl="" 
+    />
+</apex:page>

@@ -1,0 +1,159 @@
+<apex:page standardController="Board_Meeting__c" extensions="BoardMeetingController">
+
+
+ <style>
+    .activeTab {background-color: #E3F3FF; color:#000000;background-image:none; font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:bold}
+    .inactiveTab { background-color: lightgrey; color:black; background-image:none; font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:bold}
+
+ </style>
+
+    <apex:detail subject="{!bm.Id}" relatedList="false" title="true"  inlineEdit="true"/> 
+    
+    <apex:form >
+    <apex:pageblock title="Board Meeting Attendance"> 
+        <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Add Attendee" action="{!newBoardMeetingAttendance}" rendered="{!IF(DefaultTab=='All', 'true', 'false')}"/>  
+                
+                <apex:commandButton action="{!cancelInlineEdit}" id="cancelButton" value="Cancel" style="display:none;"/>
+                <apex:commandButton action="{!save}" id="saveButton" value="Save"  style="display:none;"/>
+               
+                
+        </apex:pageBlockButtons>
+
+
+ <apex:tabPanel switchType="client" selectedTab="{!DefaultTab}" id="BoardTabPanel" tabClass="activeTab" inactiveTabClass="inactiveTab">
+ 
+ 
+        <apex:tab label="All" name="All" id="All" rendered="{!IF(DefaultTab=='All', 'true', 'false')}">  
+
+        <div style=" height : 400px; overflow:auto;" >
+        	<apex:pageblock >
+       			<apex:pageBlockSection columns="1" collapsible="false">
+        			<apex:pageblocktable value="{!bma}" var="a" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:normal">
+            		<!-- <apex:column headerValue="Action" rendered="true"  style="text-decoration:none;color:blue;">
+                   	   <apex:outputLink value="/{!a.Id}" style="text-decoration:none;color:#015BA7;">Edit</apex:outputLink>
+                    <apex:commandLink action="{!editAttendance}" style="text-decoration:none;color:#015BA7;" rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+                    Edit
+                    <apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+                    <apex:outputLabel style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+                    <apex:commandLink action="{!deleteMembership}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+                    Del
+                    <apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+               		</apex:column>   
+               		-->         
+                	 <apex:column headervalue="Director"  rendered="true"> 
+                	<apex:outputLink value="/{!a.Associate_Director__r.Id}">{!a.Associate_Director__r.name}</apex:outputLink>
+                	</apex:column>
+                	
+                	<apex:column headervalue="Attended Meeting"  rendered="true">
+                		<apex:outputField value="{!a.Attended_Meeting__c}"/>
+                	</apex:column>
+                	<apex:column headervalue="How Attended" rendered="true">
+                		<apex:outputField value="{!a.How_Attended__c}" />                	
+                	</apex:column>
+                	<apex:column headervalue="Compensation Type" rendered="true">
+                		<apex:outputField value="{!a.Compensation_Type__c}" />
+                	</apex:column>
+ 					<apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton,cancelButton" hideOnEdit="editButton" />
+ 			 		</apex:pageblocktable>
+        		</apex:pageBlockSection>           
+        	</apex:pageblock>
+         </div>
+        
+        
+    	
+         
+         </apex:tab>
+
+ 
+        <apex:tab label="Attended Meeting" name="Yes" id="Yes">  
+         
+         
+         <div style=" height : 400px; overflow:auto;" >
+        	<apex:pageblock >
+       			<apex:pageBlockSection columns="1" collapsible="false">
+        			<apex:pageblocktable value="{!bma}" var="a" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:normal">
+            		<!-- <apex:column headerValue="Action" rendered="true"  style="text-decoration:none;color:blue;">
+                   	   <apex:outputLink value="/{!a.Id}" style="text-decoration:none;color:#015BA7;">Edit</apex:outputLink>
+                    <apex:commandLink action="{!editAttendance}" style="text-decoration:none;color:#015BA7;" rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+                    Edit
+                    <apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+                    <apex:outputLabel style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+                    <apex:commandLink action="{!deleteMembership}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+                    Del
+                    <apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+               		</apex:column>   
+               		-->         
+                	 <apex:column headervalue="Director"  rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}"> 
+                	<apex:outputLink rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}" value="/{!a.Associate_Director__r.Id}">{!a.Associate_Director__r.name}</apex:outputLink>
+                	</apex:column>
+                	
+                	<apex:column headervalue="Attended Meeting"  rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}">
+                		<apex:outputField rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}" value="{!a.Attended_Meeting__c}"/>
+                	</apex:column>
+                	<apex:column headervalue="How Attended" rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}">
+                		<apex:outputField rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}" value="{!a.How_Attended__c}" />                	
+                	</apex:column>
+                	<apex:column headervalue="Compensation Type" rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}">
+                		<apex:outputField rendered="{!IF(a.Attended_Meeting__c != 'No',true,false)}" value="{!a.Compensation_Type__c}" />
+                	</apex:column>
+ 					<!-- <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton,cancelButton" hideOnEdit="editButton" /> -->
+ 			 		</apex:pageblocktable>
+        		</apex:pageBlockSection>           
+        	</apex:pageblock>
+         </div>
+         
+         
+         </apex:tab>
+         
+         <apex:tab label="Did Not Attend Meeting" name="No" id="No">  
+         
+         <div style=" height : 400px; overflow:auto;" >
+        	<apex:pageblock >
+       			<apex:pageBlockSection columns="1" collapsible="false">
+        			<apex:pageblocktable value="{!bma}" var="a" style="font-family: Arial, Helvetica, sans-serif;font-size: 12px;font-weight:normal">
+            		<!-- <apex:column headerValue="Action" rendered="true"  style="text-decoration:none;color:blue;">
+                   	   <apex:outputLink value="/{!a.Id}" style="text-decoration:none;color:#015BA7;">Edit</apex:outputLink>
+                    <apex:commandLink action="{!editAttendance}" style="text-decoration:none;color:#015BA7;" rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+                    Edit
+                    <apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+                    <apex:outputLabel style="text-decoration:none;color:#999;"> | </apex:outputLabel>
+                    <apex:commandLink action="{!deleteMembership}" style="text-decoration:none;color:#015BA7;" onclick="if(!confirm('Are you sure?')) return false;">
+                    Del
+                    <apex:param name="boardMemberChosen" value="{!a.Id}" assignTo="{!boardMemberChosen}" /> 
+                    </apex:commandLink>
+               		</apex:column>   
+               		-->         
+                	 <apex:column headervalue="Director"  rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}"> 
+                	<apex:outputLink rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}" value="/{!a.Associate_Director__r.Id}">{!a.Associate_Director__r.name}</apex:outputLink>
+                	</apex:column>
+                	
+                	<apex:column headervalue="Attended Meeting"  rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}">
+                		<apex:outputField rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}" value="{!a.Attended_Meeting__c}"/>
+                	</apex:column>
+                	<apex:column headervalue="How Attended" rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}">
+                		<apex:outputField rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}" value="{!a.How_Attended__c}" />                	
+                	</apex:column>
+                	<apex:column headervalue="Compensation Type" rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}">
+                		<apex:outputField rendered="{!IF(a.Attended_Meeting__c != 'Yes',true,false)}" value="{!a.Compensation_Type__c}" />
+                	</apex:column>
+ 					<!-- <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton,cancelButton" hideOnEdit="editButton" /> -->
+ 			 		</apex:pageblocktable>
+        		</apex:pageBlockSection>           
+        	</apex:pageblock>
+         </div>
+         
+         
+         
+         </apex:tab>
+         </apex:tabPanel>
+         
+         
+	</apex:pageblock>
+	</apex:form>
+</apex:page>

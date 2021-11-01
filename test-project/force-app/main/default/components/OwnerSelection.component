@@ -1,0 +1,19 @@
+<apex:component controller="OwnerSelectionComponent">
+    <apex:pageBlock title="Select Relationship Manager" id="mainpanel">
+        <apex:pageBlockTable value="{!owners}" var="ownerinfo">
+            <apex:column headerValue="Primary RM" styleClass="{!IF(ownerinfo.IsActive,'','inactive')}">
+                <apex:outputLink value="/apex/OwnerOverview?id={!ownerinfo.Id}">{!ownerinfo.Name}</apex:outputLink>
+            </apex:column> 
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+
+    <style type="text/css">
+        .pbTitle {
+            white-space: nowrap;
+        }
+        .inactive{
+            background-color: #FF5959;
+        }
+    </style>
+
+</apex:component>

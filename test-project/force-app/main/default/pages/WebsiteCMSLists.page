@@ -1,0 +1,117 @@
+<apex:page tabstyle="Site_com_Content__tab" controller="WebsiteCMSListsController" >
+
+<style type="text/css">
+.myLinkClass:link {text-decoration:none;color:#015BA7;}
+.myLinkClass:hover {text-decoration:underline;color:#015BA7;}
+</style>
+
+
+
+    <apex:form >
+    <br/>
+    <div id="cms">
+        <apex:pageblock title="Associates" id="associates" >
+            <apex:selectList value="{!view}" multiselect="false" size="1">      
+                <apex:selectOptions value="{!viewItems}"/>
+                <apex:actionSupport event="onchange" rerender="associates" action="{!showView}"  status="associatesStatus"  />    
+            </apex:selectList>
+            <apex:outputPanel >
+                <apex:actionStatus id="associatesStatus">
+                    <apex:facet name="start">
+                        <apex:outputPanel style="position:relative">
+                            <apex:outputText value="  "/>    
+                            <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                            <apex:outputText value=" Loading..."/>                            
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>        
+            </apex:outputPanel>
+            <br/>
+            <apex:pageblocktable value="{!associates}" var="c"  style="overflow:auto" >
+                
+                <apex:column headervalue="Name" >
+                    <a href="/apex/WebsiteCMSAssociate?id={!c.id}&ap={!assoc_currentPos}&up={!unit_currentPos}&av={!view}&uv={!viewBranch}" target="_top">{!c.Name}</a>
+                    <apex:commandLink rendered="false" onclick="window.top.location='/apex/WebsiteCMSAssociate?id={!c.id}&ap={!assoc_currentPos}&up={!unit_currentPos}&av={!view}&uv={!viewBranch}'">{!c.Name}</apex:commandLink>
+                </apex:column>
+                <apex:column headervalue="Published Name" value="{!c.Website_Name_Published__c}" />
+                <apex:column headervalue="Staff Directory?" value="{!c.Website_Associate_Directory__c}"/>
+                <apex:column headervalue="Directory Category" value="{!c.Website_Directory_Category__c}"/>
+                <apex:column headervalue="Region" value="{!c.Website_Region_Code__c}"/>
+                <apex:column headervalue="RM?" value="{!c.Website_Relationship_Manager__c}"/>
+                <apex:column headervalue="RM Type" value="{!c.Website_RM_Type__c}"/>
+                <apex:column headervalue="Division" value="{!c.Website_Division_Published__c}"/>
+                <apex:column headervalue="Email" value="{!c.Website_Email_Published__c}"/>
+                <apex:column headervalue="Phone" value="{!c.Website_Office_Phone_Published__c}"/>
+                <apex:column headervalue="Mobile" value="{!c.Website_Mobile_Phone_Published__c}"/>
+                
+                
+                
+            </apex:pageblocktable>
+            
+            <div style="text-align:right;">
+                <apex:outputText value="{!assoc_previous}" style="text-decoration:none;color:#999;" rendered="{!IF(assoc_showPrev='true',false,true)}"></apex:outputText>
+                <apex:commandLink status="associatesStatus"  action="{!assoc_getPrev}" reRender="associates"  styleClass="myLinkClass" rendered="{!IF(assoc_showPrev='true',true,false)}"><apex:outputText value="{!assoc_Previous}"></apex:outputText></apex:commandLink>
+                <apex:outputLabel style="text-decoration:none;color:#999;">&nbsp;|&nbsp;</apex:outputLabel>
+                <apex:outputText value="{!assoc_next}" style="text-decoration:none;color:#999;" rendered="{!IF(assoc_showNext='true',false,true)}"></apex:outputText>
+                <apex:commandLink status="associatesStatus"  action="{!assoc_getNext}" reRender="associates"  styleClass="myLinkClass" rendered="{!IF(assoc_showNext='true',true,false)}"><apex:outputText value="{!assoc_Next}"></apex:outputText></apex:commandLink>
+            </div>
+            <apex:outputtext value="CurrentPos: {!assoc_currentPos}" rendered="false"/>
+            
+        </apex:pageblock>
+        <apex:pageblock title="Branches"  id="branches">
+            <apex:selectList value="{!viewBranch}" multiselect="false" size="1">        
+                <apex:selectOptions value="{!viewBranchItems}"/>
+                <apex:actionSupport event="onchange" rerender="branches" action="{!showViewBranch}"  status="unitsStatus"  />    
+            </apex:selectList>
+            <apex:outputPanel >
+                <apex:actionStatus id="unitsStatus">
+                    <apex:facet name="start">
+                        <apex:outputPanel style="position:relative">
+                            <apex:outputText value="  "/>    
+                            <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                            <apex:outputText value=" Loading..."/>                            
+                        </apex:outputPanel>
+                    </apex:facet>
+                </apex:actionStatus>        
+            </apex:outputPanel>         
+            <apex:pageblocktable value="{!units}" var="c"  style="overflow:auto">
+
+    
+                <apex:column headervalue="Name" >
+                    <a href="/apex/WebsiteCMSUnit?id={!c.id}&ap={!assoc_currentPos}&up={!unit_currentPos}&av={!view}&uv={!viewBranch}" target="_top">{!c.Name}</a>
+                    <apex:commandLink rendered="false" onclick="window.top.location='/apex/WebsiteCMSUnit?id={!c.id}&ap={!assoc_currentPos}&up={!unit_currentPos}&av={!view}&uv={!viewBranch}'">{!c.Name}</apex:commandLink>
+                </apex:column>
+                <apex:column headervalue="Published Name" value="{!c.Website_Name_Published__c}"/>
+                <apex:column headervalue="Display on site?" value="{!c.website_include__c}" />
+                <apex:column headervalue="Region" value="{!c.EB_Region__r.name}" />
+                <apex:column headervalue="Address" value="{!c.Website_Address_Published__c}" />
+                <apex:column headervalue="Phone" value="{!c.Website_Phone_Published__c}" />
+                <apex:column headervalue="Lobby Hours" value="{!c.website_lobby_hours__c}" />
+                <apex:column headervalue="ATM Onsite?" value="{!c.website_atm_onsite__c}" />
+                <apex:column headervalue="Drive Up?" value="{!c.website_drive_through__c}" />
+                <apex:column headervalue="Drive Up Hours" value="{!c.website_drive_through_hours__c}" />
+                <apex:column headervalue="Image URL" value="{!c.website_image_url__c}" />
+                <apex:column headervalue="Notes" value="{!c.website_notes__c}" />
+                
+            
+            </apex:pageblocktable>
+            <div style="text-align:right;">
+                <apex:outputText value="{!unit_previous}" style="text-decoration:none;color:#999;" rendered="{!IF(unit_showPrev='true',false,true)}"></apex:outputText>
+                <apex:commandLink status="unitsStatus" action="{!unit_getPrev}" reRender="branches"  styleClass="myLinkClass" rendered="{!IF(unit_showPrev='true',true,false)}"><apex:outputText value="{!unit_Previous}"></apex:outputText></apex:commandLink>
+                <apex:outputLabel style="text-decoration:none;color:#999;">&nbsp;|&nbsp;</apex:outputLabel>
+                <apex:outputText value="{!unit_next}" style="text-decoration:none;color:#999;" rendered="{!IF(unit_showNext='true',false,true)}"></apex:outputText>
+                <apex:commandLink status="unitsStatus" action="{!unit_getNext}" reRender="branches"  styleClass="myLinkClass" rendered="{!IF(unit_showNext='true',true,false)}"><apex:outputText value="{!unit_Next}"></apex:outputText></apex:commandLink>
+            </div>
+            <apex:outputtext value="CurrentPos: {!unit_currentPos}" rendered="false"/>
+        </apex:pageblock>
+
+    </div>
+    
+    
+
+
+</apex:form>
+
+
+
+</apex:page>

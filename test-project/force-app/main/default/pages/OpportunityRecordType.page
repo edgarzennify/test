@@ -1,0 +1,16 @@
+<apex:page standardController="Opportunity" 
+           extensions="OpportunityRecordTypeChange"
+           showHeader="true" sidebar="true">
+	<apex:form >
+		<apex:pageBlock title="Edit record type for opportunity: {!opport.Name}">
+		   <apex:pageblockButtons location="both">
+			    <apex:commandButton value="Save" action="{!save}" />
+			    <apex:commandButton value="Cancel" action="{!cancel}" />
+		   </apex:pageblockButtons>
+	       <apex:outputLabel value="Select New Record Type: " />
+	       <apex:selectList value="{!opport.RecordTypeId}" size="1">
+	            <apex:selectOptions value="{!opportunityRecordTypes}"/>
+	       </apex:selectList>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

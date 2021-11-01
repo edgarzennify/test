@@ -1,0 +1,23 @@
+<apex:page standardController="Board_Meeting_Attendance__c" extensions="BoardMeetingAttendanceController">
+<apex:form >
+<!-- <apex:detail subject="{!Board_Meeting_Attendance__c.Id}" relatedList="true" title="false"/>-->
+
+	<apex:pageBlock title="{!Title}" mode="edit">
+    	<apex:pageBlockButtons >
+        	<apex:commandButton action="{!Save}" value="Save"/>
+            <apex:commandButton action="{!Cancel}" value="Cancel"  immediate="true"/>
+    	</apex:pageBlockButtons>
+    	<apex:pageBlockSection title="{!BoardMeetingName}" columns="1">
+			<apex:inputField value="{!bma.Associate_Director__c}" required="true"/>
+			<!-- <apex:inputField value="{!bma.Board_Meeting__c}" required="true" editable="false"/> -->
+			<!-- <apex:inputField value="{!bma.Name__c}" required="true"/> -->
+			<apex:inputField value="{!bma.Attended_Meeting__c}" required="true"/>			
+			<apex:inputField value="{!bma.How_Attended__c}" required="true"/>
+			<apex:inputField value="{!bma.Compensation_Type__c}" required="true"/>
+		<!-- <apex:detail subject="{!board.Id}" relatedList="false" title="true"/>  -->
+        </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+
+</apex:form>
+</apex:page>

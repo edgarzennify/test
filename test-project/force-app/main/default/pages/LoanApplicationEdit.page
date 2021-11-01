@@ -1,0 +1,291 @@
+<apex:page standardcontroller="EB_Loan_Application__c" extensions="LoanApplicationEditController" action="{!CheckLocked}"  >
+    <apex:pagemessages />
+    <style>TEXTAREA {font-family:arial,verdana,ms sans serif; font-size:10pt; font-weight:normal; width:100%; Height:65px;}</style>
+    <apex:form >
+        <apex:pageblock mode="edit" rendered="{!IF(Locked == 'false' , 'true', 'false')}" >
+            <apex:pageBlockSection columns="2" showHeader="true" title="Request Summary">
+                <apex:pageBlockSectionItem rendered="{!IF(RecordtypeStatus=='true', 'true','false')}">
+                    <apex:outputLabel for="rList" value="Record Type"></apex:outputLabel>
+                    <apex:outputPanel layout="block" styleClass="requiredInput">
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" />
+                        <apex:selectList value="{!dropdownRecordTypeId}" size="1" id="rList"  >
+                            <apex:selectOptions value="{!RecordTypes}" />
+                        </apex:selectList>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:outputField value="{!loan.RecordtypeId}" rendered="{!IF(RecordtypeStatus=='true','false','true')}" />
+                <apex:inputField value="{!loan.EB_Loan_Packet__c}" rendered="{!IF(HasPermissionToEditLoanNumber=='true','true','false')}" />
+                <apex:outputField value="{!loan.EB_Loan_Packet__c}" rendered="{!IF(HasPermissionToEditLoanNumber=='true','false','true')}" />
+                <!-- <apex:inputField value="{!loan.Approval_Path__c}" />
+                <apex:inputField value="{!loan.Total_Loan_Amount__c}" />
+                <apex:inputField value="{!loan.Committee_Date__c}" />
+                <apex:inputField value="{!loan.Total_Lendable_Equity__c}" />
+                <apex:inputField value="{!loan.Unit__c}" />
+                <apex:inputField value="{!loan.Application_Stage_Reportable__c}" />
+                <apex:inputField value="{!loan.RM__c}" />
+                <apex:inputField value="{!loan.Total_Exposure__c}" />
+                <apex:inputField value="{!loan.Loan_Coordinator__c}" />-->
+                <apex:inputField value="{!loan.Account_Number__c}"  />
+                <!-- <apex:inputField value="{!loan.Documentation_Rep__c}" />-->
+                <apex:pageBlockSectionItem rendered="{!IF(HasPermissionToEditLoanNumber=='true','false','true')}" >
+                     <apex:outputLabel value="Account Number (New)" />
+                     <apex:outputLabel value="{!loan.Account_Number_Assigned__c}" />             
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.Account_Number_Assigned__c}"  rendered="{!IF(HasPermissionToEditLoanNumber=='true','true','false')}"/>
+                <!-- <apex:inputField value="{!loan.Credit_Analyst__c}" /> -->
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="1" showHeader="true" title="Request Details (Required for Approval)" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Original Credit Requested Date" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                        <apex:inputField value="{!loan.Original_Credit_Requested_Date__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.Purpose_of_Loan__c.inlineHelpText}" >
+                    <apex:outputlabel value="{!$ObjectType.EB_Loan_Application__c.Fields.Purpose_of_Loan__c.label}" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Purpose_of_Loan__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" showHeader="false" >
+                <apex:inputField value="{!loan.Loan_Type__c}"  required="true"/>
+                <apex:inputField value="{!loan.Maturity_Term_In_Months__c}" required="true" style="width:85px;" />
+                <apex:inputField value="{!loan.Bank_Owned_Loan_Amount__c}" required="true" />                
+                <!--<apex:inputField value="{!loan.Payment_Stream_Months__c}" /> -->
+                <apex:inputField value="{!loan.Maturity_Date__c}" style="width:85px;" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Credit Rating"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Credit_Rating__c}" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.X364_Day_Maturity__c}" />
+               <!-- <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Industry Code"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.EB_Account_Industry_Code__c}" style="width:300px" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem> -->
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.NAICS_Code__c.inlineHelpText}" >
+                    <apex:outputlink value="http://www.census.gov/naics/" target="_blank"  >Industry Code / NAICS website</apex:outputlink>
+                     <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.EB_Account_Industry_Code__c}" style="width:300px" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                 
+                <apex:inputField value="{!loan.Business_Purpose__c}" required="true" />
+                <apex:inputField value="{!loan.Prepayment_Language__c}" />
+               <!-- <apex:inputField value="{!loan.TDR_Determination_One__c}" />-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Revenue Code"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Revenue_Code__c}" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+               <!-- <apex:inputField value="{!loan.TDR_Determination_TWo__c}" />-->
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Annual Income"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Annual_Income__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.Unsecured_Loan__c}" />
+                <apex:inputField value="{!loan.Use_of_Funds__c}" required="true" />
+                <apex:inputField value="{!loan.Refinance_Type__c}" />
+                <!-- "added 8/16/2012 km" />-->
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.Specialize_Lending__c}" />
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" showHeader="false" title="Waived Fees?">
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Waived Fees?" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Fee_Waived__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Waived Fees Comment" />
+                    <apex:inputField value="{!loan.Fees_Waived_Comment__c}" />                    
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" showHeader="true" title="Loan Details (Required for Documentation)">
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.Is_Loan_to_Govt_Related_Entity__c.inlineHelpText}" >
+                    <apex:outputlabel value="{!$ObjectType.EB_Loan_Application__c.Fields.Is_Loan_to_Govt_Related_Entity__c.label}" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Is_Loan_to_Govt_Related_Entity__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.Is_Loan_to_Financial_Institution__c.inlineHelpText}" >
+                    <apex:outputlabel value="{!$ObjectType.EB_Loan_Application__c.Fields.Is_Loan_to_Financial_Institution__c.label}" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Is_Loan_to_Financial_Institution__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.Is_repayment_reliant_on_agriculture__c.inlineHelpText}" >
+                    <apex:outputlabel value="{!$ObjectType.EB_Loan_Application__c.Fields.Is_repayment_reliant_on_agriculture__c.label}" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Is_repayment_reliant_on_agriculture__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.Financial_institution_accept_deposits__c}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="1" showHeader="false" >
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.Niche_Products__c.inlineHelpText}" >
+                    <apex:outputlabel value="{!$ObjectType.EB_Loan_Application__c.Fields.Niche_Products__c.label}" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Niche_Products__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+
+            <apex:pageBlockSection columns="2" showHeader="true" title="Compliance Details (Required for Documentation)">
+                               
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Use of Funds Street" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Use_of_Funds_Street__c}" style="width:250px;" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Use of Funds City"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Use_of_Funds_City__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Use of Funds State"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Use_of_Funds_State__c}" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Use of Funds Zip"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Use_of_Funds_Zip__c}" style="width:75px;" />
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+                <!--<apex:inputField value="{!loan.Use_Of_Funds_Address__c}" /> -->
+            </apex:pageBlockSection>
+            
+            <apex:pageBlockSection columns="2" showHeader="true" title="Demographic Information (Required for HMDA Loans)">
+                <apex:inputField value="{!loan.Borrower_Ethnicity__c}" />             
+                <apex:inputField value="{!loan.Co_Borrower_Ethnicity__c}" />             
+                <apex:inputField value="{!loan.Borrower_Race__c}" />
+                <apex:inputField value="{!loan.Co_Borrower_Race__c}" />
+                <apex:inputField value="{!loan.Borrower_Sex__c}" />
+                <apex:inputField value="{!loan.Co_Borrower_Sex__c}" />
+                <apex:inputField value="{!loan.Occupancy__c}" />               
+                <apex:inputField value="{!loan.HMDA_Rate_Spread__c}"/>
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel ></apex:outputLabel>               
+                    <a href="http://www.ffiec.gov/ratespread/default.aspx" title="HMDA Rate Spread Calculation" target="_blank">HMDA Rate Spread Calculation Link</a>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="2" showHeader="true" title="Documentation Details (Required for Documentation)">
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Closing Date"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Closing_Date__c}" style="width:85px;" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem> 
+                <apex:inputField value="{!loan.Title_Company_Name__c}" style="width:200px;" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Closing Time"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Closing_Time__c}" style="width:85px;" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>  
+                <apex:inputField value="{!loan.Title_Company_Address__c}" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Place of Closing"></Apex:outputlabel>
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Place_of_Closing__c}" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.Title_Company_Contact__c}" style="width:200px;" />
+                <apex:inputField value="{!loan.Payoff_Institution__c}" style="width:200px;" />
+                <apex:inputField value="{!loan.Title_Company_Phone_Number__c}" />
+                <apex:inputField value="{!loan.Payoff_Contact__c}" style="width:200px;" />
+                <apex:inputField value="{!loan.Title_Company_Fax__c}" />
+                <apex:inputField value="{!loan.Payoff_Phone__c}" />
+                <apex:inputField value="{!loan.Title_Company_Email__c}" style="width:200px;" />
+                <apex:inputField value="{!loan.Payoff_Loan_Number__c}" />
+                <!--  
+                <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton,cancelButton" hideOnEdit="editButton" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit" />
+                --> 
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" showHeader="false" >
+                <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_Application__c.Fields.Disbursement_Instructions__c.inlineHelpText}" >
+                    <apex:outputlabel value="{!$ObjectType.EB_Loan_Application__c.Fields.Disbursement_Instructions__c.label}" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.Disbursement_Instructions__c}" style="width:800px;" />
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:inputField value="{!loan.Loan_Doc_Comments__c}" style="width:800px;" />
+            </apex:pageBlockSection>
+      
+            <apex:pageblockSection columns="2" showHeader="true" title="HOEPA Determination" rendered="{!loan.ShowHOEPAFields__c}">
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Is the Loan Secured by the Customer`s principal dwelling?" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.HOEPA_Secured_By_Principal_Dwelling__c}" required="true"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="Is the Loan to finance the purchase or initial construction of the Customer`s principal dwelling?" />
+                    <apex:outputpanel layout="block" styleClass="requiredInput" >               
+                        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;" />
+                        <apex:inputField value="{!loan.HOEPA_Finance_Purchase_Or_Construction__c}"/>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>
+      
+            <apex:pageblockButtons >
+                <apex:commandButton value="Save" action="{!SaveClicked}" id="saveButton" />
+                <apex:commandButton value="Quick Save" action="{!QuickSaveClicked}" id="quicksaveButton" />
+                <apex:commandButton value="Cancel" action="{!CancelClicked}" immediate="true" id="cancelButton"  />
+            </apex:pageblockButtons> 
+  </apex:pageblock>
+  
+  <apex:pageblock mode="edit" rendered="{!IF(Locked == 'false' , 'false', 'true')}">
+      <apex:pageBlockSection columns="1" >
+          <div style="padding:20px;text-align:center;font-size:18px;">
+              This application is currently awaiting approval and cannot be edited.
+              <div style="padding-top:15px;font-size:14px;">
+                  If you submitted this application for approval, you can click the "Unlock Record" button on the previous screen to allow editing.
+              </div>
+              <div style="padding-top:10px;">
+                  <img src="/servlet/servlet.FileDownload?file=01530000001AqJa" />
+              </div>
+          </div>
+      </apex:pageBlockSection>
+  </apex:pageblock>
+  </apex:form>
+</apex:page>

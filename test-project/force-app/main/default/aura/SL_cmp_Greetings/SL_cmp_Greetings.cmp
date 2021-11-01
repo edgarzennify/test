@@ -1,0 +1,10 @@
+<aura:component controller="SL_Greetings" implements="force:hasRecordId,flexipage:availableForAllPageTypes,force:appHostable,forceCommunity:availableForAllPageTypes"
+    access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="curUser" type="User" />
+    <aura:attribute name="greetings" type="String" default="Hello" />
+    <aura:if isTrue="{!v.curUser}">
+        <h1 class="greetings">{!v.greetings + ', ' + v.curUser.FirstName}!</h1>
+    </aura:if>
+
+</aura:component>

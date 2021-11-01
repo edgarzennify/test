@@ -1,0 +1,5 @@
+<apex:page docType="html-5.0"
+    sidebar="false"
+    controller="Collateral_Plugin_AdapterController"
+    action="{!GetEbCollateralAndForwardToAppraisalOrder}">
+</apex:page>

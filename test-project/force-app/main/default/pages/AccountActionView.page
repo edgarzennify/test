@@ -1,0 +1,17 @@
+<apex:page controller="AccountActionController" tabstyle="EB_Loan_Action__c" LightningStylesheets="true">
+  <apex:form >
+  <apex:pageBlock mode="maindetail" rendered="{!IF(HasPermissionAdmin=='true', 'true','false')}" >
+      <div style="position:relative;clear:both;float:right;">
+          <b>Processed</b>: <apex:outputLabel value="${!TotalProcessed.TotalTransactionAmountAsString}" /> (<apex:outputLabel value="{!TotalProcessed.TotalRecords}" /> )
+          &nbsp;|&nbsp;
+          <b>Unprocessed</b>: <apex:outputLabel value="${!TotalUnProcessed.TotalTransactionAmountAsString}" /> (<apex:outputLabel value="{!TotalUnProcessed.TotalRecords}" /> )
+      </div>
+      <div style="position:relative;clear:both;float:right;">
+          <apex:commandButton value=" Generate ATE File " action="{!ProcessDataForReport}" oncomplete="window.open('{!ReportView}');" />
+          <apex:commandButton value=" ATE Consolidator " onclick="window.open('http://ebatwork/ateconsolidator/DataUpload_CSV.aspx');" />
+      </div>
+      <div style="clear:both;"></div>  
+  </apex:pageBlock>
+  </apex:form>
+  <apex:enhancedList type="EB_Loan_Action__c" rowsPerPage="50" height="800"  />
+</apex:page>

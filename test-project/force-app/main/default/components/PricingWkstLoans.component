@@ -1,0 +1,168 @@
+<apex:component controller="PricingWkstComponentLoans" allowDML="true">
+
+	<apex:attribute name="pricingWkst" type="Pricing_Worksheet__c" assignTo="{!currentWorksheet}" required="true" description="" />
+	<apex:attribute name="pricingReq" type="PricingWkstRequest" assignTo="{!pricingRequest}" required="true" description="" />
+	<apex:attribute name="pricingResult" type="PricingWkstResults" assignTo="{!pricingResults}" required="true" description="" />
+	<apex:attribute name="isEditable" type="Boolean" default="true" description="" />
+
+		<apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!popupDisplayed}"/>
+		<apex:outputPanel styleClass="popupDataLoans" layout="block" rendered="{!popupDisplayed}">
+		    <apex:pageBlock title="Proposed Loans" id="popupPanel" >
+			    <apex:pageblockButtons location="top">
+				    <apex:commandButton value="Add Another Line" action="{!createNewItem}" rerender="popupPanel" rendered="{!If(popupType='add',true,false)}" immediate="true"/>
+			    </apex:pageblockButtons>
+			    <apex:pageblockButtons location="bottom">
+				    <apex:commandButton value=" Save New Loans " action="{!addNewItems}" rendered="{!If(popupType='add',true,false)}"/>
+				    <apex:commandButton value="   Save Changes   " action="{!updateItems}" rendered="{!If(popupType='update',true,false)}" reRender="popupPanel"/>
+				    <apex:commandButton value=" Yes, delete item " action="{!deleteItems}" rendered="{!If(popupType='deletesingle',true,false)}"/>
+				    <apex:commandButton value=" Yes, delete all " action="{!deleteItems}" rendered="{!If(popupType='deleteall',true,false)}"/>
+				    <apex:commandButton value=" Cancel " action="{!hidePopup}" rerender="entirePage" immediate="true"/>
+			    </apex:pageblockButtons>
+			    <apex:outputLabel value="Are you sure you want to delete this proposed loan?" rendered="{!If(popupType='deletesingle',true,false)}" styleClass="msg" />
+			    <apex:outputLabel value="Are you sure you want to delete all proposed loans?" rendered="{!If(popupType='deleteall',true,false)}" styleClass="msg" />
+			    <apex:messages />
+		        <apex:pageBlockTable value="{!popupData}" var="popupItem" rendered="{!If(popupType='deletesingle'||popupType='deleteall',false,true)}">
+				    <apex:column headerValue="Rate Type" headerClass="medLoanCol" styleClass="medLoanCol">
+		 		        <apex:inputField value="{!popupItem.Rate_Type__c}"/>
+				    </apex:column>
+			        <apex:column headerValue="Amount" headerClass="medLoanCol centered" styleClass="medLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Amount__c}"/>
+				    </apex:column>
+			        <apex:column headerValue="Rate" headerClass="smallLoanCol centered" styleClass="smallLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Rate__c}"/>
+				    </apex:column>
+			        <apex:column headerValue="Loan Type" headerClass="largeLoanCol centered" styleClass="largeLoanCol centered" >
+		 		        <apex:inputField id="loantype" value="{!popupItem.Loan_Type__c}">
+		 		        	<apex:actionSupport event="onchange" rerender="popupPanel"/>
+		 		        </apex:inputField>
+				    </apex:column>
+			        <apex:column headerValue="ExpUsage" headerClass="smallLoanCol centered" styleClass="smallLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Expected_Usage__c}" styleClass="{!If(popupItem.Loan_Type__c='Construction' || popupItem.Loan_Type__c='H/E' || popupItem.Loan_Type__c='Line Crdt','','hidden')}"/>
+				    </apex:column>
+			        <apex:column headerValue="Term" headerClass="medLoanCol centered" styleClass="medLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Term__c}"/>
+				    </apex:column>
+			        <apex:column headerValue="Coll" headerClass="largeLoanCol centered" styleClass="largeLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Collateral__c}"/>
+				    </apex:column>
+			        <apex:column headerValue="Fee" headerClass="smallLoanCol centered" styleClass="smallLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Fee__c}" />
+				    </apex:column>
+			        <apex:column headerValue="RR" headerClass="medLoanCol centered" styleClass="medLoanCol centered">
+		 		        <apex:inputField value="{!popupItem.Risk__c}"/>
+				    </apex:column>
+			        <apex:column headerValue="AMRT" headerClass="smallLoanCol centered" styleClass="smallLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Fully_Amortized__c}" />
+				    </apex:column>
+			        <apex:column headerValue="RNW" headerClass="smallLoanCol centered" styleClass="smallLoanCol centered" >
+		 		        <apex:inputField value="{!popupItem.Renewal__c}" />
+				    </apex:column>
+			    </apex:pageBlockTable>
+		    </apex:pageBlock>
+		</apex:outputPanel>
+	
+	<apex:outputPanel layout="block">
+	    <apex:pageBlock id="proposedLoansPanel" title="Proposed Loans" >
+
+	 	 	<div class="propLoansSection" style="width:1000px;">
+		    <apex:pageblockButtons location="top" rendered="{!isEditable}">
+			    <apex:commandButton value="      New Loans    " action="{!showAddPopup}" rerender="entirePage" />
+			    <apex:commandButton value="Edit Multiple Items" action="{!showUpdatePopupForAllItems}" rerender="entirePage" />
+			    <apex:commandButton value="Delete All" action="{!showDeletePopupForAllItems}" rerender="entirePage" />
+		    </apex:pageblockButtons>
+		        <apex:pageBlockTable value="{!existingItems}" var="existingItem" >
+			        <apex:column headerValue="Edit" styleClass="smallCol centered" headerClass="centered" rendered="{!isEditable}">
+				        <apex:commandLink value="Edit" action="{!showUpdatePopupForSingleItem}" rerender="entirePage"  >
+				        	<apex:param name="addId" assignTo="{!selectedId}" value="{!existingItem.proposedLoan.Id}" />
+				        </apex:commandLink>
+				    </apex:column>
+			        <apex:column headerValue="Del" styleClass="smallCol centered" headerClass="centered" rendered="{!isEditable}">
+				        <apex:commandLink value="Del" action="{!showDeletePopupForSingleItem}" rerender="entirePage"  >
+				        	<apex:param name="addIdForDel" assignTo="{!selectedId}" value="{!existingItem.proposedLoan.Id}" />
+				        </apex:commandLink>
+				    </apex:column>
+	
+	 		        <apex:column headerValue="Rate Type"  styleClass="medCol left" headerClass="left" >
+	 		        	<apex:outputText value="{!existingItem.proposedLoan.Rate_Type__c}" />
+	 		        	<apex:facet name="footer">
+				    		TOTALS:
+				    	</apex:facet>
+	 		        </apex:column>
+			        <apex:column headerValue="Amount" styleClass="medCol right" headerClass="right" footerClass="right" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.proposedLoan.Amount__c}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!amountTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+			        </apex:column>
+			        <apex:column headerValue="Rate" value="{!existingItem.proposedLoan.Rate__c}"  styleClass="medCol right" headerClass="right"/>
+			        <apex:column headerValue="Loan Type" value="{!existingItem.proposedLoan.Loan_Type__c}"  styleClass="medCol left" headerClass="left" />
+			        <apex:column headerValue="ExpUsage" headerClass="right">
+			        	<apex:outputText value="{!existingItem.proposedLoan.Expected_Usage__c}" styleClass="{!If(existingItem.proposedLoan.Loan_Type__c='Construction' || existingItem.proposedLoan.Loan_Type__c='H/E' || existingItem.proposedLoan.Loan_Type__c='Line Crdt','medCol right','hidden')}" />
+			        </apex:column>
+			        <apex:column headerValue="Term" value="{!existingItem.proposedLoan.Term__c}" styleClass="medCol left" headerClass="left" />
+			        <apex:column headerValue="Coll" value="{!existingItem.proposedLoan.Collateral__c}" styleClass="largeCol left" headerClass="left" />
+			        <apex:column headerValue="Fee" value="{!existingItem.proposedLoan.Fee__c}"  styleClass="medCol right" headerClass="right"/>
+			        <apex:column headerValue="RR" value="{!existingItem.proposedLoan.Risk__c}" styleClass="smallCol centered" headerClass="centered" />
+			        <apex:column headerValue="AMRT" value="{!existingItem.proposedLoan.Fully_Amortized__c}" styleClass="smallCol centered" headerClass="centered" />
+			        <apex:column headerValue="RNW" value="{!existingItem.proposedLoan.Renewal__c}" styleClass="smallCol centered" headerClass="centered" />
+			        <apex:column headerValue="TR" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!isEditable}" >
+	       		    	<apex:outputText value="{0, number, ##0.000 %}"  >
+				    		<apex:param value="{!existingItem.transferRate}" />
+				    	</apex:outputText>
+				    </apex:column>
+			        <apex:column headerValue="RE" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!isEditable}" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.riskExpense}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!riskExpenseTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+		    		</apex:column>
+			        <apex:column headerValue="Admin" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!isEditable}" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.adminFees}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!adminTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+		    		</apex:column>
+		    		<apex:column headerValue="RelCost" styleClass="medCol right" headerClass="right" footerClass="right" >
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###}" >
+					    		<apex:param value="{!pricingResults.proposalSummary.relationshipCost}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+		    		</apex:column>
+			        <apex:column headerValue="Capital" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!isEditable}" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.capital}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!capitalTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+		    		</apex:column>
+			        <apex:column headerValue="Income" styleClass="medCol right" headerClass="right" footerClass="right" rendered="{!isEditable}" >
+				    	<apex:outputText value="{0, number, $###,###,###}">
+				    		<apex:param value="{!existingItem.income}" />
+		    			</apex:outputText>
+				    	<apex:facet name="footer">
+					    	<apex:outputText value="{0, number, $###,###,###}" >
+					    		<apex:param value="{!incomeTotal}" />
+			    			</apex:outputText>
+				    	</apex:facet>
+		    		</apex:column>
+		        </apex:pageBlockTable>
+	        </div>
+	    </apex:pageBlock>
+	</apex:outputPanel>
+</apex:component>

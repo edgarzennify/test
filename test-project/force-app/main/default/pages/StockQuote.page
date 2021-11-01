@@ -1,0 +1,119 @@
+<apex:page docType="html-5.0"
+    controller="GatewayApiController" 
+    showHeader="false" >
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/react.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/JSXTransformer.js"></script>
+    <style>
+        body{background-color:transparent;}
+    </style>
+    <div id="container" />
+    <script type="text/jsx">        
+        var NumberFormat = React.createClass({
+            render: function(){
+                var formattedValue = numeral(this.props.value).format(this.props.format);
+                return (
+                    <span className={this.props.className}>{formattedValue}</span>
+                )
+            }
+        })
+        
+        function glz(amount, greater, less, zero){
+            if(amount > 0)
+                return greater;
+            if(amount < 0)
+                return less;
+            return zero;
+        }
+        
+        var StockQuote = React.createClass({
+          render: function(){
+            var changeClass = glz(this.props.changeAmount,"label label-success","label label-danger","label label-default");
+            var changeIcon = glz(this.props.changeAmount,"fa fa-caret-up","fa fa-caret-down","fa fa-sort");
+            var changeAmountAbs = Math.abs(this.props.changeAmount);
+            var link = "http://www.google.com/finance?client=ob&q=" + this.props.exchange + ":" + this.props.symbol;
+            var quoteStyle={display:"inline-block",verticalAlign:"middle",float:"none",fontWeight:"bold"};
+            return (
+              <div>
+                <div style={quoteStyle}>
+                    <a href={link} target="_blank">
+                        <i className="fa fa-line-chart" />
+                    </a>
+                    &nbsp;
+                    {this.props.symbol}:&nbsp;
+                    <NumberFormat 
+                        value={this.props.lastTrade} 
+                        format="($0,0.00)" />
+                </div>
+                &nbsp;&nbsp;
+                <span className={changeClass} >
+                    <i className={changeIcon} />
+                    &nbsp;
+                    <NumberFormat 
+                        value={changeAmountAbs}
+                        format="0,0.00" />
+                    &nbsp;&nbsp;
+                    <span className="">
+                        ({this.props.changePercent})
+                    </span>
+                </span>
+              </div>
+            )
+          }
+        })
+        
+        var StockQuoteController = React.createClass({
+          getInitialState : function(){
+            return {data:{change_amount:0}, loading: true};
+          },
+          componentDidMount: function(){
+            this._loadAsync();
+          },
+          _loadAsync : function(){
+            var _this = this;
+            this.setState({loading:true});
+            Visualforce.remoting.Manager.invokeAction("{!$RemoteAction.GatewayApiController.get}"
+                ,"StockQuoteUrl","/" + this.props.symbol,10
+                ,function(result, event){
+                    if (event.status) {
+                        if(result != ''){
+                            _this.setState({data: JSON.parse(result)});
+                        }    
+                    }
+                    _this.setState({loading:false});
+                 }
+                 ,{escape: false}
+            );
+          },
+          render: function(){
+            var allCapsSymbol = this.props.symbol.toUpperCase();
+            return this.state.loading 
+                ? 
+                <div id="loader-pane">
+                    <i className="fa fa-refresh fa-spin" />
+                    <i>&nbsp;retrieving quote for <b>{allCapsSymbol}</b>...</i>
+                </div> 
+                : 
+                (
+                  <div>
+                    <StockQuote
+                      loading={this.state.loading}
+                      symbol={this.state.data.symbol}
+                      exchange={this.state.data.exchange}
+                      lastTrade={this.state.data.last_trade}
+                      changeAmount={this.state.data.change_amount}
+                      changePercent={this.state.data.change_percent} />
+                  </div>
+                )
+          }
+        })
+        
+        React.render(
+          <StockQuoteController symbol="{!$CurrentPage.parameters.symbol}" />,
+          document.getElementById('container')
+        );
+    </script>
+</apex:page>

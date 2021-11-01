@@ -1,0 +1,3 @@
+<apex:page controller="XStageActionController" action="{!RedirectAction}">
+  Error : Permission issue
+</apex:page>

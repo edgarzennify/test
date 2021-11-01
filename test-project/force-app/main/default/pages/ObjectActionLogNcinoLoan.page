@@ -1,0 +1,12 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c" 
+    showHeader="false" 
+    sidebar="false" 
+    LightningStylesheets="true">
+
+    <c:ObjectActionLog objectId="{!LLC_BI__Loan__c.Id}"
+        actionType="Stage Logging"
+        title="Stage Logs"
+        height="275"
+    />
+</apex:page>

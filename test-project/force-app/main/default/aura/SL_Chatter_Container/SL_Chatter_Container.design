@@ -1,0 +1,6 @@
+<design:component label="Internal chatter">
+	<design:attribute name="height" label="Height" description="Height of the component displayed on the page"/>
+    <design:attribute name="path" label="Full Path" description="Please enter the full path to the SL_Chatter_Container_ID Visualforce page, available when previewing that page"/>
+    <design:attribute name="sId" label="Custom ID" description="1) Leave blank for the general Chatter feed or 2) Enter the Salesforce ID for the group or record who's feed you wish to display"/>
+    <design:attribute name="bUseCurentPage" label="Use Current Record ID" description="Check this if you want to display the feed for the currently displayed record on the community page"/>
+</design:component>

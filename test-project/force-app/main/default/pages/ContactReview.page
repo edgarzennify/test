@@ -1,0 +1,16 @@
+<apex:page showHeader="true" 
+    sidebar="true"
+    controller="ContactReviewController" 
+    tabStyle="Contact_Review__c"
+    title="Contact Synchronization Resolution" action="{!initialize}">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    
+    <body>
+        <div id="react-app"></div>
+        <script src="{!URLFOR($Resource.ContactReviewReactify, '/vendor.js')}" />
+        <script src="{!URLFOR($Resource.ContactReviewReactify, '/main.js')}" />
+    </body>
+    
+</apex:page>

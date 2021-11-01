@@ -1,0 +1,13 @@
+<!-- redirects those users not allowed to use the New button on the Entity detail page -->
+<apex:page standardController="Account" 
+           extensions="EntityNewRedirectCont" 
+           title="Direct Entity Creaition Redirection" 
+           tabStyle="Account" 
+           showHeader="true" 
+           sidebar="true" 
+           showChat="true" 
+           cache="false" 
+           label="EntityNewRedirect" 
+           Name="EntityNewRedirect" 
+           action="{!notAllowedToCreateEntities}" >
+</apex:page>

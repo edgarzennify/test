@@ -1,0 +1,7 @@
+<apex:page >
+    <div style="text-align: center; overflow:hidden;">
+        <a href="../00Q/e?retURL=%2F00Q%2Fo&amp;RecordType=012a0000001ZPde&amp;ent=Lead" target="_blank">
+            <img src="../resource/1386362572000/InternalReferralButton" border="0" />
+        </a>
+    </div>
+</apex:page>

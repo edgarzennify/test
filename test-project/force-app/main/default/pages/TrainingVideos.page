@@ -1,0 +1,31 @@
+<apex:page controller="TrainingVideosController" tabStyle="Training_Video__c" action="{!View}"  >
+<apex:sectionHeader title="Training Videos"></apex:sectionHeader>
+<apex:form >
+     <apex:pageblock id="pageBlock" >
+         <apex:pageBlockTable value="{!videos}" var="v" rendered="{!NOT(ISNULL(videos))}">             
+             <apex:column width="33%" >
+                   <apex:facet name="header">
+                         <apex:commandLink action="{!View}" value="Title {!IF(sortExpression=='Viewing_Order__c',IF(sortDirection='ASC','▼','▲'),'')}" id="cmdSort">
+                               <apex:param value="Viewing_Order__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                         </apex:commandLink>
+                   </apex:facet>
+                   <apex:outputText escape="false" value="{!ROUND(v.Viewing_Order__c,0)}. {!v.View__c}" ></apex:outputText>
+             </apex:column>
+             <apex:column value="{!v.Description__c}">
+                   <apex:facet name="header">
+                         <apex:commandLink action="{!View}" value="Description {!IF(sortExpression=='Description__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+                               <apex:param value="Description__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                         </apex:commandLink>
+                   </apex:facet>
+             </apex:column>
+             <apex:column value="{!v.Duration__c}">
+                   <apex:facet name="header">
+                         <apex:commandLink action="{!View}" value="Duration {!IF(sortExpression=='Duration__c',IF(sortDirection='ASC','▼','▲'),'')}" >
+                               <apex:param value="Duration__c" name="column" assignTo="{!sortExpression}" ></apex:param>
+                         </apex:commandLink>
+                   </apex:facet>
+             </apex:column>
+        </apex:pageBlockTable>
+     </apex:pageblock>
+    </apex:form>
+ </apex:page>

@@ -1,0 +1,89 @@
+<aura:component >
+    <aura:attribute name="SObjectName" type="String" access="public" />
+    <aura:attribute name="EmpDetailHeading" type="String" access="public" />
+    <aura:attribute name="EmployeeRecord" type="Object" access="public" />
+    <aura:attribute name="ListFieldsetResults" type="Object[]" access="public" />
+    <aura:attribute name="DetailFieldsetResults" type="Object[]" access="public" />
+    <aura:attribute name="ShowFieldLabel" type="Boolean" access="global" />
+    <aura:attribute name="ComponentPlacement" type="String" access="global" />
+    <aura:attribute name="isShowModal" type="Boolean" description="" default="false" access="global" />
+    <aura:attribute name="isShowDetailBtn" type="Boolean" description="" access="global" />
+    <aura:attribute name="firtFieldType" type="String" access="global" />
+
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+    <aura:if isTrue="{!v.isShowModal}">
+        <div class="modal-container">
+            <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open slds-modal--large slds-align--absolute-center modalProperty">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header" style="background-color: rgb(244, 246, 249);">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModal}">
+                            <lightning:icon iconName="utility:close" size="small" class="closeIcon" />
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="header43" class="slds-text-heading--medium slds-float--left">{!v.EmpDetailHeading}</h2>
+                        <span class="{!v.isShowDetailBtn ? '' : 'slds-hide'}">
+                            <lightning:button class="slds-button slds-button--neutral slds-float--right" label="Detail" onclick="{!c.redirectToProfile}"
+                            />
+                        </span>
+                    </div>
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <aura:iteration items="{!v.DetailFieldsetResults}" var="objField">
+                            <c:SL_EmpDir_DisplayField record="{!v.EmployeeRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                fieldLabel="{!objField.label}" ShowFieldLabel="{!v.ShowFieldLabel}" />
+                        </aura:iteration>
+                    </div>
+                    <div class="slds-modal__footer" style="height: 3rem;" />
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>
+        </div>
+    </aura:if>
+
+    <div class="slds-card" style="background-color:white;">
+        <div class="header forceChatterUserPreviewStencil forceRecordLayout customEmployeeCardWrapper">
+            <div class="customInfoTextWrapper">
+                <div class="customProfilePicPrimaryFieldWrapper">
+                    <aura:iteration items="{!v.ListFieldsetResults}" var="objField" indexVar="index" start="0" end="2">
+                        <aura:if isTrue="{! and(index == 0, v.firtFieldType == 'IMAGE') }">
+                            <a onclick="{!c.navigateToRecord}">
+                                <c:SL_EmpDir_DisplayField record="{!v.EmployeeRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                    fieldLabel="{!objField.label}" ShowFieldLabel="false" />
+                            </a>
+                        </aura:if>
+                        <aura:if isTrue="{! and( index == 1 , v.firtFieldType == 'IMAGE')}">
+                            <h1 class="customPrimaryField slds-truncate">
+                                <a onclick="{!c.navigateToRecord}">
+                                    <c:SL_EmpDir_DisplayField record="{!v.EmployeeRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                        fieldLabel="{!objField.label}" ShowFieldLabel="false" />
+                                </a>
+                            </h1>
+                        </aura:if>
+                        <aura:if isTrue="{! and( index == 0 , v.firtFieldType != 'IMAGE')}">
+                            <h1 class="customPrimaryField slds-truncate">
+                                <a onclick="{!c.navigateToRecord}">
+                                    <c:SL_EmpDir_DisplayField record="{!v.EmployeeRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                        fieldLabel="{!objField.label}" ShowFieldLabel="false" />
+                                </a>
+                            </h1>
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+                <div class="customSecondaryFieldsWrapper">
+                    <aura:iteration items="{!v.ListFieldsetResults}" var="objField" indexVar="index">
+                        <aura:if isTrue="{! and(index > 1 , v.firtFieldType == 'IMAGE') }">
+                            <c:SL_EmpDir_DisplayField record="{!v.EmployeeRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                fieldLabel="{!objField.label}" ShowFieldLabel="{!v.ShowFieldLabel}" />
+                        </aura:if>
+                        <aura:if isTrue="{! and(index > 0 , v.firtFieldType != 'IMAGE' ) }">
+                            <c:SL_EmpDir_DisplayField record="{!v.EmployeeRecord}" fieldApiName="{!objField.fieldPath}" fieldType="{!objField.type}"
+                                fieldLabel="{!objField.label}" ShowFieldLabel="{!v.ShowFieldLabel}" />
+                        </aura:if>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

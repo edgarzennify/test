@@ -1,0 +1,10 @@
+<design:component label="Silverline Object Detail">
+	<design:attribute name="Heading" label="Heading" description="Text heading over Object Detail display."/>
+    <design:attribute name="SObjectName" label="Object Name" description="API Name of Standard or Custom Object."/>
+    <design:attribute name="FieldsetName" label="Field Set" description='Field Set API Name.' />
+    <design:attribute name="FilterCriteria" label="Filter Criteria" description='SQL Filter Formula.' />    
+    <design:attribute name="InitialState" label="Initial State" datasource="FULL,HIDDEN" default="HIDDEN" description='Initial state should not be changed, as it will be initially hidden and will render when Object list record is being clicked.' />
+    <design:attribute name="ShowFieldLabel" label="Show field label" description="Specify field label as true or false to have fields shown with record." />
+    <design:attribute name="ShowAttachment" label="Show Attachment" description="Show all Attachments related to the Object." />
+    <design:attribute name="PageSize" label="Page Size" description="Manage page size in the component for the attachments and for sObject records(Full mode)." />
+</design:component>

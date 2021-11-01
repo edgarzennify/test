@@ -1,0 +1,60 @@
+<apex:page docType="html-5.0"
+    title="Loan Archive"
+    standardController="LLC_BI__Loan__c"
+    extensions="LoanArchiveController"
+    tabStyle="LLC_BI__Loan__c"
+    action="{!initialize}">
+    
+    <apex:pageMessages />
+    <apex:form >
+        <apex:sectionHeader title="Loan Archive Processing" subtitle="{!LLC_BI__Loan__c.Name}"/>
+        <apex:pageblock title="Merge Prospect / Core Items">
+            <apex:pageblockSection title="Merge Prospect Entities with Core Entities" collapsible="false" />
+            <apex:dataTable value="{!entityMergeList}" var="e" cellpadding="5" style="margin-left:20px" >
+                <apex:column value="{!e.description}" />
+                <apex:column >
+                    <apex:selectList value="{!e.selectedOptionId}" size="1" id="EntityOptionList">
+                        <apex:selectOptions value="{!coreEntityOptions}"></apex:selectOptions>
+                    </apex:selectList>
+                </apex:column>
+            </apex:dataTable>
+            <apex:pageblockSection title="Merge Prospect Collateral with Core Collateral" collapsible="false" />
+            <apex:dataTable value="{!collateralMergeList}" var="c" cellpadding="5" style="margin-left:20px">
+                <apex:column value="{!c.description}"/>
+                <apex:column >
+                    <apex:selectList value="{!c.selectedOptionId}" size="1" id="CollateralOptionList">
+                        <apex:selectOptions value="{!coreCollateralOptions}"></apex:selectOptions>
+                    </apex:selectList>
+                </apex:column>
+            </apex:dataTable> 
+            <apex:pageBlockButtons location="both">
+                <apex:commandButton value="Submit" action="{!saveClicked}" onclick="javascript:disableButtonsForSubmit();" alt="submit" />
+                <apex:commandButton value="Partial Collateral Merge" action="{!saveCollateralClicked}" rendered="{!isAdmin}" alt="Partial Collateral Merge"/>
+                <apex:commandButton value="Partial Collateral Merging" disabled="true" style="display: none;" alt="Partial Collateral Merging"/>
+                <apex:commandButton value="Submitting" disabled="true" style="display: none;" alt="xsubmit" />
+                <apex:commandButton value="Cancel" action="{!cancelClicked}" immediate="true" alt="cancel" />
+                <apex:commandButton value="Cancel" disabled="true" style="display: none;" alt="xcancel"/>
+            </apex:pageBlockButtons>
+        </apex:pageblock>
+    </apex:form>
+    <script language="javascript">
+        function disableButtonsForSubmit(){
+            setDisplayStyle('input', 'submit', 'none');
+            setDisplayStyle('input', 'xsubmit', 'inline');
+            setDisplayStyle('input', 'cancel', 'none');
+            setDisplayStyle('input', 'xcancel', 'inline');
+            setDisplayStyle('input', 'Partial Collateral Merge', 'none');
+            setDisplayStyle('input', 'Partial Collateral Merging', 'inline');
+        }
+        function setDisplayStyle(tagName, tagAlt, displayStyle){
+            var x=document.getElementsByTagName(tagName)
+            if(x.length > 0){
+                for(i=0;i<x.length;++i){
+                    if(x[i].alt==tagAlt){             
+                        x[i].style.display = displayStyle;
+                    }
+                }
+            }
+        }
+    </script>
+</apex:page>

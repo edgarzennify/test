@@ -1,0 +1,12 @@
+<apex:page standardcontroller="EB_Loan_Application__c" extensions="LoanAppStageActionManagerController" showHeader="true" action="{!RedirectAction}"  >
+<apex:pageMessages />
+<apex:form >
+    <apex:pageblock >
+        <apex:pageblocksection columns="1">
+            <apex:pageblocksectionItem >
+                <apex:outputLabel value="Error retriving Loan App information... "/>
+            </apex:pageblocksectionItem>            
+        </apex:pageblocksection>
+    </apex:pageblock>
+</apex:form>
+</apex:page>

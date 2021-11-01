@@ -1,0 +1,51 @@
+<apex:component controller="ParentRelComponent" rendered="{!renderComponent}">
+    <apex:attribute name="title" description="pageBlock title" type="String" required="false" assignTo="{!pageBlockTitle}"/>
+    <apex:attribute name="rendered" description="hide/show component" type="String" required="false" assignTo="{!renderComponent}"/>
+    <apex:attribute name="currentAccountId" description="Initial Account Id" type="Id" required="true" assignTo="{!childId}"/>
+    <apex:attribute name="parentAccountId" description="pageBlock title" type="Id" required="false" assignTo="{!parentId}"/>
+    <apex:attribute name="selectedRelationship" description="pageBlock title" type="String" required="false" assignTo="{!relationshipToParent}"/>
+    <apex:attribute name="staticDisplay" description="pageBlock title" type="Boolean" required="true" assignTo="{!existingRelationships}"/>
+
+      <apex:pageBlock title="{!pageBlockTitle}" >
+        <div class="hierarchyListView">
+            <div class="ownerDisplay">
+                Primary RM: {!relationshipTree[0].entity.owner.name}
+            </div>
+            <apex:pageBlockTable value="{!relationshipTree}" var="relateditem">
+                <apex:column headerValue="Entity" styleClass="node {!IF(relateditem.isCurrentNode=true,'currentNode','')}" >                
+                    <apex:outputLink value="/{!relateditem.entity.id}" style="margin-left:{!relateditem.nodeLevel}0px;" >{!relateditem.entity.Name}</apex:outputLink>
+                </apex:column> 
+                <apex:column headerValue="Active Accounts" headerClass="center" value="{!relateditem.totalActiveAccounts}" styleClass="center node {!IF(relateditem.isCurrentNode=true,'currentNode','')}" />
+                <apex:column headerValue="Relationship To Parent" value="{!relateditem.entity.Relationship_To_Parent__c}" styleClass="node {!IF(relateditem.isCurrentNode=true,'currentNode','')}" />
+                <apex:column headerValue="Branch" value="{!relateditem.entity.EB_UnitID__r.Name}" styleClass="node {!IF(relateditem.isCurrentNode=true,'currentNode','')}" />
+                <apex:column headerValue="Mini360" styleClass="node {!IF(relateditem.isCurrentNode=true,'currentNode','')}" rendered="false" >
+                    <c:Entity360Mini currentAccountId="{!relateditem.entity.id}" />
+                </apex:column>
+                <apex:column styleClass="center node {!IF(relateditem.isCurrentNode=true,'currentNode','')}" rendered="{!existingRelationships}">                
+                    <apex:outputLink value="/apex/ParentRelationshipManagerView?id={!relateditem.entity.id}&retURL=%2Fapex%2FParentRelationshipHierarchy?id={!childId}" styleClass="node {!IF(relateditem.isCurrentNode=true,'currentNode currentNodeEdit','')}">Edit</apex:outputLink>
+                </apex:column> 
+            </apex:pageBlockTable>
+        </div>
+    </apex:pageBlock> 
+    <div style="visibility:collapse;">
+    <style type="text/css">
+        .node{ 
+            padding:5px;
+        }
+        .pbTitle {
+            white-space: nowrap;
+        }
+        .currentNode{
+            font-weight: bold;  
+            background-color:#eff;        
+        }
+        .ownerDisplay{
+            font-weight: bold;  
+            padding-bottom:10px; 
+        }
+        .center{
+            text-align:center;
+        }
+    </style>
+    </div>
+</apex:component>

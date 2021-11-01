@@ -1,0 +1,163 @@
+<apex:page controller="AccountNumberGenerator"
+           title="Loan Number Generator"
+           tabStyle="Loan_Numbers__tab"
+           docType="html-5.0"
+           lightningStylesheets="true"
+           standardStylesheets="true"
+           applyHtmlTag="true"
+           applyBodyTag="false"
+           showHeader="true"
+           sidebar="true">
+  <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta http-equiv="x-ua-compatible" content="ie=edge" />
+      <title>Account Number Generator</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <apex:slds />
+        <style>
+    .label {
+       font-size:12px;
+    }
+    .value {      
+    	font-size:12px;
+    }
+    .hidden {
+    	display: none;
+    	visibility:hidden;
+    }
+    .error {    	
+    	color:red;    	
+    }
+    .buttonStyle{
+    	text-decoration:underline;
+    	color:blue;
+    	font-size:11px;
+    }
+    .downloadStyle{
+    	text-align:left;
+    	font-size:12px;
+        margin-bottom: 5px;
+    }
+    .bPageBlock{
+    }
+    .input-field{
+    	min-width: 200px;
+    }
+            .myapp{
+            margin-top:10px;
+            }
+    </style>
+    </head>
+    <body>
+      <div class="slds-scope">
+      	<div class="slds-page-header">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <div class="slds-media slds-no-space slds-grow">
+                      <div class="slds-media__figure">
+                        <svg aria-hidden="true" class="slds-icon slds-icon-action-new-custom17">
+                          <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#new_custom17')}"></use>
+                        </svg>
+                      </div>
+                      <div class="slds-media__body">
+                        <p class="slds-text-title_caps slds-line-height_reset">New Accounts</p>
+                        <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate">Loan Number Generator</h1>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>        
+          <div class="myapp">
+        <apex:form id="form" >
+            <apex:actionStatus id="status">
+            <apex:facet name="start">
+            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.75; z-index: 1000; background-color: white;">
+                &nbsp;
+            </div>
+            <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 10% 50%">                
+            <div id="spinner" class="slds-spinner_container slds-is-relative" >
+                    <div role="status" class="slds-spinner slds-spinner--large slds-spinner--brand">
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </div>
+            </apex:facet>
+        </apex:actionStatus>
+        <apex:pageBlock >
+            <apex:pageblockSection columns="1">
+                <apex:selectList id="NextStatus" value="{!generateId}" size="1" required="true" label="Account Type" styleClass="input-field">
+                    <apex:selectOptions value="{!getLoanAccountType}"></apex:selectOptions>
+                </apex:selectList> 
+                <apex:inputText id="txtCount" value="{!numberOfAccounts}" label="Number of Accounts ({!NumberGeneratorMax} MAX)" styleClass="input-field" />
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=""/>                  
+                    <apex:outputPanel >
+                		<div id="lblError" class="error" hidden="true"></div>                
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=""/>                  
+                    <apex:outputPanel >
+                        <apex:commandButton id="btnGenerate" value="Get Next Number" action="{!Generate}" rerender="form" status="status" />
+                        &nbsp;&nbsp;
+                        <apex:commandButton id="btnReset" value="Reset" action="{!ResetGenerator}" />           
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>                
+            </apex:pageblockSection>
+        </apex:pageBlock>
+            
+    <apex:outputPanel style="border:none;" rendered="{!IsError}">
+        <apex:outputLabel value="{!ErrorMessage}" styleClass="error" rendered="{!IsError}"/>
+    </apex:outputPanel>    
+    <apex:pageBlock rendered="{!NOT(ISNULL(AccountDetails))}" title="Results: New '{!LoanTableTitle}' numbers">
+        <div class="downloadStyle">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAENSURBVEhL7ZQhDgIxEEU5DyfgAJyACxA0SAQOBxqLBrUhKAwGBBgECTgSgiEkJIQgMHUlf5M209nZtpssbsUz7cx/3bbbmlJKh3h9vnp/vjtgTKrlRAl6k62ud+YOGJNqOVGC9nidEWBMquVUgiCVIEhGgJ+Ih8WCXp6XEdweb93oJmKAD/Sgl+eJW3S6PgtJUIseKSv3DGIlvnDgPeSQJBQOvAKQJ4kJB1ZAn2IKnmUuMeHSM25wBM3+0lkdpTVcORIajjmpByDTCqQCipHgGoJQuCFaALCiyeKY4vtiSiFBHlTGxaUIsF3J5pJuGbIG052dK0Uwmh3ScBw+to/eNitAEV7HMkGmFfwPpX8ECheYf1gLgAAAAABJRU5ErkJggg==" />
+            <a href="data:application/octet-stream;charset=UTF-8;base64,{!downloadData}" style="color:blue;" download="NewAccounts.txt">Download this list</a>
+        </div>
+        <apex:pageBlockTable value="{!AccountDetails}" var="a" >
+            <apex:column headerValue="Account Number" value="{!a.AccountNumber}"/>            
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:form>
+          </div>       
+      </div>
+        <script type="text/javascript">
+        const txtId = document.querySelector('[id*="txtCount"]').id
+        const txt = document.getElementById(txtId)
+        const btnId = document.querySelector('[id*="btnGenerate"]').id
+		const btn = document.getElementById(btnId)
+        const errId = document.querySelector('[id*="lblError"]').id
+		const err = document.getElementById(errId)
+        const isNumeric = function (n) {
+			return !isNaN(parseFloat(n)) && isFinite(n);
+		}
+		const inputHandler = function(e) {            
+            let val = e.target.value         
+            	
+            if(!isNumeric(val) || val < 1 || val > parseInt('{!NumberGeneratorMax}')){
+                btn.disabled = true
+                btn.readOnly = true
+                err.hidden = false
+                err.innerHTML = 'Please select a number between 1 and {!NumberGeneratorMax}'
+                btn.value = 'Get Next Number'
+            }else{
+                if(val > 1){
+                	btn.value = `Get Next ${val} Numbers`                
+            	}else {
+	                btn.value = 'Get Next Number'
+	            }  	
+                btn.disabled = false
+                btn.readOnly = false
+                err.hidden = true
+                err.innerHTML = ''
+            }
+		}
+        
+		txt.addEventListener('input', inputHandler);
+		txt.addEventListener('propertychange', inputHandler); // for IE8
+        </script>
+    </body>
+  </html>
+</apex:page>

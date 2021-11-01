@@ -1,0 +1,16 @@
+<apex:page StandardController="Borrowing_Base__c"  >
+<apex:form >
+<apex:pageBlock title="New Borrowing Base Report"  mode="edit">
+
+           <apex:pageBlockButtons >
+               <apex:commandButton action="{!Save}" value="Save"/>
+                <apex:commandButton action="{!Cancel}" value="Cancel"  immediate="true"/>                
+            </apex:pageBlockButtons>
+          
+            <apex:pageBlockSection title="Information" columns="2">
+                <apex:inputField value="{!Borrowing_Base__c.Loan_Number__c}" required="true"/>
+            </apex:pageBlockSection>
+            
+</apex:pageBlock>
+</apex:form>
+</apex:page>

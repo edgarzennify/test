@@ -1,0 +1,99 @@
+<apex:page showHeader="true" 
+    sidebar="true"
+    controller="ECOANotificationController" 
+    action="{!initialize}"
+    tabStyle="LLC_BI__Loan__c"
+    title="ECOA Notification Manager" >
+    <style type="text/css">
+        .center{
+            text-align:center;
+        }
+        span.dateInput span.dateFormat{
+           display:none;
+        }
+        .fa {
+            padding-right:5px;
+        }
+    </style>
+    <apex:stylesheet value="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+    <apex:form >
+        <apex:sectionHeader title="Loan Compliance" subtitle="ECOA Notification Manager" />
+        <div style="padding-bottom:10px;padding-top:10px">
+            <apex:inputText maxlength="0" style="width:0px;border:none;" />
+            <apex:outputLabel value="Filter by Batch Date:" style="margin-right:5px;" />
+            <apex:inputField value="{!dateObject.Bogus_Date_1__c}" styleClass="center" />
+            &nbsp;-&nbsp;&nbsp;<apex:inputField value="{!dateObject.Bogus_Date_2__c}" styleClass="center" />
+            <apex:commandButton value="Apply" action="{!filterNotifications}" style="margin-left:10px;width:75px;" />
+        </div> 
+        <apex:pageBlock id="pgBlockDetails">
+            <apex:pageBlockSection >
+            	<apex:pageBlockSectionItem >
+                    <apex:outputPanel >
+                        <i>
+                            Displaying Loans flagged for ECOA Notification between
+                            <b>
+                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                    <apex:param value="{!vm.startDate}" /> 
+                                </apex:outputText>
+                            </b>
+                            and
+                            <b>
+                                <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                    <apex:param value="{!vm.endDate}" /> 
+                                </apex:outputText>
+                            </b>
+                        </i>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockTable value="{!vm.notifications}" var="n">
+                <apex:column headerValue="" >
+                    <apex:outputPanel rendered="{!n.readyToPrint}">
+                        &nbsp;
+                        <apex:outputLabel styleClass="fa fa-print" />
+                        <apex:commandLink value="{! IF(n.printDate=='','Print','Reprint') }" action="{!print}" >
+                            <apex:param name="printDateId" assignTo="{!selectedDate}" value="{!n.flaggedDateDisplay}" />
+                            <apex:param name="printUrlId" assignTo="{!selectedUrl}" value="{!n.documentURL}" />
+                        </apex:commandLink>
+                    </apex:outputPanel>
+                </apex:column>
+                <apex:column headerValue="Batch Date" value="{!n.flaggedDateDisplay}" headerClass="center" styleClass="center" />
+                <apex:column headerValue="# Loans" value="{!n.loanCount}" headerClass="center" styleClass="center" />
+                <apex:column headerValue="Print Status" >
+                    <apex:outputPanel rendered="{! n.printDate != '' }" >
+                        <apex:outputLabel styleClass="fa fa-check" />
+                        <apex:outputLabel value="{!n.printDate}" />
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{! n.printDate == '' && n.readyToPrint }" >
+                        <apex:outputLabel styleClass="fa fa-thumbs-o-up" />
+                        <i><apex:outputLabel value="Ready to print" /></i>
+                    </apex:outputPanel>
+                    <apex:outputPanel rendered="{! n.printDate == '' && !n.readyToPrint }" >
+                        <apex:outputLabel styleClass="fa fa-times" />
+                        <i><apex:outputLabel value="Unavailable for printing" /></i>
+                    </apex:outputPanel>
+                </apex:column>                
+                <apex:column headerValue="Details" headerClass="center">
+                    <apex:pageBlockTable value="{!n.loans}" var="l">
+                        <apex:column headerValue="Loan" style="width:80px">
+                            <apex:outputLink target="_new" value="/{!l.id}">{!l.name}</apex:outputLink>
+                        </apex:column>
+                        <apex:column headerValue="Primary Borrower" value="{!l.primaryBorrower.Name}" style="width:120px" />
+                        <apex:column headerValue="Loan Type" value="{!l.loanType}" style="width:60px" />
+                        <apex:column headerValue="Product Line" value="{!l.productLine}" style="width:40px" />
+                    </apex:pageBlockTable>
+                    <br/>
+                </apex:column>
+            </apex:pageBlockTable>
+    	</apex:pageBlock>
+    </apex:form>
+
+    <script type="text/javascript">
+        window.onload = function(){
+            if({!navigate}){
+                window.open("{!selectedUrl}");
+            }
+        };
+    </script>
+
+</apex:page>

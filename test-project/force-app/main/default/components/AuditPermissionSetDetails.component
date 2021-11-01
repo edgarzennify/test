@@ -1,0 +1,29 @@
+<apex:component >
+
+	<apex:attribute name="permissionSetDetails" type="AuditPermissionSetDetails[]" required="true" description="A list of permission set detail items." />
+
+    <apex:pageBlock title="Permission Set Details">
+        <div class="permissionProfileTable">
+        <apex:pageBlockTable var="ps" value="{!permissionSetDetails}" >
+            <apex:column headerValue="Permission Set" >
+                <apex:outputLink value="/{!ps.permissionSetId}" target="_blank">{!ps.permissionSetName}</apex:outputLink>
+            </apex:column>
+            <apex:column headerValue="Read Access" value="{!ps.readAccess}" styleClass="readEditAccessCol" headerClass="readEditAccessCol"/>
+            <apex:column headerValue="Edit Access" value="{!ps.editAccess}" styleClass="readEditAccessCol" headerClass="readEditAccessCol"/>
+        </apex:pageBlockTable>
+        </div>
+    </apex:pageBlock>
+
+    <style type="text/css">
+        .readEditAccessCol{
+            max-width: 100px;
+            width: 100px;
+        }
+        .permissionProfileTable {
+            width:auto;
+            min-width: 450px;
+            max-width: 750px;
+        }
+    </style>
+
+</apex:component>

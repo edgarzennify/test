@@ -1,0 +1,66 @@
+<apex:page standardController="opportunity" extensions="EBPipelineArchiveController" LightningStylesheets="true">
+    <script language="javascript">
+    function showConfirm(selected_text){
+        p = "{!ProspectSelected}";        
+        p = p.replace(/'/gi, '\'');        
+        return confirm("Are you sure you want to merge prospect \"" + p + "\" with client \"" + selected_text + "\"?");
+    }
+    </script>
+    <apex:form >
+        <apex:pageBlock title="Convert {!Quotes}{!ProspectSelected}{!Quotes} to Client..." mode="edit" rendered="{!WonStatus}" >
+            <div style="padding:4px;">
+                <div style="padding:4px;">Please use search to select an existing Client to be merged with {!Quotes}{!ProspectSelected}{!Quotes}</div>
+                <div style="padding:4px;">
+                 <apex:inputText id="lookup" value="{!searchParam}" />
+                     <apex:commandButton value="Search" action="{!SetSearch}" />
+                     <apex:outputlabel value="(Over 100 results were returned. Consider revising your search to help find an entity faster.)" rendered="{!getRefineSearchStatus}" style="text-decoration:none;color:red;"  />
+               </div>
+               <apex:outputPanel id="gridresults">
+                   <apex:actionStatus startText="searching..." id="searchStatus"/>
+                   <apex:pageBlockTable id="dlclients" value="{!ClientNames}" frame="hsides" var="c"  first="1">
+                       <apex:column headerValue="Clients">
+                           <apex:commandLink onclick="return showConfirm('{!c.label}');" action="{!SaveClient}" id="txt" value="{!c.label}">
+                               <apex:param assignTo="{!dropdownClientId}" name="selectedClient" value="{!c.value}" />
+                           </apex:commandLink>
+                       </apex:column>
+                   </apex:pageBlockTable>
+               </apex:outputPanel>
+           </div>                 
+        </apex:pageBlock>
+        <apex:pageBlock title="&quot;{!ProspectSelected}&quot; Lost..." mode="edit" rendered="{!LostStatus}" >
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Lost Reason"/>
+                    <apex:inputTextarea id="txtlost" value="{!lostReason}" cols="50" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Lost Date"/>
+                    <apex:inputField id="txtlostdate"  value="{!opportunity.Lost_Date__c}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value=""/>
+                    <apex:commandButton value="Submit" action="{!SaveLost}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>                        
+        </apex:pageBlock>
+        <apex:pageblock rendered="{!OtherStatus}">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!Message}" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageblock>    
+        <apex:pageblock rendered="{!WonClientStatus}">
+            <center>
+            <apex:outputLabel value="Archive " />
+            <b><apex:outputLabel value="{!opportunity.Name}" /></b>
+            <apex:outputLabel value=" opportunity for " />
+            <b><apex:outputLabel value="{!Name}" /></b>
+            <apex:outputLabel value=", are you sure?" />
+            <br/><br/>
+            <apex:commandButton id="cmdArchive" value=" OK " action="{!ArchiveClient}"/>
+            <apex:commandButton id="cndArchiveCancel" action="{!cancel}" value="Cancel" />
+            </center>
+        </apex:pageblock>         
+    </apex:form>
+</apex:page>

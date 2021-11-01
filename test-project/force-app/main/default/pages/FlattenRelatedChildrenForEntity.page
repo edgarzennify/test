@@ -1,0 +1,10 @@
+<apex:page controller="ParentRelFlattenHierarchyController" showHeader="true" sidebar="true">
+	<apex:form id="Form">
+		<apex:outputPanel >
+			<apex:pageBlock >
+				<apex:outputText value="Are you sure you want to flatten the hierarchy for {!entity.Name}?" /><p/>		<apex:commandButton value="  Yes  " action="{!flattenHierarchyForEntity}" style="margin:15px;"/>
+				<apex:commandButton value="  No   " action="{!cancel}"/>
+			</apex:pageBlock>
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,33 @@
+.custom-slds-card {
+	background-color: #f5f5f5;
+	width: 100%;
+	display: inline-flex;
+}
+.custom-slds-card-title {
+	color: #183963;
+	font-weight: bold;
+}
+.custom-card-body {
+	width: 65% !important;
+}
+.custom-body-grid {
+	width: 50% !important;
+}
+.success-upload {
+    background-color: #007AC1 !important;
+}
+@media (max-width: 500px) {
+	.custom-card-body {
+		width: 100% !important;
+	}
+}
+@media (max-width: 500px) {
+	.custom-body-grid {
+		width: 100% !important;
+	}
+}
+@media (max-width: 500px) {
+	.custom-slds-card {
+		display: inline-block !important;
+	}
+}

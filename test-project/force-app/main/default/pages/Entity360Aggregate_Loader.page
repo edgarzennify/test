@@ -1,0 +1,9 @@
+<apex:page docType="html-5.0"
+    standardController="Account" 
+    showHeader="false" 
+    sidebar="false" 
+    LightningStylesheets="true">
+    
+    <c:AsyncPageLoader loadingText="Loading 360° View" redirectUrl="/apex/Entity360Aggregate?id={!Account.Id}" />
+
+</apex:page>

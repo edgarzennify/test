@@ -1,0 +1,163 @@
+<apex:component controller="BarcodeGeneratorController" allowDML="true">
+    <apex:attribute name="objectId" type="String" required="true" description="" assignTo="{!objectIdAttribute}" />
+    <apex:includeScript value="{!URLFOR($Resource.jquery_1_9_1, '/jquery.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.select2release32, '/select2-release-3.2/select2.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.select2release32, '/select2-release-3.2/select2.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.font_awesome_4_7_1, '/css/font-awesome.min.css')}"/>    
+    <apex:form id="thisForm" >
+        <apex:sectionHeader title="Document Imaging" subtitle="Barcode Generator" />
+        <apex:pageBlock id="FormContent">
+            <apex:pageBlockSection >            
+                <apex:outputPanel style="text-align:left;padding:16px;width:500px;" id="pnl">            
+                    <apex:outputText style="font-weight:bold;padding-right:10px;" value="Batch Title" />
+                    <apex:inputText value="{!vm.batchTitle}" style="width:200px;" styleClass="input" />
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:dataTable value="{!vm.rows}" var="r" cellpadding="3" >
+                    <apex:column >
+                        <div class="outerDiv">
+                            <div class="innerDiv">
+                                <apex:outputLabel value="{!r.rowIndex + 1}" />                                
+                            </div>
+                        </div>
+                    </apex:column>
+                    <apex:column headerValue="Category" >
+                        <apex:selectList id="categoryField" value="{!r.selectedCategoryValue}" size="1" style="width:150px" styleClass="select" >
+                            <apex:selectOptions value="{!vm.categoryOptions}" />
+                            <apex:actionSupport action="{!categorySelected}" 
+                                                event="onchange"
+                                                reRender="FormContent"
+                                                onComplete="myRow={!r.rowIndex}; setTabIndex(); var myIndex = j$(this).attr('tabindex'); setFocus(myIndex); initRelatedObjectsSelect();"> 
+                                <apex:param name="selectedRowIndex" value="{!r.rowIndex}" assignTo="{!selectedRowIndex}" />
+                            </apex:actionSupport>
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Document Type" >
+                        <apex:selectList id="docTypeField" value="{!r.selectedDocTypeValue}" size="1" styleClass="select">
+                            <apex:selectOptions value="{!r.selectedCategory.doctypes}"/>                
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Objects" >
+                        <apex:selectList id="relatedObjectsField" value="{!r.selectedObjectValues}" size="1" multiselect="true" style="width:450px" >
+                            <apex:selectOptions value="{!r.selectedCategory.relatedObjects}"/>                
+                        </apex:selectList>
+                    </apex:column>
+                    <apex:column headerValue="Document Date" > 
+                        <apex:inputfield id="documentDateField" value="{!r.dateObj.Bogus_Date_1__c}" styleClass="input" />
+                    </apex:column>
+                    <apex:column headerValue="Comments" > 
+                        <apex:inputText id="commentsField" value="{!r.comment}" maxlength="128" style="width:300px;" styleClass="input"/>
+                    </apex:column>
+                </apex:dataTable>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection >
+                <apex:commandButton value=" Add {!vm.addRowsCount} row{! IF(vm.addRowsCount != 1, 's', '') } " action="{!addRowsClicked}" >
+                    <apex:actionSupport event="onchange" timeout="5000" reRender="FormContent" />
+                </apex:commandButton>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons >
+                <apex:commandButton value=" Generate Barcode " action="{!generateClicked}"/>
+                <apex:commandButton value=" Cancel " action="{!cancelClicked}" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>        
+    </apex:form>
+    <script>
+        var myRow;
+        var j$ = jQuery.noConflict();  //prevents conflict with other $ selectors used by sfdc
+        j$(document).ready(function() {  
+            initRelatedObjectsSelect();          
+            setTimeout(function() {                 
+                j$('[id$=categoryField]')[0].focus();
+            }, 250);
+            setTabIndex();            
+        });
+        
+        function initRelatedObjectsSelect(){
+            var select2Id = "relatedObjectsField";
+            console.log(j$);
+            j$('[id$='+select2Id+']').select2({
+                placeholder: "--None--",
+                closeOnSelect: true,
+                width: "resolve",                                           
+                formatResult:format,
+            });
+            
+            preSelectSingleEntry('[id$="' + myRow + ':'+select2Id+'"]');
+        }
+        
+        function preSelectSingleEntry(selector){
+            j$(selector + ':input').each(function(){
+                if(j$(this).children().size()<2){
+                    j$(this).children().each(function(){
+                        j$(selector).select2("val", [j$(this).val()]);
+                    });
+                }
+            });
+        }
+        
+        function format(item, container) {
+            var option = j$(item.element);
+            if (option[0].tagName === 'OPTION') {
+                if (option.attr('disabled') !== 'disabled') {
+                    container.show();
+                    return '<div class="enabled">' + option.text() + '</div>';
+                } else {
+                    container.show();
+                    return '<div class="disabled">' + option.text() + '</div>';
+                }
+            } else {
+                return option.prop('label');
+            }
+        }
+    
+        function setTabIndex(){
+            var tabindex = 1000;
+            j$('[id$=thisForm]').find('input,select').each(function() {
+                if (this.type != "hidden") {
+                    var $input = j$(this);
+                    if (!$input.attr('readonly')){                    
+                        $input.attr("tabindex", tabindex);
+                        tabindex++;
+                    }
+                }
+            });
+        }
+        
+        function setFocus(myIndex){ 
+            myIndex++;
+            j$('[id$=thisForm]').find('input[tabindex="' + myIndex + '"]').focus();
+            j$('[id$=thisForm]').find('select[tabindex="' + myIndex + '"]').focus();
+        }
+    </script>
+    <style type="text/css">
+        .disabled {
+            font-weight:bold;
+            color:#383838;
+            padding:5px 5px 5px 5px;
+            border-style:solid;
+            border-width:0px 1px 1px 1px;
+            border-color:white;
+            background-color:#CCCCCC;
+        }
+        .enabled{
+            font-weight:normal;
+            padding-left:15px;
+        }
+        .input{
+            height:24px;
+            font-size:13px;
+        }
+        .select{
+            height:29px;
+        }
+        .outerDiv{
+            height:29px;
+            text-align:center;
+        }
+        .innerDiv{
+            position: relative;
+            top: 25%;
+        }
+    </style>
+</apex:component>

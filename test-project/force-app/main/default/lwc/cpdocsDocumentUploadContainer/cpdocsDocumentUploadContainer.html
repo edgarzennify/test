@@ -1,0 +1,60 @@
+<template>
+	<div class="slds-grid slds-wrap slds-theme_default slds-p-horizontal_medium">
+        <div class="slds-col vertical-menu-limit slds-form-element slds-m-horizontal_small slds-p-right_small dropdown-select">
+            <label class="slds-form-element__label" for="mobile-dropdown">Select Label</label>
+            <div class="slds-form-element__control">
+                <div class="slds-select_container">
+                    <select class="slds-select" id="mobile-dropdown" onchange={handleMobileSelection}>
+                        <option key={all} value="All Documents">All Documents</option>
+                        <template for:each={verticalTitleCollection} for:item="navigationTitle">
+                            <option key={navigationTitle} value={navigationTitle}>{navigationTitle}</option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col vertical-menu-limit slds-p-right_small vertical-select">
+            <div class="slds-p-top_medium slds-p-bottom_large">&nbsp;</div>
+            <lightning-vertical-navigation onselect={handleSelection}>
+                <lightning-vertical-navigation-section>
+                    <lightning-vertical-navigation-item
+                        class="slds-is-active"
+                        label="All Documents"
+                        name="All Documents">
+                    </lightning-vertical-navigation-item>
+                    <template for:each={verticalTitleCollection} for:item="navigationTitle">
+                        <lightning-vertical-navigation-item
+                            key={navigationTitle}
+                            label={navigationTitle}
+                            name={navigationTitle}>
+                        </lightning-vertical-navigation-item>
+                    </template>
+                </lightning-vertical-navigation-section>
+            </lightning-vertical-navigation>
+        </div>
+		<div class="slds-col content-display">
+            <div class="slds-p-top_medium slds-p-bottom_large slds-p-horizontal_small custom-title-header">
+                <span class="slds-text-heading_large">{selectedTitle}</span>
+            </div>
+            <div if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-is-relative">
+                    <lightning-spinner alternative-text="Loading..." variant="brand"></lightning-spinner>
+                </div>
+            </div>
+            <div if:true={noContent}>
+                <span class="slds-align_absolute-center slds-text-color_weak">No Content</span>
+            </div>
+            <div if:false={isLoading}>
+                <div class="slds-p-bottom_large">
+                    <template for:each={documentCollection} for:item="document">
+                        <c-cpdocs-document-placeholder
+                            class="slds-size_1-of-1" 
+                            key={document.documentRequestId} 
+                            documentplaceholder={document}>
+                        </c-cpdocs-document-placeholder>
+                    </template>
+                </div>
+            </div>
+		</div>
+	</div>
+</template>

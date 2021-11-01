@@ -1,0 +1,341 @@
+<apex:page sidebar="false" showHeader="false" showchat="false" standardStylesheets="true" controller="SL_ChatterLightning_Controller">
+<style>
+@font-face {
+    font-family: 'ApercuCrystal';
+    src: url('{!URLFOR($Resource.CommunityFonts, 'apercu-regular.woff')}') format('woff');
+}
+
+body{
+    font-family : 'ApercuCrystal', 'SalesforceSans-Light',Arial,sans-serif;
+    overflow-x: hidden;
+    overflow-y: visible;
+    font-size:{!aParam['font']};
+    color:{!aParam['color']};
+    position: relative;
+}
+body .overlayBackground {
+    max-height: calc(100% + 30px);
+}
+#sl_chatter{
+    margin-bottom: 30px;
+    padding:10px;
+    background-color:#fff;
+
+}
+#sl_chatter .cxallfeedactions .feeditemActionMenu .zen-options,
+#sl_chatter .feedcommentactions .commentActionMenu .zen-options,
+#sl_chatter .feedmainandrightbar .feedrightbar .zen-options {
+    right:0;
+    left: auto; 
+}
+
+#sl_chatter .publishercontainer{
+    max-width: none;
+}
+#sl_chatter .feedcontainer{
+    max-width: 100%;
+}
+#sl_chatter .feedcontainer a,
+#sl_chatter #sortDisplay {
+    color: #001764;
+}
+
+#sl_chatter .chatter-avatarRegular,
+#sl_chatter .feedcontainer .feeditemcommentphoto img{
+    border-radius: 50%;
+}
+#sl_chatter .chatter-avatarRegular .chatter-photo {
+    background-color: rgb(255, 255, 255);
+}
+
+#sl_chatter img {
+    max-width: 100%;
+    height: auto;
+}
+
+#sl_chatter .feedcontainer .zen-select .feeditemActionMenuButton, 
+#sl_chatter .feedcontainer .zen-select .commentActionMenuButton{
+    background: transparent;
+    border-radius: 0.125rem;
+}
+
+#sl_chatter .feeditemActionMenu .feeditemActionMenuButton b, 
+#sl_chatter .commentActionMenu .commentActionMenuButton b{
+    <!--background-image: url({!URLFOR($Resource.WC_Theme, 'Images/Icons/expandBlue.png')});-->
+    <!--width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;-->
+    transform: scale(1.5);
+}
+#sl_chatter .publishercontainer  img{
+    width:1px;
+    opacity: 0;
+}
+#sl_chatter .publishercontainer .publisherFeedItemTypeChoice  .publisherattachContentPost,
+#sl_chatter .publishercontainer .publisherFeedItemTypeChoice .publisherattachLinkPost,
+#sl_chatter .publishercontainer li.publisherFeedItemTypeChoice:nth-child(2), 
+#sl_chatter .publishercontainer li.publisherFeedItemTypeChoice:nth-child(3),
+#sl_chatter .publishercontainer li.publisherFeedItemTypeChoice ul.zen-options li {
+    display: none;
+}
+#sl_chatter .publishercontainer li.publisherFeedItemTypeChoice ul.zen-options li:nth-child(8) {
+    display: list-item;
+}
+
+#sl_chatter .publishercontainer .withArrowAttached span.pArrow{
+    display: none;
+}
+#sl_chatter .publishercontainer li:last-child{
+    border-left: 1px solid #000000;
+}
+
+#sl_chatter .publishercontainer .publisherFeedItemTypeChoices{
+    margin-bottom: 15px;
+    border-bottom: 1px solid #000000;
+}
+#sl_chatter .zen .zen-highlightBtn,
+#sl_chatter .zen .zen-btn,
+body .overlayDialog .zen .zen-btn,
+#sl_chatter .publishercontainer.defaultState #publishersharebutton:hover, 
+#sl_chatter .publishercontainer.defaultState #publishersharebutton:active, 
+#sl_chatter .publishercontainer.defaultState #publishersharebutton:focus, 
+#sl_chatter .publishercontainer.defaultState #publishersharebutton.onHover,
+#sl_chatter .feedcontainer .feeditemcommentnew .newcommentbutton,
+#sl_chatter .cxshowmorefeeditemscontainer a,
+#quickActionContainer.zen .zen-highlightBtn{
+    background-color:{!aParam['bg']};
+    background-image:none;
+    border:none;
+    color:white;
+    font-size:14px;
+}
+#sl_chatter .publishercontainer .publisherTextAreaInner{
+    background-image:none;
+    border-color:#d8d8d8;
+}
+
+#sl_chatter .zen .publisherTypeOverflow.zen-select{
+    line-height:13px;
+}
+#sl_chatter .zen .publisherTypeOverflow span.triggerText{
+    color:#702329;
+}
+
+#sl_chatter .zen .publisherTypeOverflow .zen-trigger{
+    display:none;
+}
+
+#sl_chatter .zen  .publisherFeedItemTypeChoice .zen-options{
+    display:block;
+    background: transparent;
+    top: -24px;
+    border: none;
+}
+#sl_chatter .zen  .publisherFeedItemTypeChoice .zen-options a{
+    color:#393939;
+    font-weight: bold;
+}
+
+
+
+#sl_chatter .zen  .publisherFeedItemTypeChoice .zen-options a:hover,
+#sl_chatter .zen  .publisherFeedItemTypeChoice .zen-options a:active,
+#sl_chatter .zen  .publisherFeedItemTypeChoice .zen-options a:focus{
+    background-color:transparent;
+}
+
+/*#sl_chatter .feedcommentuser a[href],
+#sl_chatter .feeditemsecondentity a[href],
+#sl_chatter .feeditemsecondentity a[href],
+
+#sl_chatter .cxfeeditemlike.feeditemlike a[href],*/
+#sl_chatter .feeditemsecondentity a[href]:hover,
+#sl_chatter .feeditemfirstentity a[href],
+
+#sl_chatter .contentFileTitle  a[href],
+#sl_chatter .contentFileTitle  a[href] .contentTitleLink{
+    cursor:default;
+    text-decoration:none;
+}
+
+#sl_chatter .more-file-actions{
+    display:none;
+}
+
+/*#sl_chatter .feedcontainer .feeditem{
+    background: #e9ecee;
+    padding-top: 3px;
+    padding-left: 3px;
+}*/
+
+#sl_chatter .publishercontainer .publisherFeedItemTypeChoices a.publisherattach{
+    color:#001764;
+    font-size: 14.4;
+    
+}
+#sl_chatter .publishercontainer a.publisherattach.publisherattachTextPost.withArrowAttached span{
+    text-decoration:underline;
+}
+#sl_chatter .zen-select.publisherattach.publisherTypeOverflow.withArrowAttached span.publisherattachtext{
+    text-decoration:underline;
+}
+
+#sl_chatter .ugAC_box div.ugAC_entityImgDiv{
+    display:none;
+}
+#sl_chatter .ugAC_box div.ugAC_userRole {
+    font-size: 12px;
+    line-height: 12px;
+}
+.cssDialog {
+    max-width: 80%;    
+    left: 0;
+    right: 0;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.feeditemcomment {
+    overflow: hidden !important;
+}
+#choiceinput1,
+#choiceinput2 {
+    max-width: calc( 100% - 26px);
+}
+.rechatMainContainer .feeditemcommentplaceholder input {
+    width: auto !important;
+}
+</style>
+
+<div id="sl_chatter">
+    <chatter:newsfeed onComplete="doRezie">
+    </chatter:newsfeed>
+</div>
+<script>
+
+var nCurrentH,
+    doRezie = function(){
+        var nH = document.documentElement.getBoundingClientRect().height;
+        //document.getElementById('sl_chatter').offsetHeight + 63;
+        if (nCurrentH != undefined && nCurrentH == nH) {
+            return;
+        }
+        nCurrentH = nH;
+        var aInfo = {
+            'height' : nH,
+            'type' : 'resize'
+        }
+        if (sParent != undefined && sParent != '') {
+            window.parent.postMessage(JSON.stringify(aInfo), sParent);
+            return false;
+        }
+        console.log(nH);
+    },
+    sParent = decodeURIComponent('{!aParam['parent']}');
+   
+window.addEventListener('load', function() {
+    window.addEventListener('click', function(evt) {
+        console.log(evt);
+        evt.cancelBubble = true;
+        evt.stopPropagation();
+        evt.preventDefault();
+        var oEl = evt.target;
+        var nAtt = 0;
+        while (oEl.tagName != 'A' && nAtt++ < 5) {
+            oEl = oEl.parentNode;
+        }
+        if (oEl.tagName == 'A' && oEl.href.indexOf('javascript') < 0) {
+
+            var sUrl = oEl.href;
+            if (sUrl.indexOf('/download/') > 0) {
+//                return true;
+                window.location.href = sUrl;
+                return false;
+            }
+            
+            if (sUrl.substring(0, 4) == 'http') {
+                sUrl = sUrl.replace(window.location.protocol + '//', '');
+            } else if (sUrl.substring(0, 2) == '//') {
+                sUrl = sUrl.substring(2);
+            }
+            if (sUrl.indexOf('/') > 0) {
+                sUrl = sUrl.substring(sUrl.indexOf('/'));
+            }
+
+            if (sUrl.substr(0, 1) == '/' && (sUrl.length == '16' || sUrl.length == '19')) {
+                var sKey = sUrl.substring(1, 4);
+                if (['005', '0F9', '068'].indexOf(sKey) >= 0  ) {
+                    return false;
+                }
+                
+                var aInfo = {
+                    'id' : sUrl.substring(1),
+                    'type' : 'detail'
+                }
+                if (sParent != undefined && sParent != '') {
+                    window.parent.postMessage(JSON.stringify(aInfo), sParent);
+                    return false;
+                }
+            } else {
+                var aInfo = {
+                    'url' : sUrl,
+                    'type' : 'url'
+                }
+                if (sParent != undefined && sParent != '') {
+                    window.parent.postMessage(JSON.stringify(aInfo), sParent);
+                    return false;
+                }
+            }
+            return false;
+        } else {
+            setTimeout(function(){
+                doRezie();
+            }, 300);
+        }
+        
+  });
+  window.addEventListener('resize', function(evt) {
+    doRezie();
+    console.log('resize');
+  });
+  window.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+    });
+    // MouseDown with central button click work, but new tab opens anyway
+//  window.addEventListener('mousedown', function(event) {
+//  if (event.which === 2) {
+//    event.preventDefault();  
+//    event.cancelBubble = true;
+//    return false;
+//    }
+//    });
+})
+
+window.addEventListener("message", function(evt) {
+    if (evt.data == undefined) {
+        return;
+    }
+    console.log(evt.data);
+    var aData = JSON.parse(evt.data);
+    if (aData.type == undefined)     {
+        return;
+    }
+
+    console.log(aData);
+}, false);
+
+
+
+var aInfo = {
+    'url' : document.location.href,
+    'domain' :  window.location.protocol + '//' + window.location.hostname,
+    'type' : 'init'
+}
+if (sParent != undefined && sParent != '') {
+    window.parent.postMessage(JSON.stringify(aInfo), sParent);
+}
+doRezie();
+
+</script>
+</apex:page>

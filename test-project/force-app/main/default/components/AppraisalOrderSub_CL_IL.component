@@ -1,0 +1,64 @@
+<apex:component >
+<apex:attribute type="EB_Appraisal_Order__c" name="appraisalOrder" description="CL IL"/>
+<apex:pageBlockSection title="{!appraisalOrder.Related_Collateral__r.Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Name of Golf Course" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Name_of_Golf_Course__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Holes" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Number_Of_Holes__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Privacy" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Privacy__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Amenities for Golf Course" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Amenities_for_Golf_Course__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="{!appraisalOrder.OREO_Account__r.OREO_Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Name of Golf Course" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Name_of_Golf_Course__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Number of Holes" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Number_Of_Holes__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Privacy" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Privacy__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Amenities for Golf Course" />
+    <apex:outputPanel layout="block" styleClass="requiredInput">
+        <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+        <apex:inputField value="{!appraisalOrder.OREO_Account__r.Amenities_for_Golf_Course__c}"   />
+    </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:component>

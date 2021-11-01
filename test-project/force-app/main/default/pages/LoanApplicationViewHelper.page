@@ -1,0 +1,3 @@
+<apex:page standardController="EB_Loan_Application__c"  extensions="LoanApplicationViewhelperController" action="{!GenerateNumber}" >
+  An error was encountered . Please contact IT.
+</apex:page>

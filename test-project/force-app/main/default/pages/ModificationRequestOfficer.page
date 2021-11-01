@@ -1,0 +1,44 @@
+<apex:page controller="ModReqOfficerController" showHeader="true" sidebar="true">
+    <html>
+        <head>
+            <apex:includeLightning />
+        </head>
+        <body class="slds-scope">
+            <div id="flowContainer" />
+            <script>
+            var handleStatusChange = function (event) {
+                if(event.getParam("status") === "FINISHED") {
+                    window.location = "{!URLFOR('/' + ebAccount.Id)}";
+                }        
+            };
+            $Lightning.use("c:LightningFlowContainerApp", function() {               
+                $Lightning.createComponent("lightning:flow", 
+                                           {"onstatuschange":handleStatusChange},
+                                           "flowContainer",
+                                           function (component) {
+                                               var inputVariables = [
+                                                   {
+                                                       name:"EBAccount", 
+                                                       type:"SObject", 
+                                                       value:{
+                                                           "Id":"{!ebAccount.Id}",
+                                                           "Name":"{!ebAccount.Name}"
+                                                           
+                                                       }
+                                                   },
+                                                   {name:"CurrentUnit", type:"String", value:"{!currentUnit}"},
+                                                   {name:"CurrentUnitName", type:"String", value:"{!currentUnitName}"},
+                                                   {name:"CurrentAcctLevelOfficer", type:"String", value:"{!currentAcctLevelOfficer}"},
+                                                   {name:"Approver1", type:"String", value:"{!firstApproverId}"},
+                                                   {name:"ModifyUnit", type:"Boolean", value:{!defaultModifyUnit}},
+                                                   {name:"ModifyOffAccount", type:"Boolean", value:{!defaultModifyAcctOfficer}},
+                                                   {name:"ModificationRequestName", type:"String", value:"{!modificationRequestName}"}
+                                               ];
+                                               component.startFlow("Account_Officer_Change", inputVariables);
+                                           }
+                                          );
+            });
+            </script>
+        </body>
+    </html>
+</apex:page>

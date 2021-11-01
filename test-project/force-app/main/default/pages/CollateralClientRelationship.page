@@ -1,0 +1,37 @@
+<apex:page standardController="EB_Collateral_Client_Relationship__c" extensions="CollateralClientRelationshipController" >
+   <style>TEXTAREA { font-family: arial, verdana, ms sans serif; font-size: 10pt; font-weight:normal; width:80%; Height:45px }
+   </style> 
+   <apex:form >  
+    <apex:pageBlock mode="maindetail" title="Collateral Details" >
+    <apex:pageBlockButtons >
+        <apex:commandButton value="Save" action="{!SubmitButton}" />
+        <apex:commandButton value="Quick Save" action="{!SubmitQuickButton}" />
+        <apex:commandButton value="Cancel" action="{!CancelButton}" immediate="true"/>
+    </apex:pageBlockButtons>
+
+     <apex:pageblockSection title="Information" >
+     <!--<apex:outputLabel value="{!test}"></apex:outputLabel>-->
+      <apex:inputField value="{!col.Collateral_Description__c}"  required="true" />
+      <apex:inputField value="{!col.Market_Value__c}" />
+      <apex:inputField value="{!col.Collateral_Code__c}" required="true" />
+      <apex:inputField value="{!col.Advance_Rate__c}" />
+      <apex:inputField value="{!col.Valuation_Type__c}" />
+      <apex:inputField value="{!col.Existing_Debt__c}" />
+      <apex:inputField value="{!col.Valuation_Date__c}" />
+      <apex:inputField value="{!col.Loan_Value__c}" />
+      <apex:inputField value="{!col.Appraised_Value__c}" />
+      <apex:inputField value="{!col.Lien_Position__c}" />
+      <apex:inputField value="{!col.Total_Deed_Amount__c}" />
+      <apex:inputField value="{!col.Comments__c}" />
+    
+    </apex:pageblockSection>
+    <apex:pageblockSection title="Address" >      
+      <apex:inputField value="{!col.Street__c}" />
+      <apex:inputField value="{!col.State__c}" />
+      <apex:inputField value="{!col.City__c}" />
+      <apex:inputField value="{!col.Zip_Code__c}" />
+      <apex:inputField value="{!col.EB_Appraisal_County__c}" />     
+    </apex:pageblockSection>
+    </apex:pageBlock>
+   </apex:form>
+</apex:page>

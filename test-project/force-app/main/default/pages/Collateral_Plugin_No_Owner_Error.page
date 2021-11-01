@@ -1,0 +1,11 @@
+<apex:page controller="Collateral_Plugin_AdapterController" showHeader="true" tabStyle="EB_Appraisal_Order__c">
+    <apex:form >
+        <apex:pageBlock > 
+            <div style="text-align:center">
+                This collateral does not have an Owner. Please provide an Owner.
+            </div>
+            <div style="text-align:center;padding-top:20px">
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

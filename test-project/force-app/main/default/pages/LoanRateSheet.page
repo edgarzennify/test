@@ -1,0 +1,129 @@
+<apex:page controller="LoanRateSheetController" showHeader="false" sidebar="false" standardStylesheets="true" applyBodyTag="false" renderAs="Pdf">
+<html>
+    <head>
+    <style type="text/css">
+        .pageBody{
+            font-family: Tahoma, Verdana, Arial, Times New Roman, Sans-serif;
+            font-size: 13px;
+            margin: 0 0 0 10px;
+        }
+        .currentDate{
+            color:#666;
+            font-size: 12px;
+        }
+        .section{
+            clear:both;
+            padding-top:10px;
+        }
+        .table{
+           
+        }
+        .columnHeader{
+            /*border: 1px solid #f00;*/
+        }
+        .dataCell{
+            padding-top:10px;
+        }
+        .doNotUse{
+            color:#666;
+            font-style: italic;
+        }
+        .doNotUse a{
+            color:#666;
+        }
+        .doNotUseHeader{
+            color:#333;
+            font-style: italic;
+        }
+        .providedBy{
+            color:#666;
+            font-size:11px;
+            font-style: italic;
+        }
+        .descriptionColumn{
+            width: 350px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .frequencyColumn{
+            width: 175px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .rateColumn{
+            width: 75px;
+            text-align: right;
+            vertical-align: top;
+        }
+        .dateColumn{
+            width: 110px;
+            text-align: right;
+            vertical-align: top;
+        }
+        #activeRateSection{
+            margin-top:20px;
+        }
+        #activeRateAddenda{
+            margin-top:25px;
+        }
+        #doNotUseSection{
+            margin-top:35px;
+            text-align:center;
+        }
+        @page{
+            size:portrait;
+            margin: 50px 50px 100px 50px;
+            @bottom-center{
+                font-size: 14px;
+                font-family: Sans-serif;
+                font-weight: bold;
+                margin: 50px;
+                content: "Internal use only";
+            }
+        }
+    </style>
+    </head>
+    <body>
+    <div class="pageBody">
+        <div id="details" class="section">
+            <apex:pageBlock mode="maindetail" >
+                <h2>Enterprise Bank &amp; Trust Rate Indexes</h2>
+                <div class="currentDate">{!LocalizedDate}</div>
+                <hr/>
+                <div id="activeRateSection">
+                    <apex:pageBlockTable var="rate" value="{!ApprovedRates}" styleClass="table">
+                        <apex:column headerClass="descriptionColumn columnHeader" styleClass="descriptionColumn dataCell" headerValue="Description">
+                            <apex:outputLink value="{!rate.Website__c}" target="_blank" rendered="{!rate.Is_Website_Available__c}">{!rate.Name}</apex:outputLink>
+                            <apex:outputLabel value="{!rate.Name}" rendered="{!NOT(rate.Is_Website_Available__c)}"></apex:outputLabel>
+                            <div class="providedBy" style="display:{!IF(rate.Is_Website_Available__c,'none','block')};">provided by Finance</div>
+                            <div class="providedBy" style="display:{!IF(ISBLANK(rate.Source__c),'none','block')};">source: {!rate.Source__c}</div>
+                        </apex:column>
+                        <apex:column headerClass="frequencyColumn columnHeader"  styleClass="frequencyColumn dataCell" headerValue="Rate Change Frequency" value="{!rate.Rate_Change_Frequency__c}" />
+                        <apex:column headerClass="rateColumn columnHeader" styleClass="rateColumn dataCell" headerValue="Rate" value="{!rate.Floating_Rate__c}" />
+                        <apex:column headerClass="dateColumn columnHeader" styleClass="dateColumn dataCell" headerValue="Effective Date" value="{!rate.Effective_Date__c}" />
+                    </apex:pageBlockTable>
+                </div>
+                <div id="activeRateAddenda">
+                    All indicative rates are BEFORE adding the required spread
+                    <br/><br/>
+                    IMPORTANT - Pricing for contractual SWAPs, please email swapdesk@chathamfinancial.com or call 1.484.731.0170
+                </div>
+                <div id="doNotUseSection">
+                    <h3 class="doNotUseHeader">The below rates are for reference only - DO NOT USE</h3>
+                    <apex:pageBlockTable var="rate" value="{!ReferencedRates}" styleClass="table">
+                        <apex:column headerClass="descriptionColumn columnHeader doNotUse" styleClass="descriptionColumn dataCell doNotUse" headerValue="Description">
+                            <apex:outputLink value="{!rate.Website__c}" target="_blank" rendered="{!IF(rate.Website__c='',false,true)}">{!rate.Name}</apex:outputLink>
+                            <apex:outputLabel value="{!rate.Name}" rendered="{!IF(rate.Website__c='',true,false)}"></apex:outputLabel>
+                            <div class="providedByFinance" style="display:{!IF(rate.Website__c='','block','none')};">provided by Finance</div>
+                        </apex:column>
+                        <apex:column headerClass="frequencyColumn columnHeader doNotUse" styleClass="frequencyColumn dataCell doNotUse" headerValue="Rate Change Frequency" value="{!rate.Rate_Change_Frequency__c}" />
+                        <apex:column headerClass="rateColumn columnHeader doNotUse" styleClass="rateColumn dataCell doNotUse" headerValue="Rate" value="{!rate.Floating_Rate__c}" />
+                        <apex:column headerClass="dateColumn columnHeader doNotUse" styleClass="dateColumn dataCell doNotUse" headerValue="Effective Date" value="{!rate.Updated_On__c}" />
+                    </apex:pageBlockTable>
+                </div>
+            </apex:pageBlock>
+        </div>
+    </div>
+    </body>
+</html>
+</apex:page>

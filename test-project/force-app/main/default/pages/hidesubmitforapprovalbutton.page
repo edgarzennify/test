@@ -1,0 +1,13 @@
+<apex:page standardController="EB_Loan_Application__c" >
+<script language="javascript">
+    window.onload = HideSubmitForApprovalButton;
+    function HideSubmitForApprovalButton(){
+        var x=document.body.getElementsByTagName("input")
+        if(x.length > 0){
+            //x(0).style.display= 'none';
+            //alert(x.length);
+        }
+    }
+</script>
+<input type="hidden" value="test" name="piSubmit1" />
+</apex:page>

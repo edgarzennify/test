@@ -1,0 +1,83 @@
+<apex:page standardController="EB_Event_Attendees__c" extensions="EBEventController" showHeader="false" tabStyle="EB_Event_Session__c">
+<apex:pageMessages />
+    <apex:form >
+        <apex:outputPanel rendered="{!ShowHeading}">
+            <apex:sectionHeader title="Get registered for {!Quotes}{!event.Name}{!Quotes}." />
+        </apex:outputPanel>
+        <apex:pageBlock mode="edit" >
+            <apex:pageBlockSection title="Please select your location, and session to confirm your registration." columns="1">
+                <apex:pageblocksectionItem >
+                    <apex:outputLabel value="Course" for="TheCourse"/>
+                    <apex:outputField id="TheCourse" value="{!event.Name}" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem >
+                    <apex:outputLabel id="lblAttendee" value="Attendee (First & Last Name)" for="txtAttendee" />    
+                    <apex:inputField id="txtAttendee" value="{!att.Attendee__c}" required="true" />
+                </apex:pageblocksectionItem>
+                 <apex:pageblocksectionItem rendered="{!ShowCompany}">
+                    <apex:outputLabel id="lblCompany" value="Company" for="txtCompany" />    
+                    <apex:inputField id="txtCompany" value="{!att.Company__c}" required="true" />
+                </apex:pageblocksectionItem>
+                 <!-- added on 07/16/2012 KM-->
+                 <apex:pageblocksectionItem rendered="{!ShowCompanyStreet}">
+                    <apex:outputLabel id="lblCompanyStreet" value="Company Address - Street" for="txtCompanyStreet" />    
+                    <apex:inputField id="txtCompanyStreet" value="{!att.Company_Address_Street__c}" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem rendered="{!ShowCompanyCity}">
+                    <apex:outputLabel id="lblCompanyCity" value="Company Address - City" for="txtCompanyCity" />    
+                    <apex:inputField id="txtCompanyCity" value="{!att.Company_Address_City__c}" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem rendered="{!ShowCompanyState}" >
+                    <apex:outputLabel id="lblCompanyState" value="Company Address - State" for="txtCompanyState" />    
+                    <apex:inputField id="txtCompanyState" value="{!att.Company_Address_State__c}" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem rendered="{!ShowCompanyZip}">
+                    <apex:outputLabel id="lblCompanyZip" value="Company Address - Zip" for="txtCompanyZip" />    
+                    <apex:inputField id="txtCompanyZip" value="{!att.Company_Address_Zip__c}" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem rendered="{!ShowEmail}" >
+                    <apex:outputLabel id="lblEmail" value="Email Address" for="txtEmail" />    
+                    <apex:inputField id="txtEmail" value="{!att.Email_Address__c}" required="true" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem rendered="{!ShowPhoneNumber}">
+                    <apex:outputLabel id="lblPhone" value="Phone" for="txtPhone" />    
+                    <apex:inputField id="txtPhone" value="{!att.Phone__c}" required="false" />
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem >
+                    <apex:outputLabel value="Location" for="LocationList"/>
+                    <apex:outputpanel id="locationresults" >
+                        <apex:actionRegion immediate="true">
+                            <apex:selectList value="{!dropdownLocation}" size="1"  id="LocationList" >            
+                                <apex:actionSupport action="{!Bogus}" event="onchange" rerender="SessionList" status="waitstatus"/>                
+                                <apex:selectOptions value="{!Locations}"></apex:selectOptions>
+                            </apex:selectList>
+                            <apex:actionStatus id="waitstatus" startstyle="color:gray;" startText=" refreshing sessions . . ."/>
+                        </apex:actionRegion>
+                    </apex:outputpanel> 
+                </apex:pageblocksectionItem>
+                <apex:pageblocksectionItem >
+                    <apex:outputLabel value="Session" for="SessionList"/>
+                    <apex:selectList value="{!dropdownSessionId}" size="1" id="SessionList">
+                        <apex:selectOptions value="{!Sessions}"></apex:selectOptions>
+                    </apex:selectList>
+                </apex:pageblocksectionItem>      
+                <apex:pageblocksectionItem rendered="{!ShowComments}" >
+                    <apex:outputLabel id="lblComments" value="Comments" for="txtComments" />    
+                    <apex:inputField id="txtComments" value="{!att.Comments__c}" />
+                </apex:pageblocksectionItem>   
+            </apex:pageBlockSection>                        
+            <apex:pageBlockSection rendered="{!ShowReasons}">
+                <apex:pageblockSectionItem >
+                    <apex:outputLabel value="Please select the topics that you are most interested in learning about:"></apex:outputLabel>
+                    <apex:selectCheckboxes id="ReasonCheckboxes" value="{!SelectedReasons}" layout="pageDirection" style="text-align:left;">
+                        <apex:selectOptions value="{!Reasons}"/>
+                    </apex:selectCheckboxes>
+                </apex:pageblockSectionItem>
+            </apex:pageblockSection>
+            <apex:pageBlockButtons location="bottom" >
+                <apex:commandbutton action="{!SaveSession}" value="Register"/>
+                <apex:commandbutton action="{!CancelSession}" value="Cancel" immediate="true" />
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

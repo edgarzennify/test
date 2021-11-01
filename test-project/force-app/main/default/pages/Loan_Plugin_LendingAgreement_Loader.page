@@ -1,0 +1,9 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c" 
+    showHeader="false" 
+    sidebar="false" 
+    lightningStylesheets="true">
+    
+    <c:AsyncPageLoader loadingText="Loading" redirectUrl="/apex/Loan_Plugin_LendingAgreement?id={!LLC_BI__Loan__c.Id}" />
+
+</apex:page>

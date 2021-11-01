@@ -1,0 +1,11 @@
+<apex:page controller="PricingWkstEntityController" 
+           title="Pricing Wkst Entity Redirection" 
+           tabStyle="Account" 
+           showHeader="false" 
+           sidebar="false" 
+           showChat="false" 
+           cache="false" 
+           label="PricingWkstEntity" 
+           Name="PricingWkstEntity" 
+           action="{!determineDestination}" >
+</apex:page>

@@ -1,0 +1,14 @@
+<apex:page controller="AppraisalOrderController" showHeader="true" tabStyle="EB_Appraisal_Order__c">
+    <apex:form >
+        <apex:pageBlock > 
+            <div style="text-align:center">
+                Are you sure you want to submit this appraisal order?
+            </div>
+            <div style="text-align:center;padding-top:20px">
+      <apex:actionFunction name="snapshot" action="{!CreateSnapshot}"/>
+        <apex:commandButton value="Submit Order" action="{!submit}" rendered="{!IF(AppraisalOrder.Submit_Order__c, 'false', 'true')}" oncomplete="snapshot()"/>
+         <apex:commandButton value="Cancel" action="{!Cancel}" immediate="true" />
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

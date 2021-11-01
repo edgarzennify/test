@@ -1,0 +1,80 @@
+<apex:component >
+<apex:attribute type="EB_Appraisal_Order__c" name="appraisalOrder" description="QC QD QI QJ"/>
+<apex:pageBlockSection title="{!appraisalOrder.Related_Collateral__r.Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c == null}">
+
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Sq.Ft of Unit" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Sq_Ft_of_Unit__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Estimate Value of Unit" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Estimate_Value_of_Unit__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Name of Subdivision/Development" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Name_of_Subdivision_Development__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Total # of Units in Project" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Number_of_Units__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Amenities" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.Related_Collateral__r.Amenities__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection title="{!appraisalOrder.OREO_Account__r.OREO_Collateral_Code__r.Name}" columns="2" rendered="{!appraisalOrder.OREO_Account__c != null}">
+
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Sq.Ft of Unit" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Sq_Ft_of_Unit__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Estimate Value of Unit" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Estimate_Value_of_Unit__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Name of Subdivision/Development" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Name_of_Subdivision_Development__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Total # of Units in Project" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Number_of_Units__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+<apex:pageBlockSectionItem >
+    <apex:outputLabel value="Amenities" />
+        <apex:outputPanel layout="block" styleClass="requiredInput">
+            <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#cc0000;"/>
+            <apex:inputField value="{!appraisalOrder.OREO_Account__r.Amenities__c}" />
+ </apex:outputPanel>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:component>

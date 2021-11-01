@@ -1,0 +1,6 @@
+<apex:page StandardController="EB_Collateral__c"  
+  title="Barcode Generator" 
+  tabStyle="Document"
+  >
+  <c:BarcodeGeneratorReactify objectId="{!EB_Collateral__c.Id}" />
+</apex:page>

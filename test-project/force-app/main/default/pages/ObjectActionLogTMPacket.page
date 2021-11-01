@@ -1,0 +1,11 @@
+<apex:page docType="html-5.0"
+    standardController="TM_Service_Request_Packet__c" 
+    showHeader="false" 
+    sidebar="false" >
+
+    <c:ObjectActionLog objectId="{!TM_Service_Request_Packet__c.Id}"
+        actionType="Stage Logging"
+        title="Stage Logs"
+        height="175"
+    />
+</apex:page>

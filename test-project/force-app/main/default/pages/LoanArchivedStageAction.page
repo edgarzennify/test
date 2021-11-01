@@ -1,0 +1,102 @@
+<apex:page standardController="EB_Booked_Loan_App__c" extensions="LoanAppStageArchivedActionController" >
+<apex:pageMessages />
+<style>TEXTAREA { font-family: arial, verdana, ms sans serif; font-size: 10pt; font-weight:
+  normal; width:60%; Height:55px }</style>
+    <apex:form >
+        <apex:sectionHeader title="{!archivedapp.Name}"/>
+        <apex:pageBlock mode="edit" >           
+            <apex:pageBlockSection title="Please select a new status for this loan application" columns="1" >               
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Current Status" for="CurrentStatus"/>
+                    <apex:outputField id="CurrentStatus" value="{!archivedapp.Application_Stage_Reportable__c}"  />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Change Status To" for="NextStatus"/>
+                    <apex:actionRegion >
+                        <apex:selectList id="NextStatus" value="{!ddNextStatusId}" size="1" required="true">
+                            <apex:actionSupport action="{!Bogus}" event="onchange" timeout="5000" reRender="DetailsPanel,cmdbtns" />
+                            <apex:selectOptions value="{!AllowedActions}"></apex:selectOptions>
+                        </apex:selectList>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>                                
+            </apex:pageBlockSection>        
+            <apex:outputPanel id="DetailsPanel">
+                <apex:actionStatus startText="Please wait..." startstyle="color:green;" id="waitIncreaseDeedStatus"/>
+                <apex:pageBlockSection columns="1" >  
+                    <apex:pageBlockSectionItem rendered="{!ExplanationNeeded}" >
+                        <apex:outputLabel value="Reason" for="StageExplanation" />
+                        <apex:SelectCheckboxes id="StageExplanation" value="{!SelectedReasons}" layout="pageDirection" required="true">
+                            <apex:selectOptions value="{!StageExplanationOptions}"></apex:selectOptions>
+                        </apex:SelectCheckboxes>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ExplanationNeeded}" >
+                        <apex:outputLabel value="Comments"></apex:outputLabel>
+                        <apex:inputTextarea value="{!StageLogComment}"  />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+          <!--  <apex:outputPanel id="PendingApprovalPanel" >
+                <apex:actionStatus startText="Please wait..." startstyle="color:green;" id="waitIncreaseDeedStatus2"/>
+                <apex:pageBlockSection columns="1"  >  
+                    <apex:pageBlockSectionItem rendered="{!ShowPendingApprovalPanel}">
+                        <apex:outputLabel value="Path" for="PathField"/>
+                        <apex:actionRegion immediate="true" >
+                            <apex:selectList id="PathField" value="{!ddApprovalPath}" size="1" required="true">
+                                <apex:actionSupport action="{!Bogus}" event="onchange" timeout="5000" reRender="PendingApprovalPanel" />
+                                <apex:selectOptions value="{!ApprovalPaths}"></apex:selectOptions>
+                            </apex:selectList>
+                        </apex:actionRegion>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ShowCommittee}" >
+                        <apex:outputLabel value="Next Committee Date" for="CommitteeDate" /> 
+                        <apex:inputField id="CommitteeDate" value="{!app.EB_Loan_Packet__r.Committee_Date__c}" />
+                    </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem rendered="{!ShowSignerOne}" >
+                        <apex:outputLabel value="Signer 1" for="companyList" /> 
+                        <apex:selectList value="{!dropdownApproverOneId}" size="1" id="companyList">
+                              <apex:selectOptions value="{!ApproverOneList}" />
+                         </apex:selectList> 
+                     
+                    </apex:pageBlockSectionItem>                
+                    <apex:pageBlockSectionItem rendered="{!ShowSignerOneAndTwo}" >
+                        <apex:outputLabel value="Signer 1" for="companyList2" />
+                        <apex:selectList value="{!dropdownApproverOneId}" size="1" id="companyList2">
+                              <apex:selectOptions value="{!ApproverOneList}" />
+                         </apex:selectList>  
+                     
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:pageBlockSectionItem rendered="{!ShowSignerOneAndTwo}" >
+                        <apex:outputLabel value="Signer 2" for="Signer2Field" /> 
+                        <apex:inputField id="Signer2Field" value="{!app.Approver_Two__c}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ShowSignerThree}" >
+                        <apex:outputLabel value="Signer 3" for="Signer3Field" /> 
+                        <apex:inputField id="Signer3Field" value="{!app.Approver_Three__c}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ShowPendingApprovalPanel}">
+                        <apex:outputLabel value="TDR Determination 1" for="TDR1Field"/>
+                        <apex:inputfield id="TDR1Field" value="{!app.TDR_Determination_One__c}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ShowPendingApprovalPanel}">
+                        <apex:outputLabel value="TDR Determination 2" for="TDR2Field"/>
+                        <apex:inputfield id="TDR2Field" value="{!app.TDR_Determination_TWo__c}"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:outputPanel> -->
+        </apex:pageBlock>             
+        <apex:pageBlock mode="maindetail" id="cmdbtns" >        
+            <apex:pageBlockButtons location="bottom"  > 
+                
+                <apex:commandButton value="Submit" action="{!SaveClicked}" disabled="{!IF(ButtonStatus=='true', 'false','true')}"  />
+                <apex:commandButton value="Cancel" action="{!CancelClicked}" immediate="true" />
+            </apex:pageBlockButtons>   
+           <!-- <apex:pageBlockTable value="{!EB_Loan_App_Entity_Relationships__r}" var="row">
+                <apex:column value="{!row.Entity_Name__c}" />
+            </apex:pageBlockTable>     -->
+        </apex:pageBlock> 
+         
+    </apex:form>  
+   
+   
+</apex:page>

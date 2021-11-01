@@ -1,0 +1,17 @@
+<apex:page standardController="Account" tabStyle="Account" sidebar="false" title="Entity Hierarchy: {!Account.Name}">
+    <apex:form >
+        <apex:sectionHeader title="Entity Hierarchy" subtitle="{!Account.Name}" />
+        <div>
+            <c:ParentRelationshipDisplay currentAccountId="{!Account.id}" staticDisplay="true" rendered="true" />
+        </div>
+
+        <div>
+            <c:Entity360Relationship currentAccountId="{!Account.id}" />
+        </div>
+    </apex:form>
+    <style type="text/css">
+        .currentNodeEdit{
+            visibility: visible;
+        }
+    </style>
+</apex:page>

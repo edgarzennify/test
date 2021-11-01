@@ -1,0 +1,194 @@
+<aura:component controller="SL_EmployeeDirectoryListController" implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes"
+    access="global">
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <!-- Design Attributes Start-->
+    <aura:attribute name="SObjectName" type="String" description="Name of the object for which the records needs to be displayed."
+    />
+    <aura:attribute name="ListViews" type="String" access="global" description="" />
+    <aura:attribute name="ComponentPlacement" type="String" default="Main" access="global" />
+    <aura:attribute name="EmpListHeading" default="User List" type="String" access="global" />
+    <aura:attribute name="EmpDetailHeading" default="User Detail" type="String" access="global" />
+    <aura:attribute name="ListFieldsetName" default="" type="String" access="global" />
+    <aura:attribute name="DetailFieldsetName" default="" type="String" access="global" />
+    <aura:attribute name="RecordsOnLoad" default="4" type="Integer" access="global" />
+    <aura:attribute name="FilterCriteria" default="" type="String" access="global" />
+    <aura:attribute name="FieldForAlphabeticFilter" default="" type="String" access="global" />
+    <aura:attribute name="IsExpanded" default="false" type="Boolean" description="Switch between the expanded and collapsed component."
+    />
+    <aura:attribute name="ShowSearchBox" default="" type="Boolean" access="global" />
+    <aura:attribute name="ShowFieldLabel" default="true" type="Boolean" access="global" />
+    <aura:attribute name="ShowDetailBtn" type="Boolean" default="true" access="global" />
+    <!-- Design Attributes End-->
+
+    <!--start component attribute-->
+    <aura:attribute name="lstEmployees" type="List" access="global" />
+    <aura:attribute name="lstALLEmployeeRecs" type="List" access="global" />
+    <aura:attribute name="detailFieldSetResults" default="" type="Object[]" access="global" />
+    <aura:attribute name="listFieldSetResults" default="" type="Object[]" access="global" />
+    <aura:attribute name="strSearchString" default="" type="String" access="global" />
+    <aura:attribute name="globalTimeout" type="String" access="global" />
+    <aura:attribute name="lstListView" type="List" access="global" />
+    <aura:attribute name="filter" type="String" default="All Users" access="global" />
+    <aura:attribute name="selectedListViewId" type="String" access="global" />
+    <aura:attribute name="showSpinner" type="Boolean" default="true" access="global" />
+    <aura:attribute name="selectedFilter" type="String" default="All" access="global" />
+    <aura:attribute name="strPreviousSearch" type="String" access="global" />
+    <!--end component attribute-->
+    <!--Start pagination attributes-->
+    <aura:attribute name="startIndex" default="0" type="Integer" access="global" />
+    <aura:attribute name="endIndex" default="0" type="Integer" access="global" />
+    <aura:attribute name="totalRecords" type="Integer" access="global" />
+    <!--End pagination attributes-->
+
+    <aura:attribute name="isFilterCall" type="Boolean" default="false" access="global" />
+    <aura:attribute name="firtFieldType" type="String" access="global" />
+    <aura:attribute name="noRecord" type="Boolean" default="false" access="global" />
+    <aura:attribute name="isShowModal" type="Boolean" default="false" access="global" />
+    <aura:attribute name="isValidField" type="Boolean" default="true" access="global" />
+    <aura:attribute name="requiredFields" type="Boolean" default="false" access="global" />
+
+    <aura:if isTrue="{!v.isShowModal}">
+        <div class="modal-container">
+            <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open slds-modal--small slds-align--absolute-center modalProperty">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModal}">
+                            <lightning:icon iconName="utility:close" size="small" class="closeIcon" />
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="header43" class="slds-text-heading--medium slds-float--left">Error</h2>
+                    </div>
+                    <div class="slds-modal__content slds-p-around--medium">
+                        Please check the field api name configured for the Alphabetic filter.
+                    </div>
+                    <div class="slds-modal__footer" style="height:3rem; background:white;" />
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>
+        </div>
+    </aura:if>
+    <div aura:id="mainDiv" style="border: 1px solid rgb(216, 221, 230); border-radius: .4rem; margin-top: 0.5rem;">
+        <aura:if isTrue="{!v.requiredFields || v.showSpinner}">
+            <lightning:spinner aura:id="mySpinner" class="centerAlign" variant="brand" size="large" />
+        </aura:if>
+
+        <div class="card-header">
+            <div class="card-top">
+                <h2 class="card-header-title slds-text-align--left objectListTitle">
+                    {!v.EmpListHeading}: {!v.filter}
+                </h2>
+                <div class="{!(v.lstListView.length > 0 || v.ShowSearchBox ? 'slds-grid slds-wrap ' : 'slds-grid slds-wrap hide') + (v.requiredFields ? ' slds-hide ': '')}">
+                    <div class="{!v.ComponentPlacement == 'Main' ? 'slds-p-around--x-small slds-size--9-of-12 slds-medium-size--9-of-12 slds-large-size--9-of-12 slds-row--fix' : 'slds-p-around--xx-small slds-size--9-of-12 slds-medium-size--9-of-12 slds-large-size--9-of-12 slds-row--fix'}">
+                        <aura:if isTrue="{!v.ShowSearchBox}">
+                            <div class="slds-form-element slds-p-vertical--small" style="padding: 0.5rem;">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-input-has-icon slds-input-has-icon--right" style="max-width:15rem">
+                                        <button aura:id="closeBTN" class="slds-icon slds-input__icon slds-icon--x-small closeBtn hide" onclick="{!c.clearSearch}">
+                                            <lightning:icon iconName="utility:close" size="x-small" />
+                                        </button>
+                                        <ui:inputText aura:id="searchInput" class="slds-lookup__search-input slds-input slds-wc-input--fix" placeholder="Search..."
+                                            updateOn="keyup" keyup="{!c.searchRecords}" />
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.lstListView.length > 0}">
+                            <div class="slds-form-element slds-text-align--left filterDiv">
+                                <div aria-expanded="true" class="slds-picklist slds-dropdown-trigger customPicklist" onmouseover="{!c.showDropDown}">
+                                    <button class="slds-button slds-button--neutral picklistBtn" aria-haspopup="true">
+                                        <span class="slds-truncate" aura:id="filtercheck">{!v.filter}</span>
+                                        <lightning:icon iconName="utility:down" size="x-small" class="customIcon dropDownIcon" />
+                                    </button>
+                                    <div aura:id="filter-dropdown" class="slds-dropdown slds-dropdown--left slds-dropdown--small slds-dropdown--menu">
+                                        <ul class="slds-dropdown__list" role="menu">
+                                            <aura:iteration items="{!v.lstListView}" var="listView">
+                                                <li class="slds-dropdown__item slds-has-icon--left slds-text-align--left listItem">
+                                                    <a id="{!listView.listViewId}" class="slds-truncate filterVal" role="menuitemradio" onclick="{!c.filterRecords}">
+                                                        <span id="{!listView.listViewId}"> {!listView.listViewName} </span>
+                                                    </a>
+                                                </li>
+                                            </aura:iteration>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="{! 'slds-text-align--right slds-p-right--small ' +  (v.requiredFields ? ' slds-hide ': '')}">
+                <a aura:id="A" id="A" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">A</a>|
+                <a aura:id="B" id="B" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">B</a>|
+                <a aura:id="C" id="C" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">C</a>|
+                <a aura:id="D" id="D" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">D</a>|
+                <a aura:id="E" id="E" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">E</a>|
+                <a aura:id="F" id="F" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">F</a>|
+                <a aura:id="G" id="G" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">G</a>|
+                <a aura:id="H" id="H" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">H</a>|
+                <a aura:id="I" id="I" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">I</a>|
+                <a aura:id="J" id="J" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">J</a>|
+                <a aura:id="K" id="K" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">K</a>|
+                <a aura:id="L" id="L" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">L</a>|
+                <a aura:id="M" id="M" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">M</a>|
+                <a aura:id="N" id="N" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">N</a>|
+                <a aura:id="O" id="O" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">O</a>|
+                <a aura:id="P" id="P" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">P</a>|
+                <a aura:id="Q" id="Q" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">Q</a>|
+                <a aura:id="R" id="R" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">R</a>|
+                <a aura:id="S" id="S" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">S</a>|
+                <a aura:id="T" id="T" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">T</a>|
+                <a aura:id="U" id="U" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">U</a>|
+                <a aura:id="V" id="V" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">V</a>|
+                <a aura:id="W" id="W" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">W</a>|
+                <a aura:id="X" id="X" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">X</a>|
+                <a aura:id="Y" id="Y" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">Y</a>|
+                <a aura:id="Z" id="Z" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">Z</a>|
+                <a aura:id="Other" id="Other" onclick="{!c.filterByAlphabets}" class="slds-p-horizontal--xxx-small">Other</a>|
+                <a aura:id="All" id="All" onclick="{!c.filterByAlphabets}" class="filterbackground slds-p-horizontal--xxx-small">All</a>
+            </div>
+            <a aura:id="foucusOnClick" href="#"></a>
+        </div>
+
+
+        <div aura:id="collapsibleDiv" class="{!v.IsExpanded ? '' : 'hide'}" style="background:white;">
+            <aura:if isTrue="{!v.requiredFields}">
+                <div aura:id="requiredField" class="noRecAlert">
+                    <lightning:icon iconName="utility:info" size="small" class="infoIcon" />&nbsp;&nbsp;Incomplete configration
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.lstEmployees.length > 0}">
+                <div class="slds-grid slds-wrap" style="padding: .5rem 0;">
+                    <aura:iteration items="{!v.lstEmployees}" var="employee" start="{!v.startIndex}" end="{!v.endIndex}">
+                        <span class="{!v.ComponentPlacement == 'Main' ? 'slds-p-around--x-small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-2' : 'slds-p-around--x-small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-1'}">
+                            <c:SL_EmployeeRecord EmployeeRecord="{!employee}" ListFieldsetResults="{!v.listFieldSetResults}" DetailFieldsetResults="{!v.detailFieldSetResults}"
+                                ShowFieldLabel="{!v.ShowFieldLabel}" ComponentPlacement="{!v.ComponentPlacement}" EmpDetailHeading="{!v.EmpDetailHeading}"
+                                SObjectName="{!v.SObjectName}" isShowDetailBtn="{!v.ShowDetailBtn}" firtFieldType="{!v.firtFieldType}"
+                            />
+                        </span>
+                    </aura:iteration>
+                </div>
+                <aura:set attribute="else">
+                    <aura:if isTrue="{!v.noRecord}">
+                        <div class="noRecAlert">
+                            <lightning:icon iconName="utility:info" size="small" class="infoIcon" />&nbsp;&nbsp;No records match your criteria
+                        </div>
+                    </aura:if>
+                </aura:set>
+            </aura:if>
+            <aura:if isTrue="{!v.lstEmployees.length > v.RecordsOnLoad}">
+                <div class="slds-text-align--center" style="padding: 0.5rem 0;">
+                    <button aura:id="prevButton" class="slds-button slds-button--neutral _emp-button" onclick="{!c.prev}" disabled="true">PREV</button>
+                    <button aura:id="nextButton" class="slds-button slds-button--neutral _emp-button" onclick="{!c.next}">NEXT</button>
+                </div>
+            </aura:if>
+        </div>
+    </div>
+</aura:component>

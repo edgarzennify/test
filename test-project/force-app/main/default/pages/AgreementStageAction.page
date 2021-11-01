@@ -1,0 +1,96 @@
+<apex:page StandardController="Agreement__c" extensions="AgreementStageActionController"  >
+    <apex:pageMessages />
+      <apex:form >
+        <apex:sectionHeader title="{!agmt.Name}"/>
+        <apex:pageBlock mode="edit" >
+            <apex:pageBlockSection title="Please select a new status for this Lending Agreement" columns="1" >               
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Current Status" for="CurrentStatus"/>
+                    <apex:outputField id="CurrentStatus" value="{!agmt.Stage_Reportable__c}"  />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Change Status To" for="NextStatus"/>
+                    <apex:actionRegion >
+                        <apex:selectList id="NextStatus" value="{!ddNextStatusId}" size="1" required="true">
+                            <apex:actionSupport action="{!Bogus}" event="onchange" timeout="5000" reRender="DetailsPanel,PendingApprovalPanel,cmdbtns,WithdrawnPanel" />
+                            <apex:selectOptions value="{!AllowedActions}"></apex:selectOptions>
+                        </apex:selectList>
+                    </apex:actionRegion>
+                </apex:pageBlockSectionItem>                                
+            </apex:pageBlockSection>
+            <apex:outputpanel id="WithdrawnPanel">
+             <apex:actionStatus startText="Please wait..." startstyle="color:green;" id="waitIncreaseDeedStatus5"/>
+             <apex:pageblocksection >
+                 <apex:pageblockSectionItem rendered="{!ShowWithdrawnPanel}">
+                      <apex:outputLabel value="Original Withdrawn Date" for="withdrawnDate" /> 
+                      <apex:inputField id="withdrawnDate" value="{!app.Original_Withdrawn_Date__c}" required="true"/>
+                 </apex:pageblockSectionItem>                 
+             </apex:pageblocksection>
+            </apex:outputpanel>       
+            <!--<apex:outputPanel id="DetailsPanel">
+                <apex:actionStatus startText="Please wait..." startstyle="color:green;" id="waitIncreaseDeedStatus"/>
+                <apex:pageBlockSection columns="1" >  
+                    <apex:pageBlockSectionItem rendered="{!ExplanationNeeded}" >
+                        <apex:outputLabel value="Reason" for="StageExplanation" />
+                        <apex:SelectCheckboxes id="StageExplanation" value="{!SelectedReasons}" layout="pageDirection" required="true">
+                            <apex:selectOptions value="{!StageExplanationOptions}"></apex:selectOptions>
+                        </apex:SelectCheckboxes>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ExplanationNeeded}" helpText="{!CommentsHelpText}">
+                         <apex:outputLabel value="Comments" ></apex:outputLabel>
+                         <apex:inputTextarea value="{!StageLogComment}"/>
+                    </apex:pageBlockSectionItem>
+                   </apex:pageBlockSection>
+            </apex:outputPanel>-->
+            <apex:outputPanel id="PendingApprovalPanel" >
+                <apex:actionStatus startText="Please wait..." startstyle="color:green;" id="waitIncreaseDeedStatus2"/>
+                <apex:pageBlockSection columns="1"  >
+                    <apex:pageBlockSectionItem rendered="{!ShowPendingApprovalPanel}">
+                        <apex:outputLabel />
+                        <apex:outputLabel style="text-decoration:none;color:red;" value="Warning: RM is not setup correctly and cannot be selected as 'Signer 1'." rendered="{!(ISNULL(agmt.Borrower_Name__r.Team_Relationship_Manager__r.User__r.Id))}">
+                            </apex:outputLabel>
+                    </apex:pageBlockSectionItem> 
+                    <apex:pageBlockSectionItem rendered="{!ShowApprovalPath}">
+                        <apex:outputLabel value="Path" for="PathField"/>
+                        <apex:actionRegion immediate="true" >
+                            <apex:selectList id="PathField" value="{!ddApprovalPath}" size="1" required="true">
+                                <apex:actionSupport action="{!Bogus}" event="onchange" timeout="5000" reRender="PendingApprovalPanel" />
+                                <apex:selectOptions value="{!ApprovalPaths}"></apex:selectOptions>
+                            </apex:selectList>
+                        </apex:actionRegion>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ShowCommittee}" >
+                        <apex:outputLabel value="Next Committee Date" for="CommitteeDate" /> 
+                        <apex:inputField id="CommitteeDate" value="{!agmt.Committee_Date__c}" />
+                    </apex:pageBlockSectionItem>
+                     <apex:pageBlockSectionItem rendered="{!ShowSignerOne}" >
+                        <apex:outputLabel value="Signer 1" for="companyList" /> 
+                        <apex:selectList value="{!dropdownApproverOneId}" size="1" id="companyList">
+                              <apex:selectOptions value="{!ApproverOneList}" />
+                         </apex:selectList> 
+                    </apex:pageBlockSectionItem>                
+                    <apex:pageBlockSectionItem rendered="{!ShowSignerOneAndTwo}" >
+                        <apex:outputLabel value="Signer 1" for="companyList2" />
+                        <apex:selectList value="{!dropdownApproverOneId}" size="1" id="companyList2">
+                              <apex:selectOptions value="{!ApproverOneList}" />
+                         </apex:selectList>  
+                    </apex:pageBlockSectionItem>                    
+                    <apex:pageBlockSectionItem rendered="{!ShowSignerOneAndTwo}" >
+                        <apex:outputLabel value="Signer 2" for="Signer2Field" /> 
+                        <apex:inputField id="Signer2Field" value="{!agmt.Approver_Two__c}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem rendered="{!ShowSignerThree}" >
+                        <apex:outputLabel value="Signer 3" for="Signer3Field" /> 
+                        <apex:inputField id="Signer3Field" value="{!agmt.Approver_Three__c}" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>             
+        <apex:pageBlock mode="maindetail" id="cmdbtns">        
+            <apex:pageBlockButtons location="bottom"  > 
+                <apex:commandButton value="Submit" action="{!SaveClicked}" disabled="{!IF(ButtonStatus=='true', 'false','true')}" />
+                <apex:commandButton value="Cancel" action="{!CancelClicked}" immediate="true" />
+        </apex:pageBlockButtons>  
+        </apex:pageBlock>
+       </apex:form>
+     </apex:page>

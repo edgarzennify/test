@@ -1,0 +1,29 @@
+<apex:page controller="SchedulerController" showHeader="true" tabStyle="Scheduled_Job__tab" >
+<apex:form >
+  <apex:sectionHeader title="Utilities" subtitle="Scheduled Job Console" />
+  <apex:pageBlock >
+    <apex:pageBlockSection title="Salesforce Nightly Cleanup Job" columns="2" collapsible="false">
+        <apex:pageBlockSectionItem rendered="{!!IsJobScheduled}">
+            <apex:outputLabel style="color:red;" >CURRENTLY NOT ENABLED</apex:outputLabel>
+            <apex:commandButton value="Enable" action="{!StartJob}" disabled="{!IsJobScheduled}" style="width:100px;" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IsJobScheduled}">
+            <apex:outputLabel style="color:green;" >Currently enabled</apex:outputLabel>
+            <apex:commandButton value="Disable" action="{!StopJob}" disabled="{!!IsJobScheduled}" style="width:100px;" />
+        </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+    <apex:pageBlockSection title="Change Set Management" columns="1" collapsible="false">
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel >Change Sets</apex:outputLabel>
+            <a href="/changemgmt/listInboundChangeSet.apexp?retURL=%2Fui%2Fsetup%2FSetup%3Fsetupid%3DDeploy&setupid=InboundChangeSet" target="_new">Open Inbound Change Sets</a>
+        </apex:pageBlockSectionItem>
+    </apex:pageBlockSection>
+     <apex:pageBlockSection title="Data Management" columns="1" collapsible="false">
+        
+            <apex:commandButton value="Clear All Web Service Cache" action="{!ClearAllCache}"  />
+            <apex:commandButton value="Clear Event Log" action="{!clearEventLog}"  />
+        
+    </apex:pageBlockSection>
+ </apex:pageBlock>
+</apex:form>
+</apex:page>

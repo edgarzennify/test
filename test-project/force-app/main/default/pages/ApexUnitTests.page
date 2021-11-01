@@ -1,0 +1,22 @@
+<apex:page controller="ApexUnitTestsController">
+    <apex:form >
+        <apex:commandButton value=" Run All Tests " action="{!runTests}" />
+        <apex:commandButton value=" Check Status " action="{!checkStatus}" />
+        <apex:commandButton value=" View Failed Tests " action="{!updateResults}" />
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Status">
+                <apex:outputText label="Status" value="{!status}" />
+                <apex:outputText label="JobId" value="{!jobId}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Failed Tests">
+                <apex:pageBlockTable value="{!detailedResults}" var="detail">
+                    <apex:column headerValue="Outcome" value="{!detail.Outcome}" />
+                    <apex:column headerValue="ApexClass" value="{!detail.ApexClass.Name}" />
+                    <apex:column headerValue="MethodName" value="{!detail.MethodName}" />
+                    <apex:column headerValue="Message" value="{!detail.Message}" />
+                    <apex:column headerValue="StackTrace" value="{!detail.StackTrace}" />
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

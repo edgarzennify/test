@@ -1,0 +1,374 @@
+<apex:page apiVersion="27" standardController="Agreement__c" extensions="AgreementController" title="Lending Agreement: {!agmt.Name}" action="{!initialize}" >
+<script language="javascript">
+    function showConfirm(selected_text){   
+        return confirm("Are you sure you want to "  + selected_text + "?");
+    }
+</script>
+    <apex:form >        
+        <apex:sectionHeader title="Lending Agreement" subtitle="{!agmt.Name}" />
+        <div style="padding-bottom:5px;">
+            <apex:outputLink value="/a28/o" style="font-family: Verdana, Geneva, sans-serif; font-size: 11px; text-decoration: none; color: #015BA7;">&lt;&lt; Back to List: Lending Agreements</apex:outputLink>
+        </div>
+        <div style="text-align:center;font-family: Arial, Helvetica, sans-serif; font-size:11px; margin-bottom: 15px;margin-left: 6px; margin-right: 6px; margin-top: 5px;" >
+            <a href="#IncludedEntities" title="click to view Included Entities">Included Entities</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#BorrowingBase" title="click to view Borrowing Bases">Borrowing Bases</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#RelatedCovenants" title="click to view Covenants">Covenants</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#SubordinationAgreements" title="click to view Subordination / Intercreditor Agreements">Subordination / Intercreditor Agreements</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#RelatedEBAccounts" title="click to view Included Accounts">Included Accounts</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#RelatedLoanApplications" title="click to view Included Loan Applications">Included Loan Applications</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Notes" title="click to view Attachments">Attachments</a>  
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#AgmtTests" title="click to view Agreement Tests">Agreement Tests</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#AgmtFees" title="click to view Agreement Fee">Agreement Fees</a>
+        </div>
+        <apex:pageMessages />
+    <apex:pageBlock title="Lending Agreement Detail" mode="maindetail">
+        <apex:pageBlockButtons >
+            <apex:commandButton value=" Edit " action="{!Edit}" rendered="{!isEditButtonVisible}" />
+            <apex:commandButton value=" Delete " action="{!Delete}" rendered="{!canEditAgreement}" />
+            <apex:commandButton value="Modify Agreement" action="{!Modify}" rendered="{!IsActive}" />
+            <apex:commandButton value="Workflow >>> Next Step" action="{!WorkflowNextStep}" rendered="{!showWorkflowNextStep}" />
+            <apex:commandButton value="Make This Agreement Active" action="{!MakeActive}" rendered="{!showMakeThisAgreementActive}"  onclick="return showConfirm('make agreement \'{!agmt.Name}\' Active');" />     
+            <apex:commandButton value="Archive This Agreement" action="{!MakeArchive}" rendered="{!IsActive && userHasMakeArchivePermission}"  onclick="return showConfirm('archive agreement \'{!agmt.Name}\'');" />
+            <apex:commandButton value="Agreement Report" onclick="window.open('{!ReportUrl}');" oncomplete="window.location.reload();"  />
+        </apex:pageBlockButtons>
+        <apex:pageBlockSection title="Summary" columns="2">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Primary Borrower" />
+                <apex:outputField value="{!agmt.Borrower_Name__r.Entity_Name__c}" />
+            </apex:pageBlockSectionItem>            
+            <apex:outputField value="{!agmt.Related_Borrower__c}" />
+            <apex:pageBlockSectionItem helpText="{!$ObjectType.Agreement__c.Fields.RecordTypeDescription__c.inlineHelpText}">
+                <apex:outputLabel value="Lending Agreement Status" />
+                <apex:outputField value="{!agmt.RecordTypeDescription__c}" />
+            </apex:pageBlockSectionItem>            
+            <apex:outputField value="{!agmt.Included_Loans__c}" />
+            <apex:outputField value="{!agmt.Agreement_Date__c}" />
+            <apex:outputField value="{!agmt.Included_Loan_Apps__c}" />
+            <apex:outputField value="{!agmt.Last_Amendment_Date__c}" />
+            <apex:outputField value="{!agmt.Source_Agreement__c}" />
+            <apex:outputLabel value="" />
+            <apex:outputField value="{!agmt.Replaced_By_Agreement__c}" rendered="{!IsArchive}" />
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Comments" columns="1" showHeader="false">
+            <apex:outputField value="{!agmt.Comments__c}" />
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Loan Doc Request" columns="2">
+        <apex:outputField value="{!agmt.Business_Loan_Agreement_Documents__c}"/>
+        <apex:outputField value="{!agmt.Subordination_Intercreditor_Documents__c}"/>
+        <apex:outputField value="{!agmt.Guarantee_Agreement_Documents__c}"/>
+        <apex:outputField value="{!agmt.Documentation_Path_Fx__c}"/>
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Workflow Information" columns="2" >
+            <apex:outputField value="{!agmt.Stage__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputLabel value="" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.Loan_Coordinator__c}" />
+            <apex:outputField value="{!agmt.Credit_Analyst__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.DocumentationRep__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.Booking_Rep__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.Checkback_Rep__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.File_Review_Rep__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.Image_Prep_Rep__c}" rendered="{!showWorkflowInformation}" />
+            <apex:outputField value="{!agmt.Shred_File_Rep__c}" rendered="{!showWorkflowInformation}" />            
+        </apex:pageBlockSection>
+        <apex:pageBlockSection title="Approval Details" columns="2" rendered="{!showApprovalDetails}" >
+            <apex:pageBlockSectionItem >            
+                <apex:outputLabel value="Policy Link" />
+                <apex:outputLink value="{!ApprovalPathsUrl}" target="_blank">Lending Agreement Approval Paths</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            <apex:outputLabel value="" />
+            <apex:outputField value="{!agmt.Actual_Approval_Process__c}" />
+            <apex:outputLabel value="" />
+            <apex:outputField value="{!agmt.Approver_One__c}" />
+            <apex:outputField value="{!agmt.Approver_Three__c}" />
+            <apex:outputField value="{!agmt.Approver_Two__c}" />            
+        </apex:pageBlockSection>        
+        <apex:pageBlockSection title="System Information" columns="2" collapsible="true" id="systeminformation">            
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Created By" />
+                <apex:outputText value="{!agmt.CreatedBy.Name}, {!agmt.CreatedDate}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Last Modified By" />
+                <apex:outputText value="{!agmt.LastModifiedBy.Name}, {!agmt.LastModifiedDate}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem rendered="{!isSystemAdministrator}" >
+                <apex:outputLabel value="Admin Functions" />
+                <apex:outputPanel id="removeTheseLater" style="display:inline;" >
+                    <apex:commandLink action="{!AdminMakeActive}" value="*Active" />&nbsp;|&nbsp;
+                    <apex:commandLink action="{!AdminMakePending}" value="*Pending" />&nbsp;|&nbsp;
+                    <apex:commandLink action="{!AdminMakeArchive}" value="*Archive" />&nbsp;|&nbsp;
+                    <apex:commandLink action="{!AdminMakeNew}" value="*New" />
+                </apex:outputPanel>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <script>twistSection(document.getElementById("{!$Component.systeminformation}").childNodes[0].childNodes[0]); </script>
+    </apex:pageBlock>
+    </apex:form>
+    <apex:relatedList id="ApproveHistory" list="ProcessSteps" title="Agreement Approval History" rendered="{!showOwnApproval}" />
+    <apex:pageBlock title="Loan Approval Information" rendered="{!showApprovalMinute}">
+        <apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Approval Minute"></apex:outputLabel>
+                <apex:outputLink value="{!approvalMinuteURL}">{!approvalMinute.Name}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            <apex:outputField value="{!approvalMinute.Approval_Path__c}"></apex:outputField>
+            <apex:outputField value="{!approvalMinute.Decision__c}"></apex:outputField>
+            <apex:outputField value="{!approvalMinute.Decision_Date__c}"></apex:outputField>            
+            <apex:outputField value="{!approvalMinute.Signers__c}"></apex:outputField>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:form >     
+        <!--Financial Monitoring-------------------------------------------->
+        <a id="IncludedEntities"/>
+            <apex:pageBlock title="Included Entities">
+                <apex:pageBlockButtons location="top">
+                    <apex:outputLink value="{!ReportingRequirementsURL}" target="_new">Reporting Requirements Guidelines</apex:outputLink>
+                </apex:pageBlockButtons>
+                <apex:tabPanel switchType="client" id="finReqTabs" tabClass="activeTab" inactiveTabClass="inactiveTab" headerClass="headerStyle" >
+                    <apex:tab label="Entities [{!includedEntitiesCount}]" name="includedEntities" id="tabOne" >
+                        <apex:pageblocktable value="{!IncludedEntities}" var="rel" rendered="{!NOT (ISNULL(IncludedEntities))}">
+                           <apex:column headerValue="Action" width="75" rendered="{!canEditAgreement}">
+                               <apex:commandLink value="Edit" action="{!editEntity}" style="text-decoration:none;color:#015ba7;"  >
+                                   <apex:param name="addId" assignTo="{!selectedEntity}" value="{!rel.AgreementRelationshipId}" />
+                               </apex:commandLink>
+                               |&nbsp;<apex:commandLink value="Exclude" action="{!excludeEntity}" style="text-decoration:none;color:red;" onclick="return showConfirm('Exclude the entity \'{!rel.Name}\' ');" >
+                                   <apex:param name="delId" assignTo="{!selectedEntity}" value="{!rel.AgreementRelationshipId}" />
+                               </apex:commandLink>
+                           </apex:column>
+                           <apex:column headerValue="Action" width="60" rendered="{!!canEditAgreement}" >
+                               <apex:commandLink value="View" action="{!editEntity}" style="text-decoration:none;color:#015ba7;" >
+                                   <apex:param name="addId" assignTo="{!selectedEntity}" value="{!rel.AgreementRelationshipId}" />
+                               </apex:commandLink>
+                           </apex:column>
+                           <apex:column headervalue="Name" value="{!rel.Name}" />
+                           <apex:column headervalue="Relationship" value="{!rel.Relationship}" />
+                           <apex:column headervalue="Other Agreements" value="{!rel.OtherAgreements}" />
+                        </apex:pageBlockTable>
+                        <apex:outputText value="No Included Entities" styleClass="errorMsg" rendered="{!ISNULL(IncludedEntities)}"/>
+                    </apex:tab>
+                    <apex:tab label="Financial Reporting Requirements [{!financialRequirements.size}]" name="borrowerFinancials" id="tabTwo">
+                        <apex:pageBlockTable var="req" value="{!financialRequirements}" rendered="{!financialRequirements.size > 0}">
+                           <apex:column headervalue="Document Type" value="{!req.documentType}" width="33%" />
+                           <apex:column headervalue="Name" value="{!req.name}" width="33%" />
+                           <apex:column headervalue="Details" value="{!req.details}" width="33%"/ >
+                        </apex:pageBlockTable>
+                        <apex:outputText value="No Borrower Financial Requirements" styleClass="errorMsg" rendered="{!financialRequirements.size==0}"/>
+                        <!--
+                        <apex:pageBlockTable var="finDocWrapper" value="{!finDocumentWrapper}" rendered="{!finDocumentWrapper.size > 0}">
+                            <apex:column headervalue="Document Type" value="{!finDocWrapper.financialDocType}" width="33%"/>
+                            <apex:column headervalue="Name" value="{!finDocWrapper.financialDocument.Agreement_Client_Relationship__r.Entity__c}" width="33%"/>
+                            <apex:column headervalue="Details" value="{!finDocWrapper.financialDocument.Requirement_Summary__c}" width="33%"/>        
+                        </apex:pageBlockTable>
+                        <apex:outputText value="No Borrower Financial Requirements" styleClass="errorMsg" rendered="{!finDocumentWrapper.size==0}"/>
+                        -->
+                    </apex:tab>
+                     <apex:tab label="Agreement Reporting Requirements [{!agmtDocumentWrapperCount}]" name="agreementFinancials" id="tabThree">
+                        <apex:pageBlockTable var="agmtDocWrapper" value="{!agmtDocumentWrapper}" rendered="{!agmtDocumentWrapper.size > 0}">
+                            <apex:column headervalue="Document Type" value="{!agmtDocWrapper.financialDocType}" width="33%"/>
+                            <apex:column headervalue="Name" value="{!agmtDocWrapper.financialDocument.Agreement_Client_Relationship__r.Entity__r.Entity_Name__c}" width="33%"/>
+                            <apex:column headervalue="Details" value="{!agmtDocWrapper.financialDocument.Requirement_Summary__c}" width="33%"/>        
+                        </apex:pageBlockTable>
+                        <apex:outputText value="No Agreement Reporting Requirements" styleClass="errorMsg" rendered="{!agmtDocumentWrapper.size==0}"/>
+                    </apex:tab>
+                </apex:tabPanel>
+           </apex:pageBlock>
+    </apex:form>
+    <apex:form >
+        <!-- Entities --------------------------------------------------->
+        <apex:pageBlock id="ExcludedEntities" title="Excluded Entities [{!excludedEntitiesCount}]" rendered="{!canEditAgreement}" >       
+            <apex:pageblockSection id="sectionHeader" collapsible="true" columns="1" title="Expand/Collapse" >
+                <apex:pageBlockTable value="{!ExcludedEntities}" var="o" rendered="{!NOT(ISNULL(ExcludedEntities))}">
+                    <apex:column headerValue="Action" width="60" >
+                        <apex:commandLink value="Include" action="{!includeEntity}" style="text-decoration:none;color: #015ba7;"  rerender="Dialog">
+                            <apex:param name="addId" assignTo="{!selectedEntity}" value="{!o.Id}" />
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="Name" >
+                        <apex:outputLink value="{!URLFOR($Action.Account.View,o.Id)}" >{!o.Name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="Type" value="{!o.EntityType}" />
+                    <apex:column headerValue="Address" value="{!o.Address}" />
+                    <apex:column headerValue="Related By" value="{!o.AbridgedRelatedBy}" />
+                    <!--<apex:column headerValue="Related By (full)" value="{!o.RelatedBy}" />-->
+                    <!--<apex:column headerValue="Type" value="{!o.Record_Type_Description__c}" />-->
+                    <!--<apex:column headerValue="Address" value="{!o.BillingStreet}, {!o.BillingCity}, {!o.BillingState}, {!o.BillingPostalCode}" />-->
+                </apex:pageBlockTable>
+            </apex:pageblockSection>
+            <script>//twistSection(document.getElementById('{!$Component.ExcludedEntities.sectionHeader}').childNodes[0].childNodes[0]);</script>
+        </apex:pageBlock>   
+        <!--End: Financial Monitoring ----------------------------------------------------------->
+        <!--End: Entities ------------------------------------------------------------>
+    </apex:form>
+    <c:AgreementBBaseComponent AgreementObject="{!agmt}" canEdit="{!canEditAgreement}"/>
+    <c:AgreementFinancialCovenant AgreementObject="{!agmt}" canEdit="{!canEditAgreement}"/>
+    <c:AgreementSubordination AgreementObject="{!agmt}" canEdit="{!canEditAgreement}"/>
+    <c:AgreementFee AgreementObject="{!agmt}" canEditAgmtFee="{!canEditAgreement}" rendered="{!showAgreementFees}"/>
+    <c:AgreementTest AgreementObject="{!agmt}" IsAgreementPendingStatus="{!AgreementPendingStatus}" rendered="{!canViewAgreementTests}"/> 
+        
+    <apex:form >
+        <!--Eb Accounts ============================================================= -->
+        <a id="RelatedEBAccounts" /> 
+        <apex:pageBlock title="Included Accounts" >
+            <apex:pageBlockTable value="{!IncludedEbAccountRelationships}" var="o" rendered="{!NOT(ISNULL(IncludedEbAccountRelationships))}"  >
+                <apex:column headerValue="Action" width="60" rendered="{!canExcludeRelatedEBAccounts}"  >
+                    <apex:commandLink value="Exclude" action="{!excludeEbAccount}" style="text-decoration:none;color:red;" onclick="return showConfirm(' exclude the account \'{!o.Loan_Account__r.Account_Line_1__c}\' ');">
+                        <apex:param name="excludeId" assignTo="{!selectedEbAccount}" value="{!o.id}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column headerValue="Loan Number" value="{!o.Loan_Account__c}" />
+                <apex:column headerValue="Borrower" value="{!o.Loan_Account__r.Account_Line_1__c}" />  
+                <apex:column headerValue="Current Balance" headerClass="right" 
+                    style="text-align:right"
+                    value="{!o.Loan_Account__r.Core_Current_Balance__c}" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>  
+        <apex:pageBlock id="ExcludedAccounts" title="Excluded Accounts [{!excludedEbAccountsCount}]"  rendered="{!canIncludeExcludedRelatedEBAccounts}"  >
+            <apex:pageblockSection id="sectionHeader" collapsible="true" columns="1" title="Expand/Collapse"  >
+                <apex:pageBlockTable value="{!ExcludedEbAccounts}" var="o" rendered="{!NOT(ISNULL(ExcludedEbAccounts))}" >
+                    <apex:column headerValue="Action" width="60" >
+                        <apex:commandLink value="Include" action="{!includeEbAccount}" style="text-decoration:none;color: #015ba7;">
+                            <apex:param name="addId" assignTo="{!selectedEbAccount}" value="{!o.id}" />
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="Loan Number" value="{!o.Name}" />
+                    <apex:column headerValue="Borrower" value="{!o.Account_Line_1__c}" />  
+                    <apex:column headerValue="Current Balance" headerClass="right" 
+                        style="text-align:right" 
+                        value="{!o.Core_Current_Balance__c}" />
+                </apex:pageBlockTable>
+            </apex:pageblockSection>
+            <script>//twistSection(document.getElementById('{!$Component.ExcludedAccounts.sectionHeader}').childNodes[0].childNodes[0]);</script>
+        </apex:pageBlock>
+        <a id="RelatedLoanApplications" /> 
+        <apex:pageBlock title="Included Credit Requests" >
+            <apex:pageBlockTable value="{!includedLoanApps}" var="o" rendered="{!NOT(ISNULL(includedLoanApps))}" >
+                <apex:column headerValue="Action" width="60" rendered="{!canExcludeRelatedLoanApplications}"  >
+                    <apex:commandLink value="Exclude" action="{!excludeLoanApp}" style="text-decoration:none;color:red;" onclick="return showConfirm('Exclude the account \'{!o.name}\' ');">
+                        <apex:param name="addId" assignTo="{!selectedLoanApp}" value="{!o.id}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column headerValue="Name" >
+                    <apex:outputLink value="/{!o.id}" >{!o.name}</apex:outputLink>
+                </apex:column>
+                <apex:column headerValue="Loan Packet / Product Package" value="{!o.packetOrPackageName}" />
+                <apex:column headerValue="Lead Entity" value="{!o.leadEntity.name}" />
+                <apex:column headerValue="Loan Amount" headerClass="right" style="text-align:right" >
+                        <apex:outputText value="{0,number,Currency}" >
+                            <apex:param value="{!o.loanAmount}" />
+                        </apex:outputText>
+                    </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <apex:pageBlock id="ExcludedLoanApps" title="Excluded Credit Requests [{!excludedLoanAppsCount}]" rendered="{!canIncludeRelatedLoanApplications}"  >
+            <apex:pageBlockSection id="sectionHeader" collapsible="true" columns="1" title="Expand/Collapse"  >
+                <apex:pageBlockTable value="{!excludedLoanApps}" var="o" rendered="{!NOT(ISNULL(excludedLoanApps))}" >
+                    <apex:column headerValue="Action" width="60" >
+                        <apex:commandLink value="Include" action="{!includeLoanApp}" style="text-decoration:none;color: #015ba7;" onclick="return showConfirm('Include the account \'{!o.name}\'');" >
+                            <apex:param name="addId" assignTo="{!selectedLoanApp}" value="{!o.id}" />
+                        </apex:commandLink>
+                    </apex:column>
+                    <apex:column headerValue="Name" >
+                        <apex:outputLink value="/{!o.id}" >{!o.name}</apex:outputLink>
+                    </apex:column>
+                    <apex:column headerValue="Loan Packet / Product Package" value="{!o.packetOrPackageName}" />                        
+                    <apex:column headerValue="Lead Entity" value="{!o.leadEntity.name}" />
+                    <apex:column headerValue="Loan Amount" headerClass="right" style="text-align:right" >
+                        <apex:outputText value="{0,number,Currency}" >
+                            <apex:param value="{!o.loanAmount}" />
+                        </apex:outputText>
+                    </apex:column>    
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+            <script>//twistSection(document.getElementById('{!$Component.ExcludedLoanApps.sectionHeader}').childNodes[0].childNodes[0]);</script>
+        </apex:pageBlock>
+        <!--End: Loan Apps ----------------------------------------------------->
+    
+        <!--Popups -------------------------------------------------------------->   
+        <apex:outputPanel id="Dialog">
+            <apex:outputPanel id="EntityInnerPanel" styleClass="popupBackground" layout="block" rendered="{!displayDialog}"/>
+            <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayDialog}">
+                <apex:pageblock >
+                    <apex:pageblockSection title="Add - New Agreement Client Relationship" >
+                        <apex:outputField value="{!EntityRelationships.Entity__c}" />
+                        <apex:inputField value="{!EntityRelationships.Relationship__c}" required="true"/>
+                    </apex:pageblockSection>
+                </apex:pageblock>
+                <apex:commandButton id="EntitySubmitid" value="Submit" action="{!closeDialog}" onclick="javascript:this.style.visibility='hidden';" rerender="Dialog,relatedentities,EntityRelatedList,AgmtDetails"/>
+                <apex:commandButton id="EntityCancelid" value="Cancel" action="{!cancelDialog}" immediate="true" rerender="Dialog"/>    
+            </apex:outputPanel>
+        </apex:outputPanel>
+        <!-- End: Popups -------------------------------------------------------------->
+        
+    </apex:form>
+    
+    <!--   <a id="AgmtTests" /><apex:relatedList list="Agreement_Tests__r" />  -->
+    <!--  <a id="AgmtSubs" /><apex:relatedList list="Agreement_Subordinations__r" />  -->
+      
+    <a id="Notes" /><apex:relatedList subject="{!Agreement__c}" list="CombinedAttachments" />
+    <a id="StageLog" /><apex:relatedList title="Agreement Stage Logs" list="Loan_App_Stage_Logs__r" rendered="{!showStageLog}" />
+    <!----<apex:relatedList id="ApprovalStatus" list="Agreement_Covenant_To_Loan_Packet__r" />-->
+    <!----<apex:relatedList id="Approvalmods" list="Agreement_Modifications__r" />-->
+
+    <style type="text/css">
+        .custPopup{
+            background-color: white;
+            border: solid 2px #999;
+            z-index: 9998;
+            left: 33%;
+            padding:10px;
+            position: fixed;
+            <!--width: 500px;-->
+            width: 75%;
+            margin-left: -250px;
+            <!--top:650px;-->
+            top: 5%;            
+            
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9997;
+        }
+        .relatedEntitiesSection{
+            height:200px;
+            overflow:auto;
+        }
+        .helpText {
+            position: fixed;
+            z-index: 9999;
+        }
+        .datePicker {
+            position: fixed;
+            z-index: 9999;
+        }
+        .container{ 
+            /*background-color: #E8E8E8; border-style: solid; border-width:1px;*/
+            width: 800px; 
+            text-align: center; 
+        } 
+        .headerStyle{ 
+            color: black; 
+            font-weight: bold; 
+            font-size: 24px; 
+            padding:5px; 
+        }
+        .finHeaderStyle{ 
+            color: #47A375; 
+            font-weight: bold; 
+            font-style: italic;
+            font-size: 12px; 
+            padding:3px; 
+            font-family:'Times New Roman',fantasy;
+        }
+        .right{
+            text-align:right;
+        }
+    </style>
+</apex:page>

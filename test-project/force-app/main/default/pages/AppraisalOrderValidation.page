@@ -1,0 +1,13 @@
+<apex:page standardController="EB_Appraisal_Order__c" extensions="LoanAppraisalOrderValidationController" action="{!ValidateAppraisalOrderEntry}">
+   <apex:pageMessages />
+   <apex:form >
+   <apex:pageblock >
+       <apex:pageblockSection >
+           <apex:pageBlockSectionItem >
+                <apex:commandButton value="<< Back To Collateral" action="{!BackToCollateralRelationship}" />
+           </apex:pageBlockSectionItem>
+       </apex:pageblockSection>
+   </apex:pageblock>
+  
+   </apex:form>
+</apex:page>

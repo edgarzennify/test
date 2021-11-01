@@ -1,0 +1,298 @@
+<apex:page tabstyle="Site_com_Content__tab" standardController="EB_Team_Member__c" extensions="WebsiteCMSAssociateController">
+<apex:form > 
+<br/>
+<apex:pageBlock title="Edit Site.com Content for {!EB_Team_Member__c.Name}"> 
+
+<apex:pageBlockButtons location="top">
+<apex:commandButton value="Save" action="{!save}" />
+<apex:commandButton value="Cancel" action="{!cancel}" />
+</apex:pageBlockButtons>
+
+<table style="width:100%"><tr height="30px">
+<td></td>
+<td><span style="font-weight:bold;">Salesforce.com Data</span></td>
+<td></td>
+<td><span style="font-weight:bold;">Override</span></td>
+<td><span style="font-weight:bold;">Staged</span></td>
+<td></td>
+<td><span style="font-weight:bold;">Published</span></td>
+</tr>
+
+<tr>
+<td><span style="font-weight:bold;">Name:</span></td>
+<td><apex:outputField value="{!EB_Team_Member__c.Name}" /></td>
+<td width="25px;">
+    <span style="font-weight:bold">First:</span><br/><br/>
+    <span style="font-weight:bold">Last:</span>
+    
+</td>
+<td> <apex:inputField value="{!EB_Team_Member__c.Website_First_Name_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stageName}" status="stagedNameStatus" rerender="stagedName"/>
+    </apex:inputField><br/>
+    <apex:inputField value="{!EB_Team_Member__c.Website_Last_Name_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stageName}" status="stagedNameStatus" rerender="stagedName"/>
+    </apex:inputField>
+    <apex:inputField value="{!EB_Team_Member__c.Website_Name_Override__c}" rendered="false">
+        <apex:actionSupport event="onchange" action="{!stageName}" status="stagedNameStatus" rerender="stagedName"/>
+    </apex:inputField>
+
+
+
+
+    
+    
+    
+    
+</td> 
+
+
+
+<td><apex:outputField value="{!EB_Team_Member__c.Website_Name__c}" rendered="false"/>
+    <apex:actionStatus id="stagedNameStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                <apex:outputText value=" "/>                            
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputPanel id="stagedName">
+    <table><tr><td>
+    	 <apex:outputText value="{!displayName}"/>
+	</td></tr>
+    <tr><td>First:</td><td><apex:outputText value="{!displayFirstName}"/></td></tr>
+    <tr><td>Last:</td><td><apex:outputText value="{!displayLastName}"/></td></tr></table>
+    </apex:outputPanel>
+    
+   
+</td>
+<td><apex:commandButton value="Publish" action="{!publishName}" rerender="publishedName" status="publishedNameStatus"/></td>
+<td><apex:actionStatus id="publishedNameStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>   
+                <apex:outputText value=" "/>                         
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputPanel id="publishedName">
+    <table><tr><td>
+    	<apex:outputField value="{!EB_Team_Member__c.Website_Name_Published__c}"/>
+	</td></tr>
+    <tr><td>First:</td><td><apex:outputField value="{!EB_Team_Member__c.Website_First_Name_Published__c}"/></td></tr>
+    <tr><td>Last:</td><td><apex:outputField value="{!EB_Team_Member__c.Website_Last_Name_Published__c}"/></td></tr></table>
+    </apex:outputPanel>
+</td>
+</tr>
+
+<tr>
+<td><span style="font-weight:bold;">Title:</span></td>
+<td><apex:outputField value="{!EB_Team_Member__c.User__r.Title}" /></td>
+<td width="25px;"></td>
+<td><apex:inputField value="{!EB_Team_Member__c.Website_Title_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stageTitle}" status="stagedTitleStatus" rerender="stagedTitle"/>
+    </apex:inputField>
+</td>
+
+<td><apex:outputField value="{!EB_Team_Member__c.Website_Title__c}" rendered="false"/>
+    <apex:actionStatus id="stagedTitleStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                <apex:outputText value=" "/>                            
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputText id="stagedTitle" value="{!displayTitle}"/>
+</td>
+<td><apex:commandButton value="Publish" action="{!publishTitle}" rerender="publishedTitle" status="publishedTitleStatus"/></td>
+<td><apex:actionStatus id="publishedTitleStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>   
+                <apex:outputText value=" "/>                         
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+<apex:outputField id="publishedTitle" value="{!EB_Team_Member__c.Website_Title_Published__c}"/></td>
+</tr>
+
+<tr>
+<td><span style="font-weight:bold;">Division:</span></td>
+<td><apex:outputField value="{!EB_Team_Member__c.User__r.Division}" /></td>
+<td width="25px;"></td>
+<td><apex:inputField value="{!EB_Team_Member__c.Website_Division_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stageDivision}" status="stagedDivisionStatus" rerender="stagedDivision"/>
+    </apex:inputField>
+</td>
+
+<td><apex:outputField value="{!EB_Team_Member__c.Website_Division__c}" rendered="false"/>
+    <apex:actionStatus id="stagedDivisionStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                <apex:outputText value=" "/>                            
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputText id="stagedDivision" value="{!displayDivision}"/>
+</td>
+<td><apex:commandButton value="Publish" action="{!publishDivision}" rerender="publishedDivision" status="publishedDivisionStatus"/></td>
+<td><apex:actionStatus id="publishedDivisionStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>   
+                <apex:outputText value=" "/>                         
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+<apex:outputField id="publishedDivision" value="{!EB_Team_Member__c.Website_Division_Published__c}"/></td>
+</tr>
+
+<tr>
+<td><span style="font-weight:bold;">Email:</span></td>
+<td><apex:outputField value="{!EB_Team_Member__c.User__r.Email}" /></td>
+<td width="25px;"></td>
+<td><apex:inputField value="{!EB_Team_Member__c.Website_Email_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stageEmail}" status="stagedEmailStatus" rerender="stagedEmail"/>
+    </apex:inputField>
+</td>
+
+<td><apex:outputField value="{!EB_Team_Member__c.Website_Email__c}" rendered="false"/>
+    <apex:actionStatus id="stagedEmailStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                <apex:outputText value=" "/>                            
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputText id="stagedEmail" value="{!displayEmail}"/>
+</td>
+<td><apex:commandButton value="Publish" action="{!publishEmail}" rerender="publishedEmail" status="publishedEmailStatus"/></td>
+<td><apex:actionStatus id="publishedEmailStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>   
+                <apex:outputText value=" "/>                         
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+<apex:outputField id="publishedEmail" value="{!EB_Team_Member__c.Website_Email_Published__c}"/></td>
+</tr>
+
+<tr>
+<td><span style="font-weight:bold;">Office Phone:</span></td>
+<td><apex:outputField value="{!EB_Team_Member__c.User__r.Phone}" /></td>
+<td width="25px;"></td>
+<td><apex:inputField value="{!EB_Team_Member__c.Website_Office_Phone_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stagePhone}" status="stagedPhoneStatus" rerender="stagedPhone"/>
+    </apex:inputField>
+</td>
+
+<td><apex:outputField value="{!EB_Team_Member__c.Website_Office_Phone__c}" rendered="false"/>
+    <apex:actionStatus id="stagedPhoneStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                <apex:outputText value=" "/>                            
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputText id="stagedPhone" value="{!displayPhone}"/>
+</td>
+<td><apex:commandButton value="Publish" action="{!publishPhone}" rerender="publishedPhone" status="publishedPhoneStatus"/></td>
+<td><apex:actionStatus id="publishedPhoneStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>   
+                <apex:outputText value=" "/>                         
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+<apex:outputField id="publishedPhone" value="{!EB_Team_Member__c.Website_Office_Phone_Published__c}"/></td>
+</tr>
+
+<tr>
+<td><span style="font-weight:bold;">Mobile Phone:</span></td>
+<td><apex:outputField value="{!EB_Team_Member__c.User__r.MobilePhone}" /></td>
+<td width="25px;"></td>
+<td><apex:inputField value="{!EB_Team_Member__c.Website_Mobile_Phone_Override__c}">
+        <apex:actionSupport event="onchange" action="{!stageMobile}" status="stagedMobileStatus" rerender="stagedMobile"/>
+    </apex:inputField>
+</td>
+
+<td><apex:outputField value="{!EB_Team_Member__c.Website_Mobile_Phone__c}" rendered="false"/>
+    <apex:actionStatus id="stagedMobileStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>  
+                <apex:outputText value=" "/>                            
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+    <apex:outputText id="stagedMobile" value="{!displayMobile}"/>
+</td>
+<td><apex:commandButton value="Publish" action="{!publishMobile}" rerender="publishedMobile" status="publishedMobileStatus"/></td>
+<td><apex:actionStatus id="publishedMobileStatus">
+        <apex:facet name="start">
+            <apex:outputPanel >
+                <apex:image value="/img/loading32.gif" style="height: 15px;"/>   
+                <apex:outputText value=" "/>                         
+            </apex:outputPanel>
+        </apex:facet>
+    </apex:actionStatus>
+<apex:outputField id="publishedMobile" value="{!EB_Team_Member__c.Website_Mobile_Phone_Published__c}"/></td>
+</tr>
+
+
+</table>
+
+</apex:pageBlock>
+
+<apex:pageBlock >
+
+
+
+
+
+
+
+<apex:pageBlockSection columns="2" title="Staff Directory Settings">
+
+<apex:inputcheckbox value="{!EB_Team_Member__c.Website_Associate_Directory__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.EB_Region__c}"/>
+
+<apex:inputField value="{!EB_Team_Member__c.Website_Directory_Category__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Region_Code__c}" />
+
+<apex:inputField value="{!EB_Team_Member__c.Unit__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Region_KC__c}"/>
+
+<apex:inputField value="{!EB_Team_Member__c.Branch_ID__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Region_PHX__c}"/>
+
+<apex:outputText value=" "/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Region_STL__c}"/>
+</apex:pageBlockSection>
+
+<apex:pageBlockSection columns="1" title="Relationship Manager Settings">
+<apex:inputcheckbox value="{!EB_Team_Member__c.Website_Relationship_Manager__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_RM_Type__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Placement_Rank__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Image_URL__c}"/>
+<apex:inputField value="{!EB_Team_Member__c.Website_Video_URL__c}"/>
+<apex:inputtextarea value="{!EB_Team_Member__c.Website_Bio__c}" cols="80" rows="6"/>
+</apex:pageBlockSection>
+
+<apex:pageBlockButtons location="bottom">
+<apex:commandButton value="Save" action="{!save}" />
+<apex:commandButton value="Cancel" action="{!cancel}" />
+</apex:pageBlockButtons>
+
+
+
+</apex:pageBlock>
+</apex:form>
+    
+</apex:page>

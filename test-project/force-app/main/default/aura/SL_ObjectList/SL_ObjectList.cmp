@@ -1,0 +1,179 @@
+<aura:component controller="SL_ObjectListController" implements="force:hasRecordId,flexipage:availableForAllPageTypes,force:appHostable,forceCommunity:availableForAllPageTypes"
+    access="global">
+
+    <aura:attribute name="width" type="String" />
+    <lightning:flexipageRegionInfo width="{!v.width}" />
+
+    <aura:attribute name="componentTimeId" default="" type="String" access="global" />
+
+    <aura:attribute name="Attachmentsdisplay" default="Card" type="String" access="global" />
+    <aura:attribute name="BoolForModelPopup" default="false" type="Boolean" access="global" />
+    <aura:attribute name="BoolForDropDown" default="false" type="Boolean" access="global" />
+
+    <!-- Design Attributes Start-->
+    <aura:attribute name="Heading" default="Object List" type="String" access="global" />
+    <aura:attribute name="SObjectName" default="Opportunity" type="String" access="global" />
+    <aura:attribute name="ListViews" type="String" default="" access="global" description="" />
+    <aura:attribute name="lstListView" type="List" access="global" />
+    <aura:attribute name="ListViewFilterLabel" default="Filter by List View" type="String" access="global" />
+    <aura:attribute name="filter" type="String" default="" access="global" />
+
+    <aura:attribute name="FieldsetName" default="OpptyFieldset" type="String" access="global" />
+    <aura:attribute name="DetailFieldsetName" default="OpptyFieldset" type="String" access="global" />
+    <aura:attribute name="DetailBehaviour" default="Object Detail Component" type="String" access="global" />
+    <aura:attribute name="ModalPopupHeader" default="" type="String" access="global" />
+    <aura:attribute name="MaxRecords" default="20" type="Integer" access="global" />
+    <aura:attribute name="RecordsOnLoad" default="4" type="Integer" access="global" />
+    <aura:attribute name="RelationshipField" default="" type="String" access="global" />
+    <aura:attribute name="FilterCriteria" default="" type="String" access="global" />
+    <aura:attribute name="PicklistFilter" default="" type="String" access="global" />
+    <aura:attribute name="PicklistFilterLabel" default="Filter by Picklist" type="String" access="global" />
+    <aura:attribute name="ShowSearchBox" default="" type="Boolean" access="global" />
+    <aura:attribute name="ShowFieldLabel" default="true" type="Boolean" access="global" />
+    <aura:attribute name="DisableLinks" default="false" type="Boolean" access="global" />
+    <aura:attribute name="showAttachments" type="Boolean" default="false" access="global" />
+    <aura:attribute name="ShowAttListPopu" type="Boolean" default="false" access="global" />
+    <aura:attribute name="ShowAttachmentDetail" type="Boolean" default="false" access="global" />
+
+    <aura:attribute name="ComponentExpandCollapse" default="Allow-default expanded" type="String" access="global" />
+    <aura:attribute name="IsMainExpEnabled" default="true" type="Boolean" access="global" />
+    <aura:attribute name="RecordExpandCollapse" default="Allow-default expanded" type="String" access="global" />
+    <!-- Design Attributes End-->
+
+    <aura:attribute name="recordId" type="Id" />
+    <!--Id of the record if placed in any record detail page-->
+
+    <aura:attribute name="hasMoreRecords" default="false" type="Boolean" access="global" />
+    <aura:attribute name="lstSObjectRecords" default="" type="Object[]" access="global" />
+    <aura:attribute name="lstFieldsetResults" default="" type="Object[]" access="global" />
+    <aura:attribute name="lstDetailFieldsetResults" default="" type="Object[]" access="global" />
+    <aura:attribute name="lstRecordsDisplayed" default="" type="Object[]" access="global" />
+    <aura:attribute name="intRecordsDisplayed" default="" type="Integer" access="global" />
+    <aura:attribute name="picklistOptions" default="" type="Object[]" access="global" />
+    <aura:attribute name="intPicklistOptions" default="0" type="Integer" access="global" />
+    <aura:attribute name="SelectedPicklitsValue" default="" type="String" access="global" />
+    <aura:attribute name="totalRecords" default="" type="Integer" access="global" />
+    <aura:attribute name="strSearchString" default="" type="String" access="global" />
+    <aura:attribute name="globalTimeout" type="String" access="global" />
+    <aura:attribute name="showSpinner" type="Boolean" default="false" access="global" />
+    <aura:attribute name="IsMainCmpExpanded" type="Boolean" default="true" access="global" />
+    <aura:attribute name="displayModalDetailButton" type="Boolean" default="true" access="global" />
+
+    <!--Used for topic filtering fired from another component-->
+    <aura:attribute name="TopicId" default="" type="String" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <div id="SObjectListcontainer" class="forceBaseCard">
+        <div onclick="{!c.openClose}" class="{!'card-header '+(v.IsMainExpEnabled ? 'card-header--expandable' : '')}">
+            <h2 class="slds-text-heading_small card-header__heading">
+                {!v.Heading}
+                <div style="float: right;">
+                    <aura:if isTrue="{!v.IsMainCmpExpanded}">
+                        <lightning:icon iconName="utility:chevrondown" size="x-small" class="{!v.IsMainExpEnabled ? 'customIcon' : 'customIcon hide'}"
+                        />
+                        <aura:set attribute="else">
+                            <lightning:icon iconName="utility:chevronright" size="x-small" class="{!v.IsMainExpEnabled ? 'customIcon' : 'customIcon hide'}"
+                            />
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </h2>
+        </div>
+
+        <div aura:id="collapsibleDiv" class="{!v.IsMainCmpExpanded ? 'objectListBody' : 'objectListBody hide'}" style="padding:0.5rem;">
+            <div>
+                <aura:if isTrue="{!or(v.ShowSearchBox, v.picklistOptions.length > 1)}">
+                    <div class="slds-grid slds-wrap">
+                        <aura:if isTrue="{!v.ShowSearchBox}">
+                            <div class="slds-size_8-of-12 slds-medium-size_8-of-12 slds-large-size_8-of-12">
+                                <div class="slds-form-element">
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-input-has-icon slds-input-has-icon--right" style="max-width:15rem">
+                                            <button aura:id="closeBTN" class="slds-icon slds-input__icon slds-icon--x-small closeBtn hide" onclick="{!c.clearSearch}">
+                                                <lightning:icon iconName="utility:close" size="xx-small" class="searchClearIcon" />
+                                            </button>
+                                            <ui:inputText aura:id="searchInput" class="slds-lookup__search-input slds-input" placeholder="Search..." updateOn="keyup"
+                                                keyup="{!c.searchRecords}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!v.picklistOptions.length > 1}">
+                            <div class="slds-size_8-of-12 slds-medium-size_8-of-12 slds-large-size_8-of-12">
+                                <div class="slds-form-element slds-text-align--left filterDiv">
+                                    <div aria-expanded="true" class="slds-picklist slds-dropdown-trigger customPicklist" onmouseover="{!c.showPickListDropDown}">
+                                        <button class="slds-button slds-button--neutral picklistBtn" aria-haspopup="true">
+                                            <span class="slds-truncate" aura:id="picklistcheck">{!v.SelectedPicklitsValue.length ? v.SelectedPicklitsValue : v.PicklistFilterLabel}</span>
+                                            <lightning:icon iconName="utility:down" size="x-small" class="customIcon dropDownIcon" />
+                                        </button>
+                                        <div aura:id="picklistOptions" class="slds-dropdown slds-dropdown--left slds-dropdown--small slds-dropdown--menu">
+                                            <ul class="slds-dropdown__list" role="menu">
+                                                <aura:iteration items="{!v.picklistOptions}" var="option">
+                                                    <li class="slds-dropdown__item slds-has-icon--left slds-text-align--left listItem">
+                                                        <a class="slds-truncate filterVal" role="menuitemradio" onclick="{!c.onPicklistChange}">
+                                                            <span> {!option.value} </span>
+                                                        </a>
+                                                    </li>
+                                                </aura:iteration>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+                        <div aura:id="spinnerWrapper" class="{!v.showSpinner ? 'spinnerIcon' : 'spinnerIcon hide'}">
+                            <lightning:spinner size="small" />
+                        </div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.ListViews}">
+                    <div class="slds-form-element slds-text-align--left filterDiv">
+                        <div aria-expanded="true" class="slds-picklist slds-dropdown-trigger customPicklist" onmouseover="{!c.showDropDown}">
+                            <button class="slds-button slds-button--neutral picklistBtn" aria-haspopup="true">
+                                <span class="slds-truncate" aura:id="filtercheck">{!v.filter.length ? v.filter : v.ListViewFilterLabel}</span>
+                                <lightning:icon iconName="utility:down" size="x-small" class="customIcon dropDownIcon" />
+                            </button>
+                            <div aura:id="filter-dropdown" class="slds-dropdown slds-dropdown--left slds-dropdown--small slds-dropdown--menu">
+                                <ul class="slds-dropdown__list" role="menu">
+                                    <aura:iteration items="{!v.lstListView}" var="listView">
+                                        <li class="slds-dropdown__item slds-has-icon--left slds-text-align--left listItem">
+                                            <a class="slds-truncate filterVal" role="menuitemradio" onclick="{!c.filterRecords}">
+                                                <span> {!listView} </span>
+                                            </a>
+                                        </li>
+                                    </aura:iteration>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+
+            <aura:if isTrue="{!and(v.lstRecordsDisplayed.length > 0, v.lstFieldsetResults.length > 0)}">
+                <div>
+                    <aura:iteration items="{!v.lstRecordsDisplayed}" var="objectRecord">
+                        <c:SL_ObjectRecord SObjectRecord="{!objectRecord}" FieldsetResults="{!v.lstFieldsetResults}" DetailFieldsetResults="{!v.lstDetailFieldsetResults}"
+                            ShowFieldLabel="{!v.ShowFieldLabel}" RecordExpandCollapse="{!v.RecordExpandCollapse}" DisableLinks="{!v.DisableLinks}"
+                            SObjectName="{!v.SObjectName}" DetailBehaviour="{!v.DetailBehaviour}" ModalPopupHeaderText="{!v.ModalPopupHeader}"
+                            componentTimeId="{!v.componentTimeId}" auraId="{!objectRecord.Id + '__list'}" showAttachmentsInList="{!v.showAttachments}"
+                            ShowAttListPopu="{!v.ShowAttListPopu}" BoolForModelPopup="{!v.BoolForModelPopup}" BoolForDropDown="{!v.BoolForDropDown}"
+                            ShowAttachmentDetail="{!v.ShowAttachmentDetail}" width="{!v.width}" displayModalDetailButton="{!v.displayModalDetailButton}"
+                        />
+                    </aura:iteration>
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.intRecordsDisplayed == 0}">
+                <div class="noRecAlert">
+                    <lightning:icon iconName="utility:info" size="small" class="infoIcon" />&nbsp;&nbsp;No records to show
+                </div>
+            </aura:if>
+
+            <div aura:id="showmorebtn" class="{!v.hasMoreRecords ? 'slds-text-align--center ' : ' hide'}">
+                <a style="width: 175px; margin-left: auto; margin-right: auto;" class="showMoreBtn" id="btnShowMore" onclick="{!c.showMore}">View More</a>
+            </div>
+        </div>
+    </div>
+</aura:component>

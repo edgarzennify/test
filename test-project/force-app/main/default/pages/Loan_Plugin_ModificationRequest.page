@@ -1,0 +1,19 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c"
+    extensions="Loan_PluginController"
+    showHeader="false"
+    sidebar="false"
+    action="{!initialize}"
+    lightningStylesheets="true">
+    
+  <apex:relatedList subject="{!ebAccount}" list="Modification_Requests__r" rendered="{! ebAccount != NULL }" />
+  <apex:pageBlock title="Modification Requests" tabStyle="LLC_BI__Loan__c" rendered="{! ebAccount == NULL }"  >
+    <apex:pageBlockButtons location="top">
+      <input value="New Modification Request" />
+    </apex:pageBlockButtons>
+    <apex:outputText >No Modification Requests available for <i>{! loan.LLC_BI__lookupKey__c }</i></apex:outputText>
+  </apex:pageBlock>
+  <c:Eb_PluginHelper newObjectButtonText="New Modification Request"
+      newObjectButtonUrl="/setup/ui/recordtypeselect.jsp?ent=01I13000001uG6Q&retURL=%2F{!loan.Id}%3Fnooverride%3D1&save_new_url=%2Fa2n%2Fe%3FCF00N1300000B7A8e%3D{!ebAccount.Name}%26CF00N1300000B7A8e_lkid%3D{!ebAccount.Id}%26retURL%3D%252F{!loan.Id}%253Fnooverride%253D1" />
+      
+</apex:page>

@@ -1,0 +1,21 @@
+<!-- Informs users they cannot use the New button on the Entity detail page to create Entity records. -->
+<apex:page standardController="Account" 
+    title="Direct Entity Creaition Not Allowed" 
+    tabStyle="Account" 
+    showHeader="true" 
+    sidebar="true" 
+    showChat="true" 
+    cache="false" 
+    label="EntityNewRestricted" 
+    Name="EntityNewRestricted" >
+    
+    <apex:sectionHeader title="Entity Creation" />
+    <apex:pageBlock title="" mode="view">  
+        <apex:outputPanel layout="block" style="background-color: #F5F5F5" >
+            <span style="font-family: Verdana; font-size: 16pt; font-weight: bold; margin: 50px 4px 0 30px">
+                New Entities may only be created by converting <a href="/00Q/o">Leads</a>.
+            </span>
+        </apex:outputPanel>
+    </apex:pageBlock>
+
+</apex:page>

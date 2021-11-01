@@ -1,0 +1,32 @@
+.custom-title-header span {
+	color: #183963;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: normal;
+}
+.content-display {
+    width: unset !important;
+}
+.vertical-select {
+	width: unset !important;
+	display: none !important;
+}
+.dropdown-select {
+    display: none !important;
+}
+@media (min-width: 1000px) {
+	.content-display {
+		width: 80% !important;
+	}
+}
+@media (min-width: 1000px) {
+	.vertical-select {
+		width: 20% !important;
+		display: unset !important;
+	}
+}
+@media (max-width: 1000px) {
+	.dropdown-select {
+		display: unset !important;
+	}
+}

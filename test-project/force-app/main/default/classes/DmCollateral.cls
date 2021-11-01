@@ -1,0 +1,21 @@
+public class DmCollateral {
+	public String Id {get;set;}
+	public String Name {get;set;}
+    public String CoreName {get;set;}
+	public String Description {get;set;}
+	public Decimal LendableValue {get;set;}
+	public Decimal MarketValue {get;set;}
+    public Decimal AppraisedValue {get;set;}
+    public Date AppraisedValueDate {get;set;}
+    public Boolean IsModifiedCollateralType {get;set;}
+    public String FloodInsuranceRequired {get;set;}
+    public String AssignmentOfRents {get;set;}
+	public String Street {get;set;}
+    public String City {get;set;}
+    public String State {get;set;}
+    public String PostalCode {get;set;}
+    public String County {get;set;}
+	public DmCollateralType CollateralType {get;set;}
+	public DmEntity PrimaryOwner {get;set;}
+    public String parcelNumber {get;set;}
+}

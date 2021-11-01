@@ -1,0 +1,221 @@
+<apex:page sidebar="false" controller="DocumentTreeController" showheader="true" title="Expanded View" >
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" />
+<apex:includeScript value="{!URLFOR($Resource.select2release32, '/select2-release-3.2/select2.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.select2release32, '/select2-release-3.2/select2.css')}"/>
+<!-- 
+Select2 is a jQuery based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results. 
+Look and feel of Select2 is based on the excellent Chosen library. 
+http://ivaynberg.github.com/select2/index.html
+ -->
+    <apex:form id="theform">
+        <script type="text/javascript">
+           var isLink = true;
+           var buttonText = "Click here to upload files...";
+       </script>
+               <apex:repeat value="{!breadcrumbLinkList}" var="bc">
+            <apex:outputLink value="/apex/TreeView?pageKey={!bc.Key}&pageKeyType={!bc.KeyType}&h={!history}" target="_top">{!bc.Name}</apex:outputLink>
+            <apex:outputLabel value="{!Separator}" />
+        </apex:repeat>
+        <apex:outputtext value="<br/>" escape="false" rendered="{!!ISNULL(breadcrumbLinkList)}" />
+        <div style="float:left;">
+            <apex:image rendered="{!showEntityIcon}" url="{!URLFOR($Resource.account_icon)}" title="Entity" alt="Entity" />
+            <apex:image rendered="{!showAccountIcon}" url="{!URLFOR($Resource.ebaccount_icon)}" title="Account" alt="Account" />
+            <apex:image rendered="{!showCollateralIcon}" url="{!URLFOR($Resource.ebcollateral_icon)}" title="Collateral" alt="Collateral" />
+        </div>
+        <div style="float:left;margin:13px 0 15px 5px;">
+            <span style="padding-top:20px;font-size:20px;font-weight:bold;"><apex:outputLabel value="{!parentName}" /></span>
+        </div>
+        <div style="float:right; margin-top:15px">
+        <c:BarcodeGeneratorDropzone objectId="{!ObjectId}"></c:BarcodeGeneratorDropzone>
+        </div>
+        <apex:pageBlock >
+        <input style="display:none"/>
+            <apex:pageBlockTable value="{!relatedObjects}" var="ro" >
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortTopData}" value="Related To {!IF(topSortParameter=='Name',IF(topSortDirection='ASC','▲','▼'),'')}" id="cmdSort00">
+                            <apex:param value="Name" name="column" assignTo="{!topSortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Entity"><apex:image rendered="{!IF(ro.ObjectType="Entity",true,false)}" url="{!URLFOR($Resource.account_small_icon)}" title="Entity" alt="Entity" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Loans"><apex:image rendered="{!IF(ro.ObjectType="Loans" && ro.iInactive<>1,true,false)}" url="{!URLFOR($Resource.ebaccount_small_icon)}" title="Loan" alt="Loan" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Deposits"><apex:image rendered="{!IF(ro.ObjectType="Deposits" && ro.iInactive<>1,true,false)}" url="{!URLFOR($Resource.ebaccount_small_icon)}" title="Deposit" alt="Deposit" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Time Deposits"><apex:image rendered="{!IF(ro.ObjectType="Time Deposits" && ro.iInactive<>1,true,false)}" url="{!URLFOR($Resource.ebaccount_small_icon)}" title="Time Deposit" alt="Time Deposit" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Trust"><apex:image rendered="{!IF(ro.ObjectType="Trust" && ro.iInactive<>1,true,false)}" url="{!URLFOR($Resource.ebaccount_small_icon)}" title="Trust" alt="Trust" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Oreo"><apex:image rendered="{!IF(ro.ObjectType="Oreo" && ro.iInactive<> 1,true,false)}" url="{!URLFOR($Resource.ebaccount_small_icon)}" title="Oreo" alt="Oreo" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Inactive Loan"><apex:image rendered="{!IF(ro.ObjectType="Loans" && ro.iInactive=1,true,false)}" url="{!URLFOR($Resource.ebaccount_inactive_small_icon)}" title="Inactive Loan" alt="Inactive Loan" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Inactive Deposit"><apex:image rendered="{!IF(ro.ObjectType="Deposits" && ro.iInactive=1,true,false)}" url="{!URLFOR($Resource.ebaccount_inactive_small_icon)}" title="Inactive Deposit" alt="Inactive Deposit" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Inactive Time Deposit"><apex:image rendered="{!IF(ro.ObjectType="Time Deposits" && ro.iInactive=1,true,false)}" url="{!URLFOR($Resource.ebaccount_inactive_small_icon)}" title="Inactive Time Deposit" alt="Inactive Time Deposit" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Inactive Trust"><apex:image rendered="{!IF(ro.ObjectType="Trust" && ro.iInactive=1,true,false)}" url="{!URLFOR($Resource.ebaccount_inactive_small_icon)}" title="Inactive Trust" alt="Inactive Trust" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Inactive Oreo"><apex:image rendered="{!IF(ro.ObjectType="Oreo" && ro.iInactive=1,true,false)}" url="{!URLFOR($Resource.ebaccount_inactive_small_icon)}" title="Inactive Oreo" alt="Inactive Oreo" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Collateral"><apex:image rendered="{!IF(ro.ObjectType="Collateral" && ro.iInactive<>1,true,false)}" url="{!URLFOR($Resource.ebcollateral_small_icon)}" title="Collateral" alt="Collateral" /></apex:outputLink>
+                    <apex:outputLink value="/{!ro.SfdcObjectID}" target="_blank" title="Released Collateral"><apex:image rendered="{!IF(ro.ObjectType="Collateral" && ro.iInactive= 1,true,false)}" url="{!URLFOR($Resource.ebcollateral_inactive_small_icon)}" title="Released Collateral" alt="Released Collateral" /></apex:outputLink>                    
+                    <apex:outputLink value="/apex/TreeView?pageKey={!ro.Key}&pageKeyType={!ro.KeyType}&h={!history}" target="_top">{!ro.Name}</apex:outputLink>
+                </apex:column>
+                 <apex:column value="{!ro.RelationshipName}">
+                    
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortTopData}" value="Relationship {!IF(topSortParameter=='RelationshipName',IF(topSortDirection='ASC','▲','▼'),'')}" id="cmdSort40">
+                            <apex:param value="RelationshipName" name="column" assignTo="{!topSortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column value="{!ro.Status}"  >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortTopData}" value="Status {!IF(topSortParameter=='Inactive',IF(topSortDirection='ASC','▲','▼'),'')}" id="cmdSort41">
+                            <apex:param value="Inactive" name="column" assignTo="{!topSortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column value="{!ro.iDocumentCount}">
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortTopData}" value="Documents {!IF(topSortParameter=='DocumentCount',IF(topSortDirection='ASC','▲','▼'),'')}" id="cmdSort42">
+                            <apex:param value="DocumentCount" name="column" assignTo="{!topSortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+            </apex:pageBlockTable>
+            <apex:outputLabel value="No records to display" rendered="{!(ISNULL(relatedObjects))}" styleClass="noRowsHeader"></apex:outputLabel>
+        </apex:pageBlock>
+        <apex:inputText id="bogus" style="width:0px;height:0px;border:none;"/>
+        <apex:pageBlock > 
+            <apex:pageBlockSection title="Filter Results" collapsible="true" columns="2" >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Related To"></apex:outputLabel>           
+                    <apex:selectList value="{!relatedToFilterSelectedValue}" multiselect="true" style="width:450px"  id="filterList2"  >
+                        <apex:selectOptions value="{!relatedToFilterList}" />
+                   </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Document"></apex:outputLabel>           
+                    <apex:selectList value="{!documentTypeFilterSelectedValue}" multiselect="true" style="width:450px" id="filterList"  >
+                        <apex:selectOptions value="{!documentTypeFilterList}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Start Date"></apex:outputLabel>
+                    <apex:inputField label="Start Date" value="{!filterDate.Bogus_Date_1__c}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="End Date"></apex:outputLabel>
+                    <apex:inputField label="End Date" value="{!filterDate.Bogus_Date_2__c}"  />
+                </apex:pageBlockSectionItem>
+                 <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Drawer Name"></apex:outputLabel>           
+                    <apex:selectList value="{!drawerNameFilterSelectedValue}" multiselect="true" style="width:200px" id="filterList3"  >
+                        <apex:selectOptions value="{!drawerNameFilterList}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+               <apex:pageBlockSectionItem >
+                    <apex:commandbutton action="{!filterResults}" value=" apply filter "/>
+                     <apex:commandbutton action="{!clearFilter}" value=" clear filter "/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>                   
+            <apex:pageBlockTable value="{!viewableList}" var="o" >
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Related To{!IF(sortParameter=='Name',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort0">
+                            <apex:param value="Name" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                    <apex:outputText value="{!o.Name}" />
+                </apex:column>
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Document {!IF(sortParameter=='DocTypeName',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort1">
+                            <apex:param value="DocTypeName" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                    
+                    <div style="float:left">
+                        <apex:outputLink value="{!o.DocumentURL}" target="_blank">{!o.DocTypeName}</apex:outputLink>
+                    </div>
+                    <div style="float:right;padding-right:1em;">
+                        <apex:outputLink title="Edit" rendered="{!showEditLink}" value="{!o.DocumentURL}&displaysearchwindow=1" target="_blank"><apex:image value="/img/icon/custom51_100/pencil16.png" /></apex:outputLink>
+                    </div>
+                    
+                </apex:column>
+                <apex:column value="{!o.FormattedDocumentDate}" >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Document Date {!IF(sortParameter=='DocumentDate',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort2">
+                            <apex:param value="DocumentDate" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>                        
+                </apex:column>
+                <apex:column value="{!o.FormattedCreatedDate}" >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Imaged Date {!IF(sortParameter=='CreatedDate',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort5">
+                            <apex:param value="CreatedDate" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>                        
+                </apex:column>
+                <apex:column value="{!o.Comment}"  >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Comment {!IF(sortParameter=='Comment',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort4">
+                            <apex:param value="Comment" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>
+                <apex:column value="{!o.DrawerName}"  >
+                    <apex:facet name="header">
+                        <apex:commandLink action="{!SortData}" value="Drawer Name {!IF(sortParameter=='DrawerName',IF(sortDirection='ASC','▲','▼'),'')}" id="cmdSort3">
+                            <apex:param value="DrawerName" name="column" assignTo="{!sortParameter}" ></apex:param>
+                        </apex:commandLink>
+                    </apex:facet>
+                </apex:column>      
+            </apex:pageBlockTable>
+             <br/>
+            <apex:commandLink action="{!previousPage}" rendered="{!pager.hasPreviousPage}" value="◄ Previous" />
+            <apex:outputLabel value="◄ Previous" rendered="{!!pager.hasPreviousPage}" style="color:#999;" />
+            <span style="padding: 0 10px 0 10px;">
+                <apex:outputLabel value="Page " />
+                <apex:selectList value="{!pager.currentSelectedPage}" size="1" id="pagesList" rendered="{!IF(pager.totalPages>1,true,false)}" >
+                    <apex:selectOptions value="{!pager.pagesList}" />
+                    <apex:actionSupport event="onchange" action="{!skipToSelectedPage}" />
+                </apex:selectList>
+                <apex:outputLabel value="1" rendered="{!IF(pager.totalPages>1,false,true)}" />
+                <apex:outputLabel value=" of " />
+                <apex:outputLabel value="{!pager.totalPages}" />                
+            </span>
+            <apex:commandLink action="{!nextPage}" rendered="{!pager.hasNextPage}" value="Next ►"  />
+            <apex:outputLabel value="Next ►" rendered="{!!pager.hasNextPage}" style="color:#999;" />
+            <apex:outputLabel value="No records to display" rendered="{!(ISNULL(viewableList))}" styleClass="noRowsHeader"></apex:outputLabel>   
+       </apex:pageBlock>
+    </apex:form>
+    
+
+    <script>
+        j$ = jQuery.noConflict();  //prevents conflict with other $ selectors used by sfdc
+        j$(document).ready(function() 
+         {    
+
+          j$('[id$=filterList2]').select2({closeOnSelect:true });   //,placeholder:"Select Accounts/Entities/Collateral"}); 
+          j$('[id$=filterList]').select2({closeOnSelect:true});   //,placeholder:"Select Documents"});
+          j$('[id$=filterList3]').select2({closeOnSelect:true});   //,placeholder:"Select Drawers"});
+          setTabIndex();
+          setTimeout(function(){         
+            j$('.select2-input:first').focus();
+          },250);
+         }
+        );
+        
+        function setTabIndex(){
+             var tabindex = 100;
+             j$('[id$=theform]').find('input,select').each(function() {
+                if (this.type != "hidden") {
+                    var $input = j$(this);
+                    if ($input.attr('readonly')){
+                    } else {                    
+                        $input.attr("tabindex", tabindex);
+                        tabindex++;
+                        //alert($input + " - " + tabindex)
+                    }
+                }
+            });
+        }
+        
+        
+    </script>
+    
+    
+</apex:page>

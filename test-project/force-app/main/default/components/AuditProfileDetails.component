@@ -1,0 +1,29 @@
+<apex:component >
+
+	<apex:attribute name="profileDetails" type="AuditProfileDetails[]" required="true" description="A list of profile detail items." />
+
+    <apex:pageBlock title="Profiles With Access">
+        <div class="permissionProfileTable">
+        <apex:pageBlockTable var="pws" value="{!profileDetails}" >
+            <apex:column headerValue="Profile" >
+                <apex:outputLink value="/{!pws.profileId}" target="_blank">{!pws.profileName}</apex:outputLink>
+            </apex:column>
+            <apex:column headerValue="Read Access" value="{!pws.readAccess}" styleClass="readEditAccessCol" headerClass="readEditAccessCol"/>
+            <apex:column headerValue="Edit Access" value="{!pws.editAccess}" styleClass="readEditAccessCol" headerClass="readEditAccessCol"/>
+        </apex:pageBlockTable>
+        </div>
+    </apex:pageBlock>
+
+    <style type="text/css">
+	    .readEditAccessCol{
+	        max-width: 100px;
+	        width: 100px;
+	    }
+	    .permissionProfileTable {
+	        width:auto;
+	        min-width: 450px;
+	        max-width: 750px;
+	    }
+	</style>
+
+</apex:component>

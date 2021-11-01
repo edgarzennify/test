@@ -1,0 +1,109 @@
+<apex:page docType="html-5.0"
+    controller="GatewayApiController"
+    standardStylesheets="false"
+    showHeader="false" >
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/1.4.5/numeral.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/react.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/JSXTransformer.js"></script>
+    <style>
+        body{background-color:transparent;}
+        .toolbox {
+            /*margin-right: 2px;*/
+        }
+        .fa-ul{
+            margin-left: 23px;
+        }
+        .backway-button {
+            width: 100%;
+        }
+        .backway-button__img {
+            max-width: 100%;
+        }
+    </style>
+    <div id="container" />
+    <script type="text/jsx">        
+        var Loader = React.createClass({
+          render: function(){
+            return (
+                <ul className="fa-ul">
+                    <li><i className="fa fa-li fa-refresh fa-spin" />{this.props.message}</li>
+                </ul>
+            )
+          }
+        })
+        
+        var Link = React.createClass({
+            render: function(){
+                return (
+                    <a href={this.props.url} target="_blank" className="backway-button">
+                        <img title={this.props.description} className="backway-button__img" src="{!$Resource.BackwayLogo}"/>
+                    </a>
+                )
+            }
+        })
+        
+        var Toolbox = React.createClass({
+            render: function(){
+                var links = this.props.links != null ? this.props.links : [];
+                var results = [];
+                links.map(function(l){
+                    results.push(<Link url={l.Url} description={l.Description} />);
+                });
+                return (
+                    <div className="toolbox" >
+                      {results}
+                    </div>
+                )
+            }
+        })
+        
+        var ToolboxController = React.createClass({
+            getInitialState : function(){
+                return {data:[], loading:false};
+            },
+            componentDidMount: function(){
+                this._loadAsync();
+            },
+            _getEndpoint: function(){
+                var p = { type:"user", key:"{!$User.Email}" };
+                if("{!$CurrentPage.parameters.type}".toLowerCase() == "division"){
+                    p = { type:"division", key:encodeURIComponent("{!$User.Division}") };
+                }
+                return "/toolboxes/" + p.type + "/" + p.key;
+            },
+            _loadAsync : function(){
+                this.setState({loading:true});                
+                Visualforce.remoting.Manager.invokeAction("{!$RemoteAction.GatewayApiController.get}"
+                    ,"EbridgeUrl", this._getEndpoint(), 30
+                    ,function(result, event){
+                        if (event.status) {
+                            if(result != ''){
+                                this.setState({data: JSON.parse(result)});
+                            }    
+                        }
+                        this.setState({loading:false});
+                     }.bind(this)
+                     ,{escape: false}
+                );        
+            },
+            render: function(){
+                    if(this.state.loading)
+                        return (
+                            <Loader message="Retrieving Ebridge Toolbox..." />
+                        )
+                    else
+                        return (
+                            <Toolbox links={this.state.data} />
+                        )
+            }
+        })
+        
+        React.render(
+          <ToolboxController />,
+          document.getElementById('container')
+        );
+    </script>
+</apex:page>

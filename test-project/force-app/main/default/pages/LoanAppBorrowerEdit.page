@@ -1,0 +1,266 @@
+<apex:page standardController="EB_Loan_App_Entity_Relationship__c" extensions="LoanAppBorrowerEditController" showheader="true">
+  <apex:pageMessages />
+  <style>TEXTAREA { font-family: arial, verdana, ms sans serif; font-size: 10pt; font-weight:
+  normal; width:100%; Height:35px }</style>
+  <apex:form >
+    <apex:sectionHeader title="Related Entity for {!Quotes}{!getLoanApplicationName}{!Quotes}" />
+    <div style="padding:5px;">
+    Quick Links:&nbsp;<a href="http://ebatwork/eitswebapp/logon.aspx" target="_blank">EITS</a>&nbsp;|&nbsp;<a href="http://webcapture:8080/isview/index.jsp" target="_blank">Treev</a>&nbsp;|&nbsp;<a href="https://production.penleyinc.com/penley/" target="_blank">Penley</a>
+    </div>
+    <apex:pageBlock mode="edit" >
+      <apex:pageBlockButtons >
+        <apex:commandButton value="Save" action="{!SaveBorrower}" />
+        <apex:commandButton value="QuickSave" action="{!SaveQuickBorrower}" />
+        <apex:commandButton value="Cancel" action="{!CancelBorrower}" immediate="true" />
+      </apex:pageBlockButtons>
+      <apex:pageBlockSection title="Related Entity Details (Required For Approval)">
+        <apex:pageBlockSectionItem >
+       
+          <apex:outputLabel value="Relationship Type" for="RelTypeList" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+              <apex:actionRegion immediate="true">
+                <apex:selectList value="{!dropdownRelationshipTypeId}" size="1" id="RelTypeList" tabindex="1" required="true" >
+                  <apex:actionSupport action="{!SetSearch}" event="onchange" reRender="MainPanel,MainPanel2" />
+                  <apex:selectOptions value="{!RelTypes}"></apex:selectOptions>
+                </apex:selectList>
+              </apex:actionRegion>
+            </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageblocksectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="SubType" for="SubTypePicklist" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+              <apex:selectList value="{!dropdownSubTypeId}" size="1" id="SubTypeList" tabindex="1" rendered="true"  >
+                   <apex:actionSupport action="{!SetSearch}" event="onchange" reRender="StateOfReg, StateOfRegLabel" />
+                <apex:selectOptions value="{!SubType}" />
+              </apex:selectList>
+            </apex:outputPanel>
+        </apex:pageblocksectionItem>
+        <apex:pageblocksectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="SubType" for="SubTypePicklist" />
+          <apex:outputField id="SubTypePicklist" value="{!a.Sub_Type__c}" />
+        </apex:pageblocksectionItem>
+       
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="Entity Name" />
+          <apex:inputField value="{!a.Name}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="Entity Name" />
+          <apex:outputField value="{!a.Name}" />
+        </apex:pageBlockSectionItem>  
+         <apex:pageBlockSectionItem >
+          <apex:outputLabel value="Net Worth" for="NetWorth" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="NetWorth" value="{!a.Net_Worth__c}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem> 
+        <apex:pageBlockSectionItem rendered="true" helpText="{!$ObjectType.Account.Fields.EB_Client_Name__c.inlineHelpText}">
+          <apex:outputLabel value="Core Name" />
+          <apex:outputField id="EntityName" value="{!a.EB_Client_Name__c}" />
+        </apex:pageBlockSectionItem> 
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="Liquid Asset" for="LiquidAsset" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="LiquidAsset" value="{!a.Liquid_Assets__c}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>    
+         <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$ObjectType.Account.Fields.OFAC_Verified__c.label}" for="ofacList" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:selectList value="{!dropdownOfacVerifiedId}" size="1" id="ofacList">
+                  <apex:selectOptions value="{!OfacVerified}"></apex:selectOptions>
+              </apex:selectList>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>       
+        <apex:pageBlockSectionItem helpText="{!$ObjectType.EB_Loan_App_Entity_Relationship__c.Fields.Loan_App_Net_Worth__c.inlineHelpText}">
+            <apex:outputLabel value="{!$ObjectType.EB_Loan_App_Entity_Relationship__c.Fields.Loan_App_Net_Worth__c.Label}" for="LNetWorth" />
+          <apex:inputField id="LNetWorth" value="{!r.Loan_App_Net_Worth__c}" />
+        </apex:pageBlockSectionItem>       
+       
+        <apex:pageBlockSectionItem >
+          <apex:outputpanel id="StateOfRegLabel"  >
+            <apex:outputLabel value="{!$ObjectType.Account.Fields.State_Of_Incorporation__c.label}" for="StateOfIncorp" rendered="{!IF(dropdownSubTypeId == 'Personal', 'false','true')}" />
+            <apex:outputLabel value="" rendered="{!IF(dropdownSubTypeId == 'Personal', 'true','false')}" />
+          </apex:outputpanel>
+          <apex:outputpanel id="StateOfReg"  >
+            <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:selectList value="{!dropdownStateOfIncorporationId}" size="1" id="StateOfIncorporationList" rendered="{!IF(dropdownSubTypeId == 'Personal', 'false','true')}">
+                <apex:selectOptions value="{!StateOfIncorporation}"></apex:selectOptions>
+              </apex:selectList>
+            </apex:outputpanel>
+          </apex:outputpanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$ObjectType.EB_Loan_App_Entity_Relationship__c.Fields.Loan_App_Liquid_Assets__c.Label}" for="LLiquidAsset" />
+          <apex:inputField id="LLiquidAsset" value="{!r.Loan_App_Liquid_Assets__c}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+            <apex:outputLabel value="Referral Source" />
+            <apex:inputField value="{!a.Referral_Source_LU__c}" />
+        </apex:pageBlockSectionItem>   
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="Last Financial Statement" for="LFstmt" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="LFstmt" value="{!a.Last_Financial_Statement__c}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>                            
+      </apex:pageBlockSection>
+       <apex:outputpanel id="MainPanel2">
+         <apex:pageBlockSection >
+              <apex:pageblocksectionItem rendered="{!LimitedUnlimitedVisibility}" >
+                <apex:outputLabel value="Guarantee Exists" for="GuaranteeExists"/>
+                <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                    <apex:selectList value="{!dropdownGuaranteeExistsId}" size="1" id="GuaranteeExists" required="{!LimitedUnlimitedVisibility}" >
+                        <apex:selectOptions value="{!GuaranteeExists}"></apex:selectOptions>
+                    </apex:selectList>
+                </apex:outputPanel>
+              </apex:pageBlockSectionItem>
+         </apex:pageBlockSection>
+         
+       </apex:outputpanel>
+      <apex:outputpanel id="MainPanel">
+        <apex:pageBlockSection >       
+          <apex:pageBlockSectionItem rendered="{!LimitedUnlimitedVisibility}">
+            <apex:outputLabel value="Limited or Unlimited" for="LimitUnlimitList" />
+              <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+            <apex:actionRegion immediate="true">
+              <apex:selectList value="{!dropdownLimitedUnlimitedId}" size="1"
+              id="LimitUnlimitList">
+                <apex:actionSupport action="{!SetSearch}" event="onchange" reRender="MainPanel" />
+                <apex:selectOptions value="{!LimitedUnlimitedTypes}"></apex:selectOptions>
+              </apex:selectList>
+            </apex:actionRegion>
+            </apex:outputpanel>
+          </apex:pageBlockSectionItem>       
+           <apex:pageBlockSectionItem rendered="{!IsGarantorAndLimited}" >
+               <apex:outputLabel value=""/>
+           </apex:pageBlockSectionItem>
+          <apex:pageBlockSectionItem rendered="{!IsGarantorAndLimited}">
+            <apex:outputLabel value="Limitation" for="Limitation" />
+              <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+            <apex:inputText id="Limitation" value="{!r.Limitation__c}" />
+            </apex:outputpanel>
+          </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        <!-- added on 7/24/2012 KM -->
+           <apex:pageBlockSection >
+              <apex:pageblocksectionItem rendered="{!IsGarantorAndLimited}" >
+                <apex:outputLabel value="Guarantee Specification" for="GuarantySpecification"/>
+                <apex:outputPanel layout="block" styleClass="requiredInput">
+                    <apex:outputPanel layout="block" styleClass="requiredBlock"/>
+                    <apex:selectList value="{!dropdownGuarantySpecificationId}" size="1" id="GuarantySpecification" required="{!GuarantySpecificationVisibility}" >
+                        <apex:selectOptions value="{!GuarantySpecification}"></apex:selectOptions>
+                    </apex:selectList>
+                </apex:outputPanel>
+              </apex:pageBlockSectionItem>
+         </apex:pageBlockSection>
+      </apex:outputpanel> 
+      
+        <apex:pageBlockSection >
+         <apex:pageBlockSectionItem >
+             <apex:outputLabel value="Special Requirements" for="specialrequirement" />
+             <apex:inputField id="specialrequirement" value="{!a.Financial_Monitoring_Special_Req__c}" />
+         </apex:pageBlockSectionItem>
+        </apex:pageblocksection>
+       
+       <apex:pageBlockSection title="Related Entity Details (Required For Documentation)">
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="Street" for="street1" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="street1" value="{!a.BillingStreet}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="Street" for="Street" />
+          <apex:outputField id="Street" value="{!a.BillingStreet}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="SSN/TIN" for="SSNTIN"  />
+          <apex:outputField id="SSNTIN" value="{!a.SSNTIN_Encrypted__c}" />
+        </apex:pageBlockSectionItem>
+         <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="SSN/TIN" for="SSNTIN"  />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="SSNTIN" value="{!a.SSNTIN_Encrypted__c}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="City" for="City" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="City" value="{!a.BillingCity}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="City" for="City" />
+          <apex:outputField id="City" value="{!a.BillingCity}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem >
+          <apex:outputLabel value="{!$ObjectType.Account.Fields.Reg_O_Qualifications__c.label}{!$ObjectType.Account.Fields.Reg_O_Qualifications__c.inlineHelpText}"
+          for="regoList" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:selectList value="{!dropdownRegOQId}" size="1" id="regoList">
+                <apex:selectOptions value="{!RegOQ}"></apex:selectOptions>
+              </apex:selectList>
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="State" for="State" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="State" value="{!a.BillingState}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="State" for="State" />
+          <apex:outputField id="State" value="{!a.BillingState}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageblocksectionItem >
+          <apex:outputLabel value="Reg O Foreign Institution" for="RegFI" />
+          <apex:inputField id="RegFI" value="{!a.Reg_O_Foreign_Insitution__c}" />
+        </apex:pageblocksectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+          <apex:outputLabel value="Zip" for="Zip" />
+          <apex:outputPanel layout="block" styleClass="requiredInput">
+              <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+              <apex:inputField id="Zip" value="{!a.BillingPostalCode}" />
+          </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="Zip" for="Zip" />
+          <apex:outputField id="Zip" value="{!a.BillingPostalCode}" />
+        </apex:pageBlockSectionItem>
+        <apex:pageblocksectionItem >
+          <apex:outputLabel value="Reg O Foreign Institution Title" for="RegFIT" />
+          <apex:inputField id="RegFIT" value="{!a.Reg_O_Foreign_Insitution_Title__c}" />
+        </apex:pageblocksectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'false','true')}">
+         <apex:outputLabel value="Phone" for="Phone"  />
+         <apex:outputPanel layout="block" styleClass="requiredInput">
+         <apex:outputPanel layout="block" styleClass="requiredBlock" style="background-color:#0000ff;"/>
+         
+          <apex:inputText id="Phone" value="{!a.Phone}" />
+           </apex:outputPanel>
+        </apex:pageBlockSectionItem>
+        <apex:pageBlockSectionItem rendered="{!IF(ReadonlyStatus=='true', 'true','false')}">
+          <apex:outputLabel value="Phone" for="Phone" />
+          <apex:outputText id="Phone" value="{!a.Phone}" />
+        </apex:pageBlockSectionItem>
+      </apex:pageBlockSection>
+    </apex:pageBlock>
+    <!-- <apex:outputLabel value="Error: {!err}"/> -->
+  </apex:form>
+</apex:page>

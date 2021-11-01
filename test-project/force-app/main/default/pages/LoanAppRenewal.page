@@ -1,0 +1,4 @@
+<apex:page standardController="EB_Account__c" showHeader="true" extensions="LoanAppRenewalController" action="{!RedirectToRenewalApp}">
+  <apex:pageMessages />
+  <apex:outputlabel value="Error creating renewal application. Please contact Administrator." />
+</apex:page>

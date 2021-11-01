@@ -1,0 +1,122 @@
+<apex:component controller="Entity360MiniComponentController">
+  <apex:attribute name="currentAccountId" type="String" description="" assignTo="{!entityId}" />
+  <apex:repeat value="{!elementViewModels}" var="vm" >
+      <div class="mini-container" >
+          <div class="header header-{!vm.elementType}">{!vm.elementSymbol}</div> 
+          <div class="detail opportunity">
+            <div class="percent-{!vm.opportunityPercent} content"></div>
+          </div>
+          <div class="detail detail-{!vm.elementType}">
+            <div class="percent-{!vm.existingPercent} content"></div>
+          </div> 
+      </div>
+  </apex:repeat>
+  <style type="text/css">
+.mini-container {
+    position: relative;
+    width: 20px; 
+    height: 20px;
+    background-color: white;
+    font-family:    Verdana, Tahoma,Helvetica,sans-serif;
+    font-size: 9px;
+    overflow: hidden;
+    margin: 1px;
+/*    padding: 1px;*/
+    float: left;
+    
+    border-radius: 5%;
+    
+    background-color: #DDDDDD;
+}
+
+.mini-container .header {
+    position: absolute;
+    top:1px;
+    left:1px;
+    font-weight: bold;
+    font-size: 9px;
+    color: #333;
+}
+
+.mini-container .header-inactive {
+    color: #999;
+}
+
+.mini-container .content {
+    width:100%;
+    text-align: center;
+    display: block;
+    clear: both;
+}
+
+.mini-container .detail {
+    display: block;
+    text-align: center;
+}
+
+.mini-container .opportunity-probability {
+    display: none;
+    background-color: #ffaa22;
+    float: left;
+}
+
+.mini-container .detail-active {
+    width: 100%;
+    background-color: #94C4FE;
+}
+
+.mini-container .detail-inactive {
+    width: 100%;
+}
+
+.mini-container .opportunity {
+    width: 100%;
+    background-color: #FFFF9D;
+}
+
+.mini-container .detail .percent-0 {
+    height: 0px;
+    visibility: hidden;
+}
+
+.mini-container .detail .percent-10 {
+    height: 2px;
+}
+
+.mini-container .detail .percent-20 {
+    height: 4px;
+}
+
+.mini-container .detail .percent-30 {
+    height: 6px;
+}
+
+.mini-container .detail .percent-40 {
+    height: 8px;
+}
+
+.mini-container .detail .percent-50 {
+    height: 10px;
+}
+
+.mini-container .detail .percent-60 {
+    height: 12px;
+}
+
+.mini-container .detail .percent-70 {
+    height: 14px;
+}
+
+.mini-container .detail .percent-80 {
+    height: 16px;
+}
+
+.mini-container .detail .percent-90 {
+    height: 18px;
+}
+
+.mini-container .detail .percent-100 {
+    height: 20px;
+}
+</style>
+</apex:component>

@@ -1,0 +1,79 @@
+<apex:page standardController="EB_Loan_Application__c" extensions="SynchronizeBookedLoanController">
+  <script language="javascript">
+   
+    function HideSubmitForApprovalButton(){
+        var x=document.getElementsByTagName("input")
+        var s="";
+        if(x.length > 0){
+            for(i=0;i<x.length;++i){
+                if( x[i].value=="Submit"){             
+                      x[i].style.visibility='hidden';
+                    
+                }
+            }
+        }       
+    }
+   
+</script>
+  <apex:pageMessages />
+  <apex:form >
+    <apex:sectionHeader title="{!EB_Loan_Application__c.Name}"/>
+    <apex:pageblock mode="edit" title="Synchronize Application with Account">
+    <br/>
+      <apex:pageblockSection title="Prospect Entities to be merged with Client Entities" collapsible="false">
+        <apex:pageblockSectionItem >
+          <apex:dataTable value="{!entities}" var="e" cellpadding="5">
+              <apex:column value="{!e.BookedProspect}"/>
+              <apex:column >
+                  <apex:selectList value="{!e.dropdownOptionId}" size="1" id="EntityOptionList">
+                      <apex:selectOptions value="{!e.getOptions}"></apex:selectOptions>
+                    </apex:selectList>
+              </apex:column>
+          </apex:dataTable>
+        </apex:pageblockSectionItem>
+      </apex:pageblockSection>
+      <apex:pageblockSection title="Prospective Collateral to be merged with Existing Collateral" collapsible="false">
+        <apex:pageblockSectionItem >
+          <apex:dataTable value="{!collaterals}" var="c" cellpadding="5">
+              <apex:column value="{!c.BookedProspect}"/>
+              <apex:column >
+                  <apex:selectList value="{!c.dropdownOptionId}" size="1" id="CollateralOptionList">
+                      <apex:selectOptions value="{!c.getOptions}"></apex:selectOptions>
+                    </apex:selectList>
+              </apex:column>
+              <apex:column rendered="{!ShowSelectiveCollateralMerge}">
+                  <apex:commandLink value="Merge" action="{!RunSelectiveCollateralMerge}" >
+                      <apex:param name="collateralMergeSelector" value="{!c.Index}" assignTo="{!SelectiveCollateralMergeId}"/>
+                  </apex:commandLink>
+              </apex:column>
+          </apex:dataTable>
+        </apex:pageblockSectionItem>
+      </apex:pageblockSection>
+      <!--  
+      <apex:pageblockSection title="Entities" collapsible="false">
+        <apex:pageblockSectionItem >
+          <apex:dataList value="{!entities}" var="e" id="theEntitiesList" type="1">
+            <apex:outputText value="{!e.BookedProspect}" />
+            <apex:selectList value="{!e.dropdownOptionId}" size="1" id="CollateralOptionList">
+              <apex:selectOptions value="{!e.getOptions}"></apex:selectOptions>
+            </apex:selectList>
+          </apex:dataList>
+        </apex:pageblockSectionItem>
+      </apex:pageblockSection>
+      <apex:pageblockSection title="Collaterals" collapsible="false">
+        <apex:pageblockSectionItem >
+          <apex:dataList value="{!collaterals}" var="c" id="theCollateralList">
+            <apex:outputText value="{!c.BookedProspect}" />
+            <apex:selectList value="{!c.dropdownOptionId}" size="1" id="CollateralOptionList">
+              <apex:selectOptions value="{!c.getOptions}"></apex:selectOptions>
+            </apex:selectList>
+          </apex:dataList>
+        </apex:pageblockSectionItem>
+      </apex:pageblockSection> -->
+      <apex:pageBlockButtons location="both">
+        <apex:commandButton value="Submit" action="{!SaveClicked}"  onclick="javascript:HideSubmitForApprovalButton()"  />
+        <apex:commandButton id="thisbutton" value="Cancel" action="{!CancelClicked}" immediate="true" />
+      </apex:pageBlockButtons>
+    </apex:pageblock>
+  </apex:form>
+</apex:page>

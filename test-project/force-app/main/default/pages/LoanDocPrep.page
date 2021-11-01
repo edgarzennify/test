@@ -1,0 +1,292 @@
+<apex:page showHeader="true" 
+    sidebar="true"
+    controller="LoanDocPrepController"
+    action="{!initialize}" 
+    tabStyle="LLC_BI__Loan__c"
+    title="Doc Prep">
+
+    <style>
+        .ct{
+            text-align:center;
+        }
+        .section {
+            clear: both;
+        }
+        .sub-section {
+            width:50%;
+        }
+        .sub-section-left {
+            float: left;
+        }
+        .sub-section-right {
+            float: right;    
+        }
+        .content-left {
+            margin-right:5px;
+        }
+        .content-right {
+            margin-left:5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .excluded {
+            opacity: .6;
+        }
+        .page-buttons {
+            text-align: center;
+            padding-bottom: 10px;
+        }
+    </style>
+    
+    <apex:sectionHeader title="Loan Doc Prep" subtitle="{!vm.loanName} / {!vm.loanAccountNumber} ({!vm.loanRenewalFlag})" />    
+    <div class="bPageTitle" style="padding:0px;">
+        <div class="ptBreadcrumb">
+            &nbsp;«&nbsp;<a href="/{!vm.loanId}">Back to Loan: {!vm.loanName}</a>
+        </div>
+    </div>
+    <apex:form >
+        <apex:pageMessages />    
+        <div class="page-buttons">
+            <apex:commandButton action="{!generate}" value="Generate LaserPro Export File"/>
+            <apex:commandButton action="{!cancel}" value="Cancel"/>
+        </div>
+        <div class="section">
+            <div class="sub-section sub-section-left">
+                <div class="content-left">
+                    <apex:pageBlock title="Loan Request">
+                        <apex:pageBlockSection columns="1">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Amt Requested</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.AmountRequested}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >No. Pmts</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.NumberOfPayments}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Loan Purpose</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.LoanPurpose}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Collateral Offered</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.CollateralOffered}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Payment Type</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.PaymentType}</apex:outputText>
+                            </apex:pageBlockSectionItem>            
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Rate Type</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.RateType}</apex:outputText>
+                            </apex:pageBlockSectionItem>           
+                        </apex:pageBlockSection>    
+                    </apex:pageBlock>
+                </div>
+            </div>
+            <div class="sub-section sub-section-right">
+                <div class="content-right">
+                    <apex:pageBlock title="Interest Rate Selection">
+                        <apex:pageBlockSection columns="1">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Index Rate Code</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.IndexRateCode}</apex:outputText>
+                            </apex:pageBlockSectionItem>                        
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Interest Rate</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.InterestRate}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Interest Rate Adjustment Frequency</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.InterestRateAdjustmentFrequency}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Margin</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.Margin}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Rate Ceiling</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.RateCeiling}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Rate Floor</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.RateFloor}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+        <apex:pageBlock title="Customer Summary">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable var="x" value="{!vm.includedEntities}">
+                    <apex:column headerValue="Customer List" value="{!x.FirstName} {!x.LastNameOrCompanyName}" />
+                    <apex:column headerValue="Capacity" value="{!x.Capacity}" />
+                    <apex:column headerValue="Authority" value="{!x.Authority}" />
+                    <apex:column headerValue="SSN/TIN" value="{!x.SsnTin}" />
+                    <apex:column headerValue="Address" value="{!x.StreetAddress}" />
+                    <apex:column headerValue="City" value="{!x.StreetAddressCity}" />
+                    <apex:column headerValue="State" value="{!x.StreetAddressState}" />
+                    <apex:column headerValue="Postal Code" value="{!x.StreetAddressPostalCode}" />                
+                    <apex:column headerValue="Primary Phone" value="{!x.PrimaryPhone}" />                    
+                    <apex:column headerValue="SIC" value="{!x.SicCode}" />
+                    <apex:column headerValue="Email" value="{!x.EmailAddress}" />
+                </apex:pageBlockTable>  
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" title="* Excluded Entities *" >
+                <apex:pageBlockTable var="x" value="{!vm.excludedEntities}" styleClass="excluded">
+                    <apex:column headerValue="Customer List" value="{!x.FirstName} {!x.LastNameOrCompanyName}" />
+                    <apex:column headerValue="Capacity" value="{!x.Capacity}" />
+                    <apex:column headerValue="Authority" value="{!x.Authority}" />
+                    <apex:column headerValue="SSN/TIN" value="{!x.SsnTin}" />
+                    <apex:column headerValue="Address" value="{!x.StreetAddress}" />
+                    <apex:column headerValue="City" value="{!x.StreetAddressCity}" />
+                    <apex:column headerValue="State" value="{!x.StreetAddressState}" />
+                    <apex:column headerValue="Postal Code" value="{!x.StreetAddressPostalCode}" />                
+                    <apex:column headerValue="Primary Phone" value="{!x.PrimaryPhone}" />                    
+                    <apex:column headerValue="SIC" value="{!x.SicCode}" />
+                    <apex:column headerValue="Email" value="{!x.EmailAddress}" />
+                </apex:pageBlockTable>  
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <div class="section">
+            <div class="sub-section sub-section-left">
+                <div class="content-left">
+                    <apex:pageBlock title="Classification Data">
+                        <apex:pageBlockSection columns="1">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Loan Date</apex:outputLabel>
+                                <apex:outputText value="{0, date, MM-dd-yyyy}">
+                                    <apex:param value="{!vm.loan.LoanDate}"/>
+                                </apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Loan Number</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.LoanNumber}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Application Date</apex:outputLabel>
+                                <apex:outputText value="{0, date, MM-dd-yyyy}">
+                                    <apex:param value="{!vm.loan.ApplicationDate}"/>
+                                </apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Application Number</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.ApplicationNumber}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Branch</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.Branch}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Officer</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.Officer}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Host System Loan Type</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.HostSystemLoanType}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                </div>
+            </div>
+            <div class="sub-section sub-section-right">
+                <div class="content-right">
+                    <apex:pageBlock title="Classification Data (continued)">
+                        <apex:pageBlockSection columns="1">
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Employee Loan</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.EmployeeLoanYesOrNo}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Reg O Loan</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.RegOLoan}</apex:outputText>
+                            </apex:pageBlockSectionItem>
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Automatic Loan Payments</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.AutomaticLoanPaymentsYesOrNo}</apex:outputText>
+                            </apex:pageBlockSectionItem>                        
+                            <apex:pageBlockSectionItem >
+                                <apex:outputLabel >Deposit Account Number</apex:outputLabel>
+                                <apex:outputText >{!vm.loan.DepositAccountNumber}</apex:outputText>
+                            </apex:pageBlockSectionItem>                        
+                        </apex:pageBlockSection>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+        <apex:pageBlock title="Collateral Summary">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable var="x" value="{!vm.includedCollaterals}">
+                    <apex:column headerValue="Type" value="{!x.Type}" />
+                    <apex:column headerValue="State" value="{!x.LegalState}" />
+                    <apex:column headerValue="SubType" value="{!x.SubType}" />
+                    <apex:column headerValue="Description" value="{!x.Description}" />
+                    <apex:column headerValue="Street" value="{!x.StreetAddress}" />
+                    <apex:column headerValue="City" value="{!x.StreetAddressCity}" />
+                    <apex:column headerValue="State" value="{!x.StreetAddressState}" />
+                    <apex:column headerValue="Postal Code" value="{!x.StreetAddressPostalCode}" />
+                    <apex:column headerValue="County" value="{!x.StreetAddressCounty}" />
+                    <apex:column headerValue="Value" value="{!x.MarketValue}" />
+                    <apex:column headerValue="Coll Code" value="{!x.CollateralCode}" />
+                    <apex:column headerValue="Grantors">
+                        <apex:pageBlockTable var="xx" value="{!x.RelatedGrantors}" >
+                            <apex:column headerValue="Name" value="{!xx.LastName}" />
+                        </apex:pageBlockTable>
+                    </apex:column>
+                    <apex:column headerValue="Insurance">
+                        <apex:pageBlockTable var="xxx" value="{!x}">
+                            <apex:column headerValue="Req?" value="{!x.InsuranceRequiredYesOrNo}" />
+                            <apex:column headerValue="Incl Agmt to Provide?" value="{!x.IncludeAgreementToProvideInsuranceYesOrNo}" />
+                            <apex:column headerValue="Amt" value="{!x.InsuranceAmount}" />
+                            <apex:column headerValue="Basis" value="{!x.InsuranceBasis}" />
+                            <apex:column headerValue="Prove Coverage By" value="{!x.ProveCoverageBy}" />
+                            <apex:column headerValue="Return Proof To" value="{!x.InsuranceReturnProofTo}" />
+                        </apex:pageBlockTable>
+                    </apex:column>
+                </apex:pageBlockTable>  
+            </apex:pageBlockSection>
+            <apex:pageBlockSection columns="1" title="* Excluded Collateral *" >
+                <apex:pageBlockTable var="x" value="{!vm.excludedCollaterals}" styleClass="excluded">
+                    <apex:column headerValue="Type" value="{!x.Type}" />
+                    <apex:column headerValue="State" value="{!x.LegalState}" />
+                    <apex:column headerValue="SubType" value="{!x.SubType}" />
+                    <apex:column headerValue="Description" value="{!x.Description}" />
+                    <apex:column headerValue="Street" value="{!x.StreetAddress}" />
+                    <apex:column headerValue="City" value="{!x.StreetAddressCity}" />
+                    <apex:column headerValue="State" value="{!x.StreetAddressState}" />
+                    <apex:column headerValue="Postal Code" value="{!x.StreetAddressPostalCode}" />
+                    <apex:column headerValue="County" value="{!x.StreetAddressCounty}" />
+                    <apex:column headerValue="Value" value="{!x.MarketValue}" />
+                    <apex:column headerValue="Coll Code" value="{!x.CollateralCode}" />
+                    <apex:column headerValue="Grantors">
+                        <apex:pageBlockTable var="xx" value="{!x.RelatedGrantors}" >
+                            <apex:column headerValue="Name" value="{!xx.LastName}" />
+                        </apex:pageBlockTable>
+                    </apex:column>
+                    <apex:column headerValue="Insurance">
+                        <apex:pageBlockTable var="xxx" value="{!x}">
+                            <apex:column headerValue="Req?" value="{!x.InsuranceRequiredYesOrNo}" />
+                            <apex:column headerValue="Incl Agmt to Provide?" value="{!x.IncludeAgreementToProvideInsuranceYesOrNo}" />
+                            <apex:column headerValue="Amt" value="{!x.InsuranceAmount}" />
+                            <apex:column headerValue="Basis" value="{!x.InsuranceBasis}" />
+                            <apex:column headerValue="Prove Coverage By" value="{!x.ProveCoverageBy}" />
+                            <apex:column headerValue="Return Proof To" value="{!x.InsuranceReturnProofTo}" />
+                        </apex:pageBlockTable>
+                    </apex:column>
+                </apex:pageBlockTable>  
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:pageBlock title="Fees and Charges">
+            <apex:pageBlockSection columns="1">
+                <apex:pageBlockSection columns="1">
+                <apex:pageBlockTable var="x" value="{!vm.loan.Fees}">
+                    <apex:column headerValue="Description" value="{!x.FeeDescription}" />
+                    <apex:column headerValue="Cash Amount" value="{!x.CashFee}" />
+                    <apex:column headerValue="Financed Amount" value="{!x.FinFee}" />
+                </apex:pageBlockTable>  
+            </apex:pageBlockSection>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

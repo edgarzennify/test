@@ -1,0 +1,134 @@
+<aura:component access="public"  
+	implements="flexipage:availableForAllPageTypes,force:appHostable,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes"
+
+	controller="SL_Office">
+	<ltng:require scripts="{!$Resource.sldsicon + '/plugin/date-x.js' 
+		+ ',' + $Resource.sldsicon + '/plugin_new/array-x.js'
+		+ ',' + $Resource.sldsicon + '/plugin_new/moment.min.js'
+		+ ',' + $Resource.sldsicon + '/plugin_new/moment-timezone-with-data.js'
+		}" 
+		afterScriptsLoaded="{!c.doInit}"
+	/>
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<aura:attribute name="sOfficeObject" type="String" default="" access="public"/>
+	<aura:attribute name="sTZ" type="String" default="" access="public"/>
+	<aura:attribute name="sPhoto" type="String" default="" access="public"/>
+    <aura:attribute name="sStripTags" type="Boolean" default="true" access="public"/>
+	<aura:attribute name="sAddress" type="String" default="" access="public"/>
+	<aura:attribute name="sListFields" type="String" default="" access="public"/>
+	<aura:attribute name="sDetailsFields" type="String" default="" access="public"/>
+	<aura:attribute name="sFilter" type="String" default="" access="public"/>
+
+	<aura:attribute name="sGoogleKey" type="String" default="" access="public"/>
+	<aura:attribute name="bDetailsButton" type="Boolean" default="" access="public"/>
+	<aura:attribute name="sDetailsUrl" type="String" default="" access="public"/>
+
+	<aura:attribute name="sClickType" type="String" default="detail" access="public"/>
+	<aura:attribute name="sSort" type="String" default="" access="public"/>
+	<aura:attribute name="bSortDesc" type="Boolean" default="false" access="public"/>
+	<aura:attribute name="bHideLabels" type="Boolean" default="false" access="public"/>
+
+	<aura:attribute name="_aData" type="Object[]" default="" access="private"/>
+	<aura:attribute name="_oEl" type="Object" default="" access="private"/>
+	
+	<div class="{!'slds-card ' + (v.bHideLabels ? '_hide_labels' : '')}">
+		<div class="slds-card__header slds-grid">
+			<header class="slds-media slds-media_center slds-has-flexi-truncate">
+				<div class="slds-media__body">
+	        		<h2 class="slds-card__header-title">
+	        			<span class="slds-text-heading_small">Offices</span>
+	        		</h2>
+	        	</div>
+			</header>
+		</div>
+		<div class="slds-card__body">
+			<ul class="slds-card__body_inner slds-has-dividers_top-space">
+				<aura:iteration var="oOff" items="{!v._aData}">
+				<li class="slds-item slds-card__item">
+					<article class="slds-tile">
+					    <h3 class="slds-tile__title slds-truncate" title="Salesforce UX">
+					    	<a onclick="{!c.openDetail}" data-id="{!oOff.id}" data-idx="{!oOff.idx}">{!oOff.title}</a>
+					    </h3>
+					    <div class="slds-tile__detail">
+					    	<p>{!oOff.date}</p>
+						    <aura:if isTrue="{!!empty(oOff.fields)}">
+					      	<dl class="slds-list_horizontal slds-wrap">
+					      		<aura:iteration var="oField" items="{!oOff.fields}">
+						        <dt class="slds-item_label slds-text-color_weak slds-truncate" 
+						        	title="{!oField.label}">{!oField.label}:</dt>
+						        <dd class="slds-item_detail slds-truncate">
+						        	<aura:renderif isTrue="{!oField.link != undefined}">
+					          			<a onclick="{!c.detailEvent}" data-evt="{!oField.link}">{!oField.value}</a>
+					          			<aura:set attribute="else">
+					          				<aura:renderif isTrue="{!oField.html}">
+					          					<aura:unescapedHtml value="{!oField.value}"/>
+					          					<aura:set attribute="else">
+					          						{!oField.value}
+					          					</aura:set>
+					          				</aura:renderif>
+					          			</aura:set>
+					          		</aura:renderif>
+						        </dd>
+						        </aura:iteration>
+					      	</dl>
+					      	</aura:if>
+					    </div>
+					</article>
+				</li>
+				</aura:iteration>
+			</ul>
+		</div>
+	    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="{!'slds-modal slds-fade-in-open ' + (empty(v._oEl) ? 'slds-hide' : '')}">
+    	<aura:if isTrue="{!!empty(v._oEl)}">
+    	<div class="slds-modal__container">
+      		<header class="slds-modal__header">
+        		<h2 class="slds-text-heading_medium slds-hyphenate">{!v._oEl.title}</h2>
+                <lightning:buttonIcon class="slds-modal__close" iconName="utility:close" alternativeText="Close" size="large" variant="bare-inverse" onclick="{!c.closeDetail}" />
+      		</header>
+      		<div class="slds-modal__content slds-p-around_medium">
+      			<article class="slds-tile slds-m-bottom_small" aura:id="_details">
+  				<div class="slds-tile__detail">
+		      		<dl class="slds-list_horizontal slds-wrap">
+	      			<aura:iteration var="oField" items="{!v._oEl.detail}">
+		        		<dt class="slds-item_label slds-text-color_weak slds-truncate" title="{!oField.label}">{!oField.label}:</dt>
+		        		<dd class="slds-item_detail">
+							<aura:renderif isTrue="{!oField.link != undefined}">
+			          			<a onclick="{!c.detailEvent}" data-evt="{!oField.link}">{!oField.value}</a>
+			          			<aura:set attribute="else">
+			          				<aura:renderif isTrue="{!oField.html}">
+			          					<aura:unescapedHtml value="{!oField.value}"/>
+			          					<aura:set attribute="else">
+			          						{!oField.value}
+			          					</aura:set>
+			          				</aura:renderif>
+			          			</aura:set>
+			          		</aura:renderif>
+		        		</dd>
+		    		</aura:iteration>
+		      		</dl>
+		    	</div>
+		  		</article>
+		  		<aura:if isTrue="{!!empty(v._oEl.img)}">
+		    		<img title="{!v._oEl.title}" src="{!v._oEl.img}" class="_office_image slds-m-top_small"/>
+		    	</aura:if>
+		    	<aura:if isTrue="{!!empty(v._oEl.imgRich)}">
+		    		<a onclick="{!c.showMap}" class="_showMap">
+		    		<aura:unescapedHtml value="{!v._oEl.imgRich}" />
+		    		</a>
+		    	</aura:if>
+      			<img src="{!v._oEl.mapPath}" class="slds-m-top_small _showMap" onclick="{!c.showMap}" />
+      		</div>
+      		<footer class="slds-modal__footer">
+      			<aura:if isTrue="{!v.bDetailsButton}">
+      				<button class="slds-button slds-button_neutral" onclick="{!c.goToDetail}">Details</button>	
+      			</aura:if>
+        		<button class="slds-button slds-button_neutral office__button--close" onclick="{!c.closeDetail}">Close</button>
+      		</footer>
+		</div>
+		</aura:if>
+  		</section>
+  		<div class="{!'slds-backdrop slds-backdrop_open ' + (empty(v._oEl) ? 'slds-hide' : '')}"></div>
+	</div>
+</aura:component>

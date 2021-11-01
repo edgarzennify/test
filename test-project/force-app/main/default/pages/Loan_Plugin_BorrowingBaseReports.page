@@ -1,0 +1,19 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Loan__c"
+    extensions="Loan_PluginController"
+    showHeader="false"
+    sidebar="false"
+    action="{!initialize}"
+    lightningStylesheets="true">
+    
+  <apex:relatedList subject="{!ebAccount}" list="Borrowing_Base_Reports__r" rendered="{! ebAccount != NULL }" />
+  <apex:pageBlock title="Borrowing Base Reports" tabStyle="LLC_BI__Loan__c" rendered="{! ebAccount == NULL }"  >
+    <apex:pageBlockButtons location="top">
+      <input value="New Borrowing Base Report" />
+    </apex:pageBlockButtons>
+    <apex:outputText >No Borrowing Base Reports available for <i>{! loan.LLC_BI__lookupKey__c }</i></apex:outputText>
+  </apex:pageBlock>
+    <c:Eb_PluginHelper newObjectButtonText="New Borrowing Base Report"
+      newObjectButtonUrl="{!$Site.Domain}/apex/BorrowingBaseReportNew?CF00N30000009Psfa={! ebAccount.Name }&CF00N30000009Psfa_lkid={! ebAccount.Id }&scontrolCaching=1&retURL=%2F{! loan.Id }&sfdc.override=1" />
+      
+</apex:page>

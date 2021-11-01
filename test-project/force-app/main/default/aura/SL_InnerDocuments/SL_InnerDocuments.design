@@ -1,0 +1,31 @@
+<design:component label="Silverline Library Files">
+    <design:attribute name="Heading" label="Heading" default="Library Files" description="Heading displayed for the component."/>
+    <!-- <design:attribute name="SObjectName" label="Object Name" default="ContentVersion" description="Name of the object for which the records needs to be displayed." />
+    <design:attribute name="SFileFieldName" label="File Field Name" default="ContentDocumentId" description="Name of the FILE field." />-->
+    <design:attribute name="STitleFieldName" label="Title Field Name" default="Title" description="API Field Name, which is using for top search." />
+    <design:attribute name="Grouping1" label="Grouping 1" default="SLSI__Content_Types__c" description="Field to Group by for first tier of tree." />
+    <design:attribute name="Grouping2" label="Grouping 2" default="SLSI__Category_Level_1__c" description="Field to Group by for second tier." />
+    <design:attribute name="Grouping3" label="Grouping 3" default="SLSI__Category_Level_2__c" description="Field to Group by for third tier." />
+    <design:attribute name="Grouping4" label="Grouping 4" default="SLSI__Category_Level_3__c" description="Field to Group by for fourth tier." />
+	<design:attribute name="filterCreteria" label="filter Criteria"  default="" description="enclose brackets when use 'OR' in the filter Creteria." />
+	
+	<design:attribute name="lstGlobalLibIDs" label="List of Library IDs for get files" default="" description="Global filter by Library if Empty then get all files. Comma is used for separating library IDs." />
+    <design:attribute name="mainLibraryID" label="Default Library ID for Upload File" default="05833000000Tq9X" description="ID of Content Library for Upload File" />
+    <design:attribute name="pSort" label="Default Sort Column" datasource="File Name,Modified Date" default="Modified Date" description="Default Sort Column ('File Name'/'Modified Date')" />
+    <design:attribute name="pSortDir" label="Default Sort Direction" datasource="ASC,DESC" default="DESC" description="Default Sort Direction ('ASC'/'DESC')" />
+    <design:attribute name="NumbRecords" label="Number Lines for Table View" description="Number Lines for Table View. List block Height. Default value is 8. (0 - No Limit)"/>
+    <design:attribute name="NumbRecordsTile" label="Number Lines for Tile View" description="Number Lines for Tile View. List block Height. Default value is 3. (0 - No Limit)"/>
+
+    <design:attribute name="widthLeft" label="Width for Left part (%)" description="Width for Lift part (%). Default value is 22."/>
+    <!-- <design:attribute name="widthRight" label="Width for Right part (%)" description="Width for Right part (%). Default value is 78."/> -->
+
+	
+	<design:attribute name="ShowCategoryArea" label="Display Category Area" description="Display Category Area." default="true" />
+	<design:attribute name="ShowSearchBox" label="Display Search Box" description="Search box appears where the records can be searched." default="true" />
+	<design:attribute name="ShowUploadButton" label="Display Upload Button" description="Upload Button appears under file list section (top-right corner)." default="true" />
+	<design:attribute name="ShowViewButton" label="Display View Button" description="View Button appears under file list section (top-right corner)." default="true" />
+	<design:attribute name="ShowExtendedTree" label="Display Extended Tree" description="Extended Tree by default." default="false" />
+	
+	<design:attribute name="pViewMode" label="View Mode" datasource="Table,Tile" default="Table" description="View Mode ('Table'/'Tile')" />
+	
+</design:component>

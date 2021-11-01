@@ -1,0 +1,52 @@
+<apex:page standardController="EB_Account__c" extensions="LoanAppRenewalPreProcessorController"  >
+ <apex:pageMessages />
+ <apex:form >
+         <apex:pageBlock >         
+             <apex:pageBlockButtons >
+                 <apex:commandButton value="Create New Packet" action="{!NewPacket}"/>
+             </apex:pageBlockButtons>
+              <apex:pageblockSection rendered="{!IF(IsMod=='true', 'true','false')}"  >
+                 <apex:pageblockSectionItem >
+                    <apex:outputLabel value="Select Modification Type" for="modList" />
+                       <apex:outputPanel layout="block" styleClass="requiredInput">
+                       <apex:selectList value="{!dropdownRecordTypeId}" size="1" id="modList" required="true" >
+                       <apex:selectOptions value="{!ModRecordTypes}"></apex:selectOptions>
+                       </apex:selectList>
+                    </apex:outputPanel> 
+                 </apex:pageblockSectionItem>
+             </apex:pageblockSection>
+             <apex:pageblockSection >
+                  <apex:pageblockSectionItem >
+                 <apex:outputlabel value="*Please use the search below to search across all Packets."></apex:outputlabel>
+                  </apex:pageblockSectionItem>
+                   </apex:pageblockSection>
+                     <apex:pageblockSection >
+                 <apex:pageblockSectionItem >
+                     <apex:inputtext value="{!searchParam}" />
+                     <apex:commandButton value="Search" /> 
+                 </apex:pageblockSectionItem>
+             </apex:pageblockSection>
+            <apex:pageBlockTable value="{!ActivePackets}" var="o" rendered="{!NOT(ISNULL(ActivePackets))}">
+            <apex:column headerValue="Action">
+              <!--<apex:commandLink value="Edit" action="{!SaveQuickCollateral}" onclick="editRedirect('{!o.Id}','{!r.Id}');" style="text-decoration:none;color:blue;" />-->
+             <!-- <apex:outputLink value="/apex/AppraisalOrder?id={!o.Id}&uid={!r.Id}" style="text-decoration:none;color:blue;">Edit</apex:outputlink>-->
+            <apex:commandLink value="Select" action="{!SelectPacket}" style="text-decoration:none;color:blue;">
+                  <apex:param name="editId" assignTo="{!selectedEditId}" value="{!o.id}"/> 
+             </apex:commandLink>
+            </apex:column>
+            <apex:column value="{!o.Name}"/>
+            <apex:column value="{!o.Actual_Approval_Path__c}"/>
+             <apex:column value="{!o.Number_of_Applications__c}"/>
+             <apex:column value="{!o.Total_Requested__c}"/>
+             <apex:column value="{!o.CreatedDate}"/> 
+       </apex:pageBlockTable>
+       <apex:outputLabel value="No records to display" rendered="{!(ISNULL(ActivePackets))}"  styleClass="noRowsHeader"></apex:outputLabel>
+             <apex:pageBlockSection >
+                 <apex:pageBlockSectionItem >
+                 
+                 </apex:pageBlockSectionItem>
+             </apex:pageBlockSection>
+         </apex:pageBlock>
+   
+ </apex:form>
+</apex:page>

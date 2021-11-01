@@ -1,0 +1,31 @@
+function autosave() {
+	if (jQuery('.cke_button__save').is(":visible") && jQuery('.cke_button__save').hasClass('cke_button_off')) {
+	console.log('saving');
+		jQuery('.cke_button__save').click();
+	}
+}
+auto_save = {};
+auto_save.comments = auto_save.comments || {};
+
+auto_save.isFirstLoad = function(namesp, jsFile) {
+    var isFirst = namesp.firstLoad === undefined;
+    namesp.firstLoad = false;
+    
+    if (!isFirst) {
+        console.log(
+            "Warning: Javascript file is included twice - that's okay if you have multiple narratives: " + 
+                jsFile);
+    }
+
+    return isFirst;
+};
+
+
+jQuery(document).ready(function () {
+    if (!auto_save.isFirstLoad(auto_save.comments, "csa_auto_save_credit_memo.resource")) {
+        return;
+    }
+
+    // normal event handling stuff.
+     setInterval(autosave, 60000);
+});

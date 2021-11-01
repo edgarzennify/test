@@ -1,0 +1,23 @@
+<apex:page title="TM Service Request"
+   standardcontroller="TM_Service_Request__c"
+    extensions="TmBoardingController"
+    docType="html-5.0"
+    showHeader="true" 
+    sidebar="false"
+    standardStylesheets="false" 
+    applyHtmlTag="true"
+    >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <style defer="true" type='text/css'>
+        button {
+            background-image: none !important;
+        }
+    </style>
+    <div id="react-app">
+       Loading...
+    </div>
+    
+    <script src="{!URLFOR($Resource.TmBoardingPrintableEmptyFormsReactify, '/vendor.js')}"></script>
+    <script src="{!URLFOR($Resource.TmBoardingPrintableEmptyFormsReactify, '/main.js')}"></script>
+</apex:page>

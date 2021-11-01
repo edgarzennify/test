@@ -1,0 +1,90 @@
+<apex:page docType="html-5.0" 
+    title="Ebt Rate Sheet"
+    showHeader="true" 
+    tabStyle="Rate_Sheet__tab" 
+    lightningStylesheets="True">
+    
+    <apex:form >
+        <apex:sectionHeader title="EB&T Rate Sheet"/>
+        <apex:tabPanel switchType="ajax" selectedTab="depositRateSheet">        
+             <apex:tab label="Consumer" name="consumerRates">
+                <apex:iframe id="ifConsumerRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000033" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="Deposit" name="depositRateSheet">
+                <apex:iframe id="ifDepositRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000001" 
+                    scrolling="true" 
+                    height="2200px"
+                    width="100%"
+                    frameborder="0" />  
+            </apex:tab>
+            <apex:tab label="Deposit Promotion" name="depositPromotion">
+                <apex:iframe id="ifDepositPromotion" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000038" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="Loan" name="loanRates">
+                <apex:iframe id="ifLoanRateSheet"
+                    src="/apex/LoanRateSheet" 
+                    scrolling="true"                    
+                    frameborder="0" />
+            </apex:tab>            
+            <apex:tab label="Mortgage" name="mortgageRates">
+                <apex:iframe id="ifMortgageRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000002" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="New Mexico" name="newMexicoRates">
+                <apex:iframe id="ifNewMexicoRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000040" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="West Coast" name="westCoastRates">
+                <apex:iframe id="ifWestCoastRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000041" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="Private Banking" name="privateBankingRates">
+                <apex:iframe id="ifprivateBankingRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000035" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="Swap" name="swapRates">
+                <apex:iframe id="ifSwapRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000036" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+            <apex:tab label="Tax" name="taxRates">
+                <apex:iframe id="ifTaxRates" 
+                    src="/apex/ExternalDocumentViewer?name=XDOC-0000037" 
+                    scrolling="true" 
+                    height="1200px"
+                    width="100%"
+                    frameborder="0" />
+            </apex:tab>
+        </apex:tabPanel>
+    </apex:form>    
+</apex:page>

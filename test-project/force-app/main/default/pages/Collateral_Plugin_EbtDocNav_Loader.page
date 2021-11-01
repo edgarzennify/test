@@ -1,0 +1,9 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Collateral__c" 
+    showHeader="false" 
+    sidebar="false" 
+    LightningStylesheets="true">
+    
+    <c:AsyncPageLoader loadingText="Loading Document Navigator" redirectUrl="/apex/Collateral_Plugin_EbtDocNav?id={!LLC_BI__Collateral__c.Id}" />
+
+</apex:page>

@@ -1,0 +1,9 @@
+<apex:page standardcontroller="EB_Appraisal_Order__c" showHeader="true" >
+    <apex:form >
+        <apex:pageBlock > 
+            <div style="text-align:center">
+                To create a new Appraisal Order, please go to the appropriate Collateral or OREO Account, and click the "New Appraisal Order" button. Thank you.
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

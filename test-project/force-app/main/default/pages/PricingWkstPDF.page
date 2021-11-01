@@ -1,0 +1,25 @@
+<apex:page title="Pricing Worksheet" controller="PricingWkstControllerPDF" action="{!initialize}" showHeader="false" sidebar="false">
+
+    <apex:stylesheet value="{!URLFOR($Resource.pricingwkst, 'pricingwkst.css')}"/>
+
+    <apex:form >
+        <apex:outputPanel id="entirePage" >
+            <apex:sectionHeader title="Pricing Worksheet" subtitle="{!currentWorksheet.Entity__r.Name}" />
+
+            <c:PricingWkstROESummary pricingResult="{!pricingResults}" isEditable="false" />
+            <c:PricingWkstAcctRemovals pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="false"/>
+            <c:PricingWkstLoans pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="false" />
+            <c:PricingWkstDeposits pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="false" />
+            <c:PricingWkstNonIntIncome pricingWkst="{!currentWorksheet}" pricingReq="{!pricingRequest}" pricingResult="{!pricingResults}" isEditable="false" />
+            <apex:outputLabel value="Comments" style="font-weight:bold;"/><br/>
+            <apex:inputTextarea value="{!currentWorksheet.Comments__c}" style="width:100%;" />
+            <br/><br/>
+            <apex:pageBlock title="Existing Account Details">
+                <c:PricingWkstROEAcctDetails pricingResult="{!pricingResults}" isEditable="true" showAllColumns="false"/>
+            </apex:pageBlock>
+            <apex:pageBlock id="relationshipTree" title="Hierarchy">
+                <div style="width:760px;"><c:ParentRelationshipDisplay currentAccountId="{!currentWorksheet.Entity__r.id}" staticDisplay="false" rendered="true" /></div>
+            </apex:pageBlock>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

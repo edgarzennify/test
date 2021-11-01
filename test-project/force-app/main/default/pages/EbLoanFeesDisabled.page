@@ -1,0 +1,10 @@
+<apex:page standardController="EB_Loan_Fee_and_Expense_Tracking__c" title="loanForce Disabled" >
+    <apex:sectionHeader title="EB Loan Fee and Expense Tracking" subtitle="loanForce Disabled" />
+    <apex:pageblock mode="detail" >
+        <apex:pageBlockSection columns="1" >
+            <div style="padding:20px;text-align:center;font-size:18px;">
+                Creating new "loanForce" fees has been disabled. Please use Ncino loan system to enter new loan fees.
+            </div>
+        </apex:pageBlockSection>
+    </apex:pageblock>
+</apex:page>

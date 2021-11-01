@@ -1,0 +1,7 @@
+<apex:page standardController="EB_Account__c"  
+    showHeader="false" 
+    sidebar="false" >    
+
+    <c:EbtDocNavigator objectId="{!EB_Account__c.Id}" />
+    
+</apex:page>

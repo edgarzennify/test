@@ -1,0 +1,38 @@
+<apex:page controller="DataViewerController" showHeader="false" title="{!vm.reportName}" standardStylesheets="false" action="{!init}">
+    <apex:outputText value="{!vm.results}" escape="false" rendered="{!!vm.isPdf}"/>
+    <apex:iframe id="viewAsPdf"
+                    src="/apex/ExternalDocumentViewer?docid={!vm.documentId}" 
+                    scrolling="true" 
+                    height="12000px"
+                    width="100%"
+                    frameborder="0" 
+                    rendered="{!vm.isPdf}"/>
+      
+    <apex:form rendered="{!vm.showDebugInfo}">
+        <br/>
+        <apex:pageBlock title="Debugging Information" >
+            <apex:pageBlockSection title="Errors" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:repeat value="{!vm.debugErrors}" var="x" >
+            			<li>{!x}</li>
+                    </apex:repeat>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="dvReport" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:inputTextarea readonly="true" value="{!vm.debugReportObj}" style="width:100%" rows="10" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Query" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:inputTextarea readonly="true" value="{!vm.debugQuery}" style="width:100%" rows="20" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Query Results" columns="1">
+                <apex:pageBlockSectionItem >
+                    <apex:inputTextarea readonly="true" value="{!vm.debugData}" style="width:100%" rows="20" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>           
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

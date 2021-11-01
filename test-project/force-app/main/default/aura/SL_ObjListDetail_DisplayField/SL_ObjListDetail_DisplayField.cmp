@@ -1,0 +1,126 @@
+<aura:component>
+    <aura:attribute name="record" type="sObject" />
+    <aura:attribute name="fieldApiName" type="String" />
+    <aura:attribute name="fieldValue" type="String" />
+    <aura:attribute name="fieldType" type="object" />
+    <aura:attribute name="fieldLabel" type="object" />
+    <aura:attribute name="showFieldLabel" type="Boolean" />
+    <aura:attribute name="showBorder" type="Boolean" default="true" />
+    <aura:attribute name="noLinks" type="Boolean" default="false" access="global" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{!v.fieldValue}">
+        <div class="{!(v.showBorder ? 'slds-border_bottom ' : ' ') + ' object-display-field'}">
+            <aura:if isTrue="{!v.fieldType == 'DATETIME' || v.fieldType == 'TIME'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <ui:outputDateTime value="{!v.fieldValue}" />
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'STRING' || v.fieldType == 'COMBOBOX' || v.fieldType == 'ID' || v.fieldType == 'ENCRYPTEDSTRING' || v.fieldType == 'BASE64' || v.fieldType == 'PICKLIST' || v.fieldType == 'REFERENCE' || v.fieldType == 'PHONE'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <lightning:formattedText value="{!v.fieldValue}" />
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'BOOLEAN'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <ui:outputCheckbox value="{!v.fieldValue}" />
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'CURRENCY'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <!-- <ui:outputCurrency value="{!v.fieldValue}" /> -->
+                        <lightning:formattedNumber value="{!v.fieldValue}" style="currency" />
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'DOUBLE' || v.fieldType == 'INTEGER' || v.fieldType == 'PERCENT'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <aura:if isTrue="{!v.fieldType == 'PERCENT'}">
+                        <lightning:formattedNumber value="{!v.fieldValue}" style="percent" />
+                        <aura:set attribute="else">
+                            <lightning:formattedNumber value="{!v.fieldValue}" />
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'EMAIL'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <lightning:formattedEmail value="{!v.fieldValue}" />
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'DATE'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <ui:outputDate format="M/dd/yyyy" value="{!v.fieldValue}" /> 
+                        
+                    </div>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'TEXTAREA'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <lightning:formattedRichText value="{!v.fieldValue}" />
+                    </div>
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.fieldType == 'URL'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <lightning:formattedUrl value="{! (v.noLinks ? '#' : v.fieldValue)}" />
+                        <!-- <ui:outputURL value="{! (v.noLinks ? '#' : v.fieldValue)}" label="{!v.fieldValue}" /> -->
+                    </div>
+
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.fieldType == 'IMAGE'}">
+                <div class="slds-size--4-of-4 displayData">
+                    <aura:renderIf isTrue="{!v.showFieldLabel}">
+                        <div class="label">{!v.fieldLabel}: </div>
+                    </aura:renderIf>
+                    <div class="{!(v.showBorder ?' value heading' : ' value1 heading')}">
+                        <img src="{!v.fieldValue}" />
+                    </div>
+                </div>
+            </aura:if>
+        </div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,42 @@
+<template>
+	<div class="slds-card slds-theme_shade slds-p-vertical_medium slds-p-horizontal_large slds-m-bottom_x-small custom-slds-card">
+		<div class='custom-card-body'>
+			<div class="slds-grid slds-wrap custom-card-grid">
+				<div class="slds-col slds-p-bottom_small slds-text-heading_small custom-slds-card-title slds-size_1-of-1 slds-p-bottom_medium">
+					<span>{documentplaceholder.documentName}</span>
+				</div>
+				<div class="slds-col slds-p-bottom_small slds-text-body_small slds-text-color_weak slds-p-right_medium custom-body-grid">
+					<span>Entity: &nbsp;</span>
+					<span>{documentplaceholder.objectDescription}</span>
+				</div>
+				<div id="due-date" class="slds-col slds-p-bottom_small slds-text-body_small slds-text-color_weak slds-p-right_medium custom-body-grid">
+					<span>Due: &nbsp;</span>
+					<span class={duedatetext}>{documentplaceholder.documentDueDateLabel}</span>
+				</div>
+				<div class="slds-p-bottom_small slds-text-body_small slds-text-color_weak slds-p-right_medium">
+					<span>Description: &nbsp;</span>
+					<span>{documentplaceholder.documentDescription}</span>
+				</div>
+			</div>
+		</div>
+		<template if:true={uploadComplete}>
+			<div class="slds-text-align_center slds-align-middle">
+				<lightning-icon class="slds-m-horizontal_small slds-icon-action-approval success-upload" icon-name="action:approval" size="medium"></lightning-icon>
+				<span class="slds-p-top_small slds-text-color_weak slds-text-heading_small">Successfully uploaded.</span>
+			</div>
+		</template>
+		<template if:false={uploadComplete}>
+			<div class="slds-align-middle">
+				<lightning-file-upload
+					class="slds-m-horizontal_small"
+					label="Upload"
+					name="fileUploader"
+					accept={documentplaceholder.fileTypes}
+					record-id={documentplaceholder.documentRequestId}
+					onuploadfinished={handleUploadFinished}>
+				</lightning-file-upload>
+				<span class="slds-text-color_weak slds-text-body_small slds-align_absolute-center">File formats/extensions accepted: {documentplaceholder.fileTypes}</span>
+			</div>
+		</template>
+	</div>
+</template>

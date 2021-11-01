@@ -1,0 +1,59 @@
+<apex:page standardController="EB_Loan_App_Entity_Relationship__c" extensions="LoanAppBorrowerAddController">
+  <apex:pageMessages />
+  <script language="javascript">
+    function showConfirm(selected_text){ 
+      loanapp = "{!LoanAppSelected}"; 
+      loanapp = loanapp.replace(/'/gi, '\''); 
+      entity = selected_text; 
+      entity = entity.replace(/'/gi, '\''); 
+      return confirm("Are you sure you want to add entity \"" + entity + "\" to \"" + loanapp + "\"?"); 
+    }
+  </script>
+  <apex:form >
+    <apex:pageBlock title="Add Entity To {!getLoanApplicationName}" mode="edit">
+      <div style="padding:4px;">
+        <div style="padding:4px;">
+        
+          Please use search to select an existing entity to be attached to this application.
+        </div>
+        <div style="padding:4px;">          
+            <apex:pageBlockButtons location="top">
+              <!--<apex:commandButton value="Add New Related Entity" action="{!SaveNewBorrower}" />-->
+              <apex:commandButton value="Cancel" action="{!CancelBorrower}" />
+            </apex:pageBlockButtons>
+            <!--<apex:outputLabel value="Search: " for="lookup"></apex:outputLabel>-->          
+          <apex:inputText id="lookup" value="{!searchParam}" />
+          <apex:actionRegion immediate="true">
+            <apex:commandButton value="Search"  />
+            <apex:outputlabel value="(Over 100 results were returned. Consider revising your search to help find an entity faster.)" rendered="{!getRefineSearchStatus}" style="text-decoration:none;color:red;"  />
+            <apex:actionSupport event="onclick" reRender="gridresults" status="searchStatus" />
+          
+          </apex:actionRegion>
+          <!-- <apex:actionRegion immediate="true" >
+                    <apex:inputText id="lookup"  value="{!searchParam}">
+                        <apex:actionSupport action="{!SetSearch}" event="onkeyup" timeout="5000" reRender="gridresults" status="searchStatus"/>
+                    </apex:inputText>
+                </apex:actionRegion> -->
+        </div>
+        <apex:outputPanel id="gridresults">
+            <apex:actionStatus startText="searching..." startstyle="color:green;" id="searchStatus" />
+            <apex:pageBlockTable id="dlclients" value="{!EntityObjects}" frame="hsides" var="c" rendered="{!MatchesFound}" style="margin-left:4px;">
+                <apex:column headerValue="Entities">
+                    <apex:commandLink onclick="return showConfirm('{!c.Entity_Name__c}');" action="{!SaveBorrower}" id="txt" value="{!c.Entity_Name__c}">
+                        <apex:param assignTo="{!dropdownEntityId}" name="selectedEntity" value="{!c.Id}" />
+                    </apex:commandLink>
+                </apex:column>
+                <apex:column title="Street" value="{!c.BillingStreet}"/>
+                <apex:column title="City" value="{!c.BillingCity}"/>
+                <apex:column title="State" value="{!c.BillingState}"/>
+                <apex:column title="Phone" value="{!c.Phone}"/>            
+            </apex:pageBlockTable>
+            <apex:outputPanel rendered="{!NoMatchesFound}">
+                <div class="message warningM4" style="margin-left:4px;"><img src="/s.gif" alt="Warning" class="msgIcon" title="Warning" /> No matches found. Try refining your search, or click "Add a New Related Entity" to create a new Entity for this application.</div>
+            </apex:outputPanel>
+            <apex:commandButton value="Add a New Related Entity" action="{!SaveNewBorrower}" rendered="{!SearchClicked}" style="margin-top:4px;margin-left:4px;" />
+        </apex:outputPanel>
+      </div>
+    </apex:pageBlock>
+  </apex:form>
+</apex:page>

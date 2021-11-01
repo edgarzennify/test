@@ -1,0 +1,29 @@
+<apex:page standardController="Board_Director_Association__c" extensions="BoardMembershipController" showHeader="true">
+<apex:form >
+ <apex:pageMessages />
+<!--  <apex:detail subject="{!bm.Id}" relatedList="false" title="false"/>	-->
+<apex:pageBlock title="{!PageTitle}" mode="edit">
+            <apex:pageBlockButtons >
+               <apex:commandButton action="{!membershipSave}" value="Save"/>
+                <apex:commandButton action="{!membershipCancel}" value="Cancel"  immediate="true"/>
+                
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection title="Information" columns="2">
+            <!--  <apex:inputField value="{!$CurrentPage.parameters.cid}"/>-->
+            <!--   <apex:detail subject="{!Board_Director_Association__c.}"/>-->
+					
+			<apex:inputField value="{!bm.Board__c}" required="true"/>
+			<apex:inputField value="{!bm.EB_Team_Member__c}" required="true"/>
+			<apex:inputField value="{!bm.Date_Elected__c}" required="true"/>
+			<apex:inputField value="{!bm.Date_Resigned__c}"/>			
+			<apex:inputField value="{!bm.Role__c}" required="true"/>
+			<apex:inputField value="{!bm.Compensation_Type__c}" required="true"/>
+			
+			<!-- <apex:detail subject="{!board.Id}" relatedList="false" title="true"/>  -->
+            </apex:pageBlockSection>
+            
+        </apex:pageBlock>
+
+
+</apex:form>
+</apex:page>

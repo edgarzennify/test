@@ -1,0 +1,80 @@
+<apex:page standardController="EB_Loan_Application__c" extensions="LoanApplicationViewController" >
+<script language="javascript">
+    addLoadEvent(HideSubmitForApprovalButton);
+    function HideSubmitForApprovalButton(){
+        var x=document.getElementsByTagName("input")
+        var s="";
+        if(x.length > 0){
+            for(i=0;i<x.length;++i){
+                if(x[i].name == "piSubmit" && x[i].value=="Submit for Approval"){             
+                    x[i].style.display="none";
+                }
+            }
+        }       
+    }
+    function addLoadEvent(func){
+        var oldonload = window.onload;
+        if (typeof window.onload != 'function') {
+            window.onload = func;
+        }else{
+            window.onload = function() {
+                if (oldonload) {
+                    oldonload();
+                }
+                func();
+            }
+       }
+    }
+</script>
+<apex:form >
+    <div style="padding-bottom:5px;">
+        <apex:outputLink value="/a0m/o" style="font-size:8pt; text-decoration: none; color: #015BA7;">&lt;&lt; Back to List: Loan Applications</apex:outputLink>
+    </div>
+    <div style="padding-bottom:10px;text-align:center;">
+        <a href="#RateStreams" title="click to view Rate Streams">Rate Streams</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#PayStreams" title="click to view Payment Streams" >Payment Streams</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#RelatedEntities" title="click to view Related Entities">Related Entities</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Collateral" title="click to view Collateral" >Collateral</a>
+        <!-- &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#SpecialInstructions" title="click to view Special Instructions">Special Instructions</a> -->
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#LoanAgreements" title="click to view Lending Agreements">Lending Agreements</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#LoanFees" title="click to view Loan Fees">Loan Fees</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Participations" title="click to view Participations">Participations</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Notes" title="click to view Notes + Attachments">Notes &amp; Attachments</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Approvals" title="click to view Approval History">Approval History</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#Minutes" title="click to view Minutes">Minutes</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#StageLog" title="click to view the Stage Log">Stage Log</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;<a href="#OpenActivities" title="click to view Activities">Activities</a>
+    </div>
+  <apex:detail relatedList="false" relatedListHover="true" inlineEdit="true"/>
+ 
+</apex:form>
+  <!--<apex:detail title="Loan Application" relatedList="false"/>-->
+  <a id="RateStreams" /><apex:relatedList list="EB_Loan_App_Rate_Streams__r" rendered="{!IF(RenderRateStream=='true', 'true','false')}" />
+  <a id="PayStreams" /><apex:relatedList list="EB_Loan_Application_Payment_Streams__r" rendered="{!IF(RenderPaymentStream=='true', 'true','false')}" />
+  <a id="RelatedEntities" /><apex:relatedList list="EB_Loan_App_Entity_Relationships__r" rendered="{!IF(RenderRelatedEntity=='true', 'true','false')}" />
+ <!-- <a id="RelatedEntities" /><apex:relatedList list="EB_Loan_App_Entity_Relationships__r"  />-->
+  <a id="Collateral" /><apex:relatedList list="EB_Loan_App_Collateral_Relationships__r" rendered="{!IF(RenderCollateral=='true', 'true','false')}" />
+  <!-- <a id="SpecialInstructions" /><apex:relatedList list="EB_Loan_App_Agreements__r" rendered="{!IF(RenderLoanAgreement=='true', 'true','false')}" /> -->
+  <a id="LoanAgreements" /><apex:relatedList list="Agreement_Loan_Application_Relationship__r" rendered="{!IF(RenderLoanAgreement=='true', 'true','false')}" />
+
+  <a id="LoanFees" /><apex:relatedList list="EB_Loan_Fees__r" rendered="{!IF(RenderLoanFee=='true', 'true','false')}"/>
+  <a id="Participations" /><apex:relatedList list="EB_Loan_Participations__r" rendered="{!IF(RenderParticipation=='true', 'true','false')}" />
+  <a id="Notes" /><apex:relatedList subject="{!EB_Loan_Application__c}" list="NotesAndAttachments" />
+  <a id="Approvals" /><apex:relatedList subject="{!EB_Loan_Application__c}" list="ProcessSteps" />
+  <a id="Minutes" /><apex:relatedList list="EB_Loan_App_Committee_Decisions__r" />
+  <a id="StageLog" /><apex:relatedList list="EB_Loan_Application_Stage_Logs__r" />
+  <a id="OpenActivities" /><apex:relatedList subject="{!EB_Loan_Application__c}" list="OpenActivities" />
+  <a id="ActivityHistory" /><apex:relatedList subject="{!EB_Loan_Application__c}" list="activityhistories" />
+  <a id="History" />
+  <apex:pageBlock title="Selected Field History" >
+    <apex:pageblocktable value="{!EB_Loan_Application__c.Histories}" var="History" title="hist">
+        <apex:column headerValue="Date" value="{!History.CreatedDate}"/>
+        <apex:column headerValue="User">
+            <apex:outputLink value="/{!History.CreatedBy.Name}">{!History.CreatedBy.Name}</apex:outputLink>
+        </apex:column>
+        <apex:column headerValue="Action">
+            <apex:outputText escape="false" value="Changed <b>{!History.Field}</b> from {!History.OldValue} to <b>{!History.NewValue}</b>"/>
+        </apex:column>
+    </apex:pageBlockTable>
+</apex:pageBlock>
+</apex:page>

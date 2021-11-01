@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>29.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>This VF Page is used to display the Commercial Loan Overview</description>
+    <label>CommercialOverviewPage</label>
+    <packageVersions>
+        <majorNumber>2</majorNumber>
+        <minorNumber>47</minorNumber>
+        <namespace>LLC_BI</namespace>
+    </packageVersions>
+</ApexPage>

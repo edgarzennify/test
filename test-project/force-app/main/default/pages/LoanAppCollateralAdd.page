@@ -1,0 +1,35 @@
+<apex:page standardController="EB_Loan_App_Collateral_Relationship__c" extensions="LoanAppCollateralAddController" >
+    <apex:pageMessages />
+    <script language="javascript">
+        function showConfirm(selected_text){ 
+            loanapp = "{!LoanAppSelected}"; 
+            //loanapp = loanapp.replace(/'/gi, '\''); 
+            collateral = selected_text; 
+            //collateral = collateral.replace(/'/gi, '\''); 
+            return confirm("Are you sure you want to add collateral \"" + collateral + "\" to \"" + loanapp + "\"?"); 
+        }        
+    </script>
+    <apex:form >
+        <apex:pageBlock title="Add Collateral To {!getLoanApplicationName}" mode="edit"  >
+            <apex:pageBlockButtons location="top" >        
+                <apex:commandButton value="Cancel" action="{!CancelCollateral}" />
+            </apex:pageBlockButtons>
+            <div style="padding:4px;">
+                <apex:outputPanel rendered="{!CollateralFound}">
+                    <div style="padding:4px;">Please select an existing collateral item to be attached to &quot;{!LoanAppSelected}&quot;.</div>
+                    <apex:pageBlockTable id="dlcollaterals" value="{!CollateralNames}" frame="hsides" var="c">
+                        <apex:column headerValue="Collateral">
+                            <apex:commandLink onclick="return showConfirm('{!c.label}');" action="{!SaveCollateral}" id="txt" value="{!c.label}">
+                                <apex:param assignTo="{!selectedCollateralId}" name="selectedEntity" value="{!c.value}" />
+                            </apex:commandLink>
+                        </apex:column>
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!NoCollateralFound}">
+                    <div class="message warningM4" style="margin-left:4px;"><img src="/s.gif" alt="Warning" class="msgIcon" title="Warning" /> No existing collateral available to attach. Click "Add New Collateral" to create a new item for this application.</div>
+                </apex:outputPanel>  
+                <apex:commandButton value="Add a New Collateral Item" action="{!SaveNewCollateral}" style="margin-top:4px;margin-left:4px;" />
+            </div>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

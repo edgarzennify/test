@@ -1,0 +1,6 @@
+<apex:page showChat="false" showHeader="false" >
+    <chatter:feed entityId="{!$User.Id}"/>
+   <!-- <chatter:follow entityId="{!$User.Id}"/>-->
+   
+    <!--<chatter:newsfeed />-->
+</apex:page>

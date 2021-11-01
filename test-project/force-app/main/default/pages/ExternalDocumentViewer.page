@@ -1,0 +1,7 @@
+<apex:page docType="html-5.0"
+    controller="ExternalDocumentViewerController"
+    showHeader="false" 
+    sidebar="false"
+    action="{!initialize}" >
+    {!message}
+</apex:page>

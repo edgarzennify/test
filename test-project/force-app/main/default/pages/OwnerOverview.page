@@ -1,0 +1,13 @@
+<apex:page tabStyle="User" title="Relationship Manager Overview" sidebar="false" >
+	<apex:form >
+	    <div style="width:950px">
+		    <c:OwnerOverviewDisplay />
+	    </div>
+	</apex:form>
+    <style type="text/css">
+        .currentNodeEdit{
+            visibility: visible;
+        }
+    </style>
+
+</apex:page>

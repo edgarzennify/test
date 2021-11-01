@@ -1,0 +1,24 @@
+<apex:page title="Loan Ate Transaction" controller="GatewayApiController"
+docType="html-5.0"
+showHeader="false" 
+sidebar="false"
+standardStylesheets="false"
+applyHtmlTag="false">
+    
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta charset="utf-8" />
+        <title>Loan Ate Transaction</title>
+        <script type="text/javascript">
+            var __userName = "{!$User.FirstName} {!$User.LastName}";
+            var __isSandbox = '{!getIsSandbox}';
+            function consoleLog(msg){
+                console.log(msg);
+            }           
+		</script>
+    </html>
+	<body>
+    	<div id="container"></div>
+        <script src="{!URLFOR($Resource.LoanAteTransaction, '/bundle.js')}" />
+    </body>    
+</apex:page>

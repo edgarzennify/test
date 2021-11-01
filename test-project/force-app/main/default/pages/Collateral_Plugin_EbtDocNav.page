@@ -1,0 +1,29 @@
+<apex:page docType="html-5.0"
+    standardController="LLC_BI__Collateral__c"
+    extensions="Collateral_PluginController"
+    showHeader="false" 
+    sidebar="false" >
+    
+    <style>
+        .ebt-doc-nav-header{
+            padding: 15px 0 5px 5px;
+            font-size: larger;
+            font-weight: bold;
+            color: #666;
+            display: block;
+            border-bottom: 1px solid #CCC;
+            margin-bottom: 10px;
+        }
+    </style>
+    
+    <apex:outputPanel rendered="{! ebCollateral != NULL }" ><span class="ebt-doc-nav-header">Booked Collateral Document Navigator</span></apex:outputPanel>
+    <c:EbtDocNavigator objectId="{!ebCollateral.Id}" rendered="{! ebCollateral != NULL }" />
+    <apex:outputPanel ><span class="ebt-doc-nav-header">In Process Collateral Document Navigator</span></apex:outputPanel>
+    <c:EbtDocNavigator objectId="{!Id}" />
+    <!--
+    <apex:outputPanel rendered="{! ebCollateral == NULL}">
+        EBT Document Navigator currently not available for this Collateral
+    </apex:outputPanel>
+    -->
+    
+</apex:page>

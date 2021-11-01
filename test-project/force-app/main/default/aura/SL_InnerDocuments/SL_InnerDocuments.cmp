@@ -1,0 +1,243 @@
+<aura:component controller="SL_InnerDocuments" implements="force:hasRecordId,flexipage:availableForAllPageTypes,force:appHostable,forceCommunity:availableForAllPageTypes" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+
+    <aura:attribute name="Heading" default="Library Files" type="String" access="global"/>
+    <aura:attribute name="lstGlobalLibIDs" default="" type="String" access="global"/>
+    <aura:attribute name="SObjectName" default="ContentVersion" type="String" access="global"/>
+    <aura:attribute name="SFileFieldName" default="ContentDocumentId" type="String" access="global"/>
+    <aura:attribute name="STitleFieldName" default="Title" type="String" access="global"/>
+    <aura:attribute name="Grouping1" default="SLSI__Content_Types__c" type="String" access="global"/>
+    <aura:attribute name="Grouping2" default="SLSI__Category_Level_1__c" type="String" access="global"/>
+    <aura:attribute name="Grouping3" default="SLSI__Category_Level_2__c" type="String" access="global"/>
+    <aura:attribute name="Grouping4" default="SLSI__Category_Level_3__c" type="String" access="global"/>
+    <aura:attribute name="ShowCategoryArea" default="true" type="Boolean" access="global"/>
+ 	<aura:attribute name="ShowSearchBox" default="true" type="Boolean" access="global"/>
+ 	<aura:attribute name="ShowUploadButton" default="true" type="Boolean" access="global"/>
+ 	<aura:attribute name="ShowViewButton" default="true" type="Boolean" access="global"/>
+ 	<aura:attribute name="ShowExtendedTree" default="false" type="Boolean" access="global"/>
+	<aura:attribute name="mainLibraryID" default="05833000000Tq9X" type="String"  access="global"/>
+	<aura:attribute name="pSort" default="Modified Date" type="String" access="global"/>
+	<aura:attribute name="pSortDir" default="DESC" type="String" access="global"/> 
+	<aura:attribute name="NumbRecords" default="8" type="Integer" access="global"/>
+	<aura:attribute name="NumbRecordsTile" default="3" type="Integer" access="global"/>
+	<aura:attribute name="pViewMode" default="Table" type="String" access="global"/>
+	<aura:attribute name="filterCreteria" default="" type="String" access="global"/>
+
+
+	<aura:attribute name="widthLeft" default="22" type="Integer" access="global"/>
+	<aura:attribute name="widthRight" default="78" type="Integer" access="global"/>
+	<aura:attribute name="widthLeftStr" default="22%" type="String" access="PRIVATE"/>
+	<aura:attribute name="widthRightStr" default="78%" type="String" access="PRIVATE"/>	
+
+	<aura:attribute name="IsSpinner" type="Boolean" default="false" access="PRIVATE"/>
+	<aura:attribute name="treeItems" type="Object" access="PRIVATE"/>
+	<aura:attribute name="docItems" type="Object" access="PRIVATE"/>
+	<aura:attribute name="HeadSubText" default="0" type="String" access="PRIVATE"/>
+	<aura:attribute name="catLev0" default="" type="String" access="PRIVATE"/>
+	<aura:attribute name="catLev1" default="" type="String" access="PRIVATE"/>
+	<aura:attribute name="catLev2" default="" type="String" access="PRIVATE"/>
+	<aura:attribute name="catLev3" default="" type="String" access="PRIVATE"/>
+	<aura:attribute name="pSearchTxt" default="" type="String" access="PRIVATE"/>
+	
+
+
+    <div style="background-color: rgb(255, 255, 255);position: relative;">
+    	<aura:if isTrue="{!v.IsSpinner}">
+    		<lightning:spinner variant="brand" aura:id="GlobSpinner" size="small"/>
+    	</aura:if>
+    	<style>
+    	.slds-size--2-of-6
+		{
+			width: {!v.widthLeftStr} !important;
+		    -webkit-box-flex: 0 !important;
+		    -webkit-flex: 0 0 {!v.widthLeftStr} !important;
+		    -ms-flex: 0 0 {!v.widthLeftStr} !important;
+		    flex: 0 0 {!v.widthLeftStr} !important;
+		    max-width: {!v.widthLeftStr} !important;
+		}
+		.slds-size--4-of-6
+		{
+			width: {!v.widthRightStr} !important;
+		    -webkit-box-flex: 0 !important;
+		    -webkit-flex: 0 0 {!v.widthRightStr} !important;
+		    -ms-flex: 0 0 {!v.widthRightStr} !important;
+		    flex: 0 0 {!v.widthRightStr} !important;
+		    max-width: {!v.widthRightStr} !important;
+		}
+    	</style>
+    
+	    
+	    <div class="document-list-header-wrap" style="border-bottom: 1px solid #ebeced;">
+
+            <h3 class="slds-tile__title" title="{!v.Heading}">{!v.Heading}</h3>
+            
+            <div class="search-upload-wrap slds-grid slds-wrap">
+                
+                <div class="search-box slds-size_6-of-12">
+
+                    <aura:if isTrue="{!v.ShowSearchBox}">
+                    
+                        <input onkeypress="{!c.handleClickEvnt}" class="searchInp input uiInput uiInputText uiInput--default uiInput--input" type="text" placeholder="Search documents by name..." aura:id="stext" value="{! v.pSearchTxt }" style="width: 75%;margin-right:10px;"/>
+                        <ui:button aura:id="button" buttonTitle="Click to see files filtered by search value" class="button" label="Search" press="{!c.doSearch}"/>
+                    
+                    </aura:if>
+                    
+                </div>
+                    
+                <div class="tools-wrap slds-size_6-of-12">
+                        
+                    <aura:if isTrue="{! v.docItems.length > 0 }">
+                        
+                        <aura:if isTrue="{! v.ShowViewButton }">
+                            
+                            <div style="float: right;" class="tool-item">
+                                <lightning:buttonMenu menuAlignment="right" iconName="{! if(v.pViewMode=='Table','utility:table','utility:tile_card_list')}" aura:id="menuView" title="{! 'Display As '+v.pViewMode}" onselect="{! c.handleChangeView }">
+                                    <lightning:menuItem label="Table" value="Table" checked="{! if(v.pViewMode=='Table',true,false)}" aura:id="iMenuViewTable" iconName="utility:table" title="Display As Table"/>
+                                    <lightning:menuItem label="Tile" value="Tile" checked="{! if(v.pViewMode=='Tile',true,false)}" aura:id="iMenuViewTile" iconName="utility:tile_card_list" title="Display As Tile"/>
+                                </lightning:buttonMenu>
+                            </div>
+                            
+                        </aura:if> <!-- /ShowViewButton -->
+                        
+                    </aura:if> <!-- /docItems.length > 0 -->
+                    
+                    <aura:if isTrue="{!v.ShowUploadButton}">
+                     <aura:if isTrue="{!v.treeItems != null}">
+                        <div style="float: right;padding-right:10px;" class="tool-item">
+                            <lightning:fileUpload class="fUploadCus" label="Upload Files" multiple="true" disabled="{! false}" recordId="{! v.mainLibraryID }" onuploadfinished="{! c.handleUploadFinished }"/>
+                        </div>
+                        </aura:if>
+                    </aura:if>                    
+                    
+                </div> <!--/tools-wrap -->
+
+            </div> <!-- /search-upload-wrap -->
+            
+            
+            <div class="slds-grid list-details-wrap" style="padding:7px 10px">
+                <div class="breadcrumbs" style="{!if(v.ShowCategoryArea,'','display:none')}">
+                    <ul class="slds-list_horizontal slds-has-dividers_right" aura:id="navListItems">
+                        <li class="slds-item"><b>All Files</b></li>
+                    </ul>
+                </div>
+                <div class="list-count">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;({!v.HeadSubText} files)</p>
+                </div>
+            </div> <!-- /list-details-wrap -->
+
+        </div> <!-- /document-list-header-wrap -->
+	
+		<div class="file-list-content-wrapper">
+            <lightning:layout verticalAlign="stretch" multipleRows="true" class="x-large" >
+                
+                <aura:if isTrue="{!v.ShowCategoryArea}">
+                    <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box slds-size--2-of-6">
+                        <div style="margin-left:-8px;">
+                        <aura:if isTrue="{!v.treeItems != null}">
+                        	<lightning:tree items="{!v.treeItems}" onselect="{!c.handleSelect}"/>
+                        </aura:if>
+                        </div>
+                        
+                    </lightning:layoutItem>
+                </aura:if>
+                
+                <lightning:layoutItem flexibility="auto" padding="around-small" class="{! if(v.ShowCategoryArea,'custom-box slds-size--4-of-6 pright rSideInnerDoc','custom-box slds-size--4-of-6 rSideInnerDoc')}">
+    
+                    <div>
+            
+                        <aura:if isTrue="{!v.docItems.length > 0}">
+                            
+                            <aura:if isTrue="{! (v.pViewMode == 'Tile')}">
+                                
+                                <div style="{!'text-align: center;padding:10px;'+if(v.NumbRecordsTile==0,'','max-height:'+(0.4+(12.6*v.NumbRecordsTile))+'rem;overflow:auto;')}" align="center">
+                                
+                                    <aura:iteration items="{!v.docItems}" var="doc">
+                                        <div style="width:20rem;height:11rem;position:relative;display:inline-block !important;margin:0.8rem">
+                                            <lightning:fileCard fileId="{!doc.itemDocID}"/>
+                                        </div>
+                                    </aura:iteration>
+                                    
+                                </div>
+                                
+                            </aura:if>
+        
+                            <aura:if isTrue="{! (v.pViewMode == 'Table')}">
+                                
+                                <div class="divViewMode">
+                                
+                                    <table cellspacing="0" cellpadding="0" border="0">
+                                        <tr>
+                                            <td style="padding-bottom:2px">
+                                            <table class="slds-table slds-table_bordered slds-table_resizable-cols slds-table_fixed-layout" role="grid" style="border-top:0px !important">
+                                            <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th style="height:52px" aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" aria-label="File Name" scope="col">
+                                                    <a onclick="{!c.doSortName}" class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                                      <span class="slds-assistive-text">Sort by: </span>
+                                                      <span class="slds-truncate" title="File Name" style="margin-left:24px;margin-right:6px">File Name</span>
+                                                      <div class="slds-icon_container">
+                                                        <aura:if isTrue="{!and(v.pSort == 'File Name', v.pSortDir == 'ASC')}">
+                                                            <lightning:icon iconName="utility:arrowup" size="xx-small" class="slds-icon slds-icon--selected slds-icon--xx-small slds-icon-text-default " />
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!and(v.pSort == 'File Name', v.pSortDir == 'DESC')}">
+                                                            <lightning:icon iconName="utility:arrowdown" size="xx-small" class="slds-icon slds-icon--selected slds-icon--xx-small slds-icon-text-default " />
+                                                        </aura:if>
+                                                      </div>
+                                                    </a>
+                                                  </th>
+                                                  <th style="height:52px;width:242px" aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" aria-label="Modified Date" scope="col">
+                                                    <a onclick="{!c.doSortDate}" class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                                      <span class="slds-assistive-text">Sort by: </span>
+                                                      <span class="slds-truncate" title="Modified Date" style="margin-right:6px">Modified Date</span>
+                                                      <div class="slds-icon_container">
+                                                            <aura:if isTrue="{!and(v.pSort == 'Modified Date', v.pSortDir == 'ASC')}">
+                                                                <lightning:icon iconName="utility:arrowup" size="xx-small" class="slds-icon slds-icon--selected slds-icon--xx-small slds-icon-text-default " />
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!and(v.pSort == 'Modified Date', v.pSortDir == 'DESC')}">
+                                                                <lightning:icon iconName="utility:arrowdown" size="xx-small" class="slds-icon slds-icon--selected slds-icon--xx-small slds-icon-text-default " />
+                                                            </aura:if>
+                                                      </div>
+                                                    </a>
+                                                  </th>
+                                            </tr>
+                                            </thead>
+                                            </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div aura:id="ScrollDiv" style="{! if(v.NumbRecords==0,'','max-height:'+(1+(65*v.NumbRecords))+'px;'+(if(v.docItems.length le v.NumbRecords,'','overflow:auto;')))}">
+                                                <table class="slds-table slds-table_bordered slds-table_cell-buffer" style="border-top:0px !important">
+                                                <tbody>
+                                                        <aura:iteration items="{!v.docItems}" var="doc">
+                                                    <tr>
+                                                        <th scope="row" data-label="File Name" style="height:65px"><div class="slds-truncate" title=""><lightning:fileCard fileId="{!doc.itemDocID}"/></div></th>
+                                                        <td style="width:160px" data-label="Last Last Modified Date"><div style="color: rgb(22, 50, 92);" class="slds-truncate" title="">
+                                                            <lightning:formattedDateTime value="{!doc.dtLastModifiedDate}" year="numeric" month="numeric" day="numeric"  hour="2-digit" minute="2-digit" />
+                                                        </div></td>
+                                                        <td class="slds-cell-shrink" data-label="Actions">
+                                                            <lightning:buttonMenu name="{!doc.itemPos}" onfocus="{! c.handleScrollingDiv}" menuAlignment="right" aura:id="menuAct" alternativeText="Action menu" onselect="{! c.handleSelectMAction }">
+                                                                <lightning:menuItem label="Download File" value="{!doc.itemIDDown}" />
+                                                                <lightning:menuItem label="Delete File" value="{!doc.itemIDDel}" />
+                                                            </lightning:buttonMenu>
+                                                        </td>
+                                                    </tr>
+                                                        </aura:iteration>
+                                                </tbody>
+                                                </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </aura:if>
+                            <aura:set attribute="else">
+                                <div class="slds-text-title_caps" align="center" style="padding-top:45px">Folder is empty.</div>
+                            </aura:set>
+                        </aura:if>
+                    </div>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </div>
+</aura:component>
